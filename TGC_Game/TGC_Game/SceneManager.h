@@ -1,6 +1,12 @@
 #pragma once
+
+#include"SceneBase.h"
+
 class SceneManager
 {
+private:
+	SceneBase* current_scene;
+
 public:
 	SceneManager();
 	~SceneManager();
@@ -20,5 +26,23 @@ public:
 	/// </summary>
 	void Shutdown();   //Finalizeと同じ
 
+private:
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	void Graph() const;
+
+	/// <summary>
+	/// シーン切り替え処理
+	/// </summary>
+	/// <param name="next_type">次のシーンタイプ</param>
+	void ChangeScene(eSceneType next_type);
+
+	/// <summary>
+	/// シーン生成処理
+	/// </summary>
+	/// <param name="next_type">次のシーンタイプ</param>
+	/// <returns>生成したシーン情報のポインタ</returns>
+	SceneBase* CreateScene(eSceneType next_type);
 };
 
