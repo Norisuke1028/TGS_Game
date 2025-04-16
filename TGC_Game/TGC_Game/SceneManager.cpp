@@ -34,7 +34,20 @@ void SceneManager::WakeUp()
 
 
 	// ウィンドウタイトルの設定
-	SetWindowText("Game Development SuperMario");
+	SetWindowText("TGS Game Yagimine");
+
+	// 垂直同期を行わない
+	SetWaitVSyncFlag(FALSE);
+
+	// 描画先を表画面に反映する
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	// 最初のシーンをタイトル画面にする
+	//ChangeScene(eSceneType::title);
+	ChangeScene(eSceneType::in_game);
+
+	// 非アクティブ状態でも動作させる
+	SetAlwaysRunFlag(TRUE);
 }
 
 /// <summary>
@@ -42,6 +55,11 @@ void SceneManager::WakeUp()
 /// </summary>
 void SceneManager::Run()
 {
+	// メインループ
+	while (ProcessMessage() != -1)
+	{
+
+	}
 }
 
 /// <summary>
