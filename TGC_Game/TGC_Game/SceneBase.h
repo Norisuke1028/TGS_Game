@@ -40,13 +40,14 @@ public:
 	}
 
 
-	///// <summary>
-	///// 更新処理
-	///// </summary>
-	//virtual eSceneType Update()
-	//{
-
-	//}
+	 ///<summary>
+	 ///<更新処理
+	 ///</summary>
+	virtual eSceneType Update()
+	{
+		//現在のシーン情報を返却する
+		return GetNowSceneType();
+	}
 
 	/// <summary>
 	/// 描画処理

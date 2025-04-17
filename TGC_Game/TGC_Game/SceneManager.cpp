@@ -5,8 +5,8 @@
 #include "TitleScene.h"
 #include "InGameScene.h"
 
-#define SCREEN_HEIGHT 480	// 画面の高さ
-#define SCREEN_WIDTH 640	// 画面の幅
+#define SCREEN_HEIGHT 1280	// 画面の高さ
+#define SCREEN_WIDTH 720	// 画面の幅
 #define REFRESHRATE 32		// リフレッシュレート
 
 SceneManager::SceneManager() : current_scene(nullptr)
@@ -56,9 +56,24 @@ void SceneManager::WakeUp()
 void SceneManager::Run()
 {
 	// メインループ
-	while (ProcessMessage() != -1)
+	while (ProcessMessage() == 0)
 	{
+		// シーンの更新
+		eSceneType next_scene_type = current_scene->Update();
 
+		// 描画処理
+		Graph();
+
+		// 現在のシーンタイプが次のシーンタイプと違っているか？
+		if (current_scene->GetNowSceneType() != next_scene_type)
+		{
+			// シーン切り替え処理
+			ChangeScene(next_scene_type);
+		}
+		if (current_scene->GetNowSceneType() == eSceneType::in_game)
+		{
+
+		}
 	}
 }
 
@@ -67,6 +82,16 @@ void SceneManager::Run()
 /// </summary>
 void SceneManager::Shutdown()
 {
+	// シーン情報が生成されていれば、削除する
+	if (current_scene != nullptr)
+	{
+		current_scene->Finalize();
+		delete current_scene;
+		current_scene = nullptr;
+	}
+
+	// Dxライブラリの使用を終了する
+	DxLib_End();
 }
 
 /// <summary>
@@ -74,6 +99,14 @@ void SceneManager::Shutdown()
 /// </summary>
 void SceneManager::Graph() const
 {
+	// 画面の初期化
+	//ClearDrawScreen();
+
+	// シーンの描画処理
+	current_scene->Draw();
+
+	// 裏画面の内容を表画面に反映する
+	ScreenFlip();
 }
 
 /// <summary>
@@ -82,6 +115,26 @@ void SceneManager::Graph() const
 /// <param name="next_type">次のシーンタイプ</param>
 void SceneManager::ChangeScene(eSceneType next_type)
 {
+	// 次のシーンを生成する
+	SceneBase* next_scene = CreateScene(next_type);
+
+	// エラーチェック
+	if (next_scene == nullptr)
+	{
+		throw ("シーンが生成できませんでした\n");
+	}
+
+	// シーン情報が格納されていたら、削除する
+	if (current_scene != nullptr)
+	{
+		current_scene->Finalize();
+		delete current_scene;
+	}
+
+	// 次のシーンの初期化
+	next_scene->Initialize();
+	// 現在シーンの上書き
+	current_scene = next_scene;
 }
 
 /// <summary>
