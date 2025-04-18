@@ -16,7 +16,6 @@ public:
 	virtual void Finalize() override;
 
 	// 現在のシーンタイプ情報を取得する
-	virtual const eSceneType GetNowSceneType() const override;
-
+	virtual eSceneType GetNowSceneType() const override;
 };
 

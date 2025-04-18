@@ -1,48 +1,32 @@
 #pragma once
 
-#include"SceneBase.h"
+#include "SceneBase.h"
 
+// シーン管理クラス
 class SceneManager
 {
 private:
+	// 現在のシーン
 	SceneBase* current_scene;
+	// ゲームループを行うかのフラグ
+	bool loop_flag;
 
 public:
 	SceneManager();
 	~SceneManager();
 
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	void WakeUp();
+public:
+	void Initialize();
+	void Update();
+	void Finalize();
 
-	/// <summary>
-	///  実行処理(更新処理)
-	/// </summary>
-	void Run();
-
-	/// <summary>
-	/// 終了時処理
-	/// </summary>
-	void Shutdown();   //Finalizeと同じ
+public:
+	// ゲームループを行うか調べる処理
+	bool LoopCheck() const;
 
 private:
-	/// <summary>
-	/// 描画処理
-	/// </summary>
-	void Graph() const;
-
-	/// <summary>
-	/// シーン切り替え処理
-	/// </summary>
-	/// <param name="next_type">次のシーンタイプ</param>
-	void ChangeScene(eSceneType next_type);
-
-	/// <summary>
-	/// シーン生成処理
-	/// </summary>
-	/// <param name="next_type">次のシーンタイプ</param>
-	/// <returns>生成したシーン情報のポインタ</returns>
-	SceneBase* CreateScene(eSceneType next_type);
+	// シーン切り替え処理
+	void ChangeScene(eSceneType new_scene_type);
+	// シーン生成処理
+	SceneBase* CreateScene(eSceneType new_scene_type);
 };
-
