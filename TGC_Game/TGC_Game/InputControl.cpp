@@ -1,111 +1,174 @@
 #include "InputControl.h"
-#include "Dxlib.h"
+#include "DxLib.h"
 
-// 静的メンバ変数定義
-bool InputControl::now_button[16] = {};
-bool InputControl::old_button[16] = {};
-float InputControl::trigger[2] = {};
-Vector2D InputControl::stick[2] = {};
+// 静的メンバ変数の初期化
+InputControl* InputControl::instance = nullptr;
 
-// 入力機能 : 更新処理
+// インスタンスを取得
+InputControl* InputControl::GetInstance()
+{
+	if (instance == nullptr)
+	{
+		// 最初の1回だけオブジェクトを生成する
+		instance = new InputControl();
+	}
+
+	// 実体を返す
+	return instance;
+}
+
+// インスタンスの削除
+void InputControl::DeleteInstance()
+{
+	if (instance != nullptr)
+	{
+		// メモリの開放
+		delete instance;
+		instance = nullptr;
+	}
+}
 
 void InputControl::Update()
 {
-	// XInputコントローラーの入力値を取得する
-	XINPUT_STATE input_state = {};
-	GetJoypadXInputState(DX_INPUT_PAD1, &input_state);
+	// ゲームパッドの情報
+	XINPUT_STATE input;
 
-	// ボタン入力値の更新
-	for (int i = 0; i < 16; i++) {
-		old_button[i] = now_button[i];
-		now_button[i] = (bool)input_state.Buttons[i];
-	}
+	// ゲームパッドの状態を取得
+	GetJoypadXInputState(DX_INPUT_PAD1, &input);
 
-	// トリガー入力値の更新(0.0fから1.0fに範囲を制限する)
-	trigger[0] = (float)input_state.LeftTrigger / (float)UCHAR_MAX;
-	trigger[1] = (float)input_state.RightTrigger / (float)UCHAR_MAX;
-
-	// 左スティック入力値の更新(-1.0fから1.0fに範囲を制限する)
-	if (input_state.ThumbLX > 0.0f)
+	// メモリ領域をコピー
+	memcpy(old_button, now_button, (sizeof(char) * PAD_BUTTON_MAX));
+	for (int i = 0; i < PAD_BUTTON_MAX; i++)
 	{
-		stick[0].x = (float)input_state.ThumbLX / (float)SHRT_MAX;
-	}
-	else
-	{
-		stick[0].x = -((float)input_state.ThumbLX / (float)SHRT_MIN);
-	}
-	if (input_state.ThumbLY > 0.0f)
-	{
-		stick[0].y = (float)input_state.ThumbLY / (float)SHRT_MAX;
-	}
-	else
-	{
-		stick[0].y = -((float)input_state.ThumbLY / (float)SHRT_MIN);
+		// 現在押しているボタンの更新
+		now_button[i] = input.Buttons[i];
 	}
 
-	// 右スティック入力値の更新(-1.0fから1.0fに範囲を制限する)
-	if (input_state.ThumbRX > 0.0f)
-	{
-		stick[1].x = (float)input_state.ThumbRX / (float)SHRT_MAX;
-	}
-	else
-	{
-		stick[1].x = -((float)input_state.ThumbRX / (float)SHRT_MIN);
-	}
-	if (input_state.ThumbRY > 0.0f)
-	{
-		stick[1].y = (float)input_state.ThumbRY / (float)SHRT_MAX;
-	}
-	else
-	{
-		stick[1].y = -((float)input_state.ThumbRY / (float)SHRT_MIN);
-	}
+	// 左スティックの更新
+	left_stick.x = input.ThumbLX;
+	left_stick.y = input.ThumbLY;
+
+	// 右スティックの更新
+	right_stick.x = input.ThumbRX;
+	right_stick.y = input.ThumbRY;
+
+	// 左トリガーの更新
+	left_trigger = (int)input.LeftTrigger;
+
+	// 右トリガーの更新
+	right_trigger = (int)input.RightTrigger;
 }
 
-// ボタン取得 : 押してる間
-bool InputControl::GetButton(int button)
+// ボタンの入力状態を取得
+ePadInputState InputControl::GetButtonInputState(int button)
 {
-	return CheckButtonRange(button) && (now_button[button] && old_button[button]);
+	// ボタン入力が有効な範囲だったら処理を行う
+	if (CheckButtonRange(button))
+	{
+		if (old_button[button] == TRUE)
+		{
+			if (now_button[button] == TRUE)
+			{
+				// 押し続けている
+				return ePadInputState::eHeld;
+			}
+			else
+			{
+				// 離した瞬間
+				return ePadInputState::eRelease;
+			}
+		}
+		else
+		{
+			if (now_button[button] == TRUE)
+			{
+				// 押した瞬間
+				return ePadInputState::ePress;
+			}
+			else
+			{
+				// 入力無し
+				return ePadInputState::eNone;
+			}
+		}
+	}
+
+	return ePadInputState::eNone;
 }
 
-// ボタン取得 : 押した瞬間
-bool InputControl::GetButtonDown(int button)
+// 左スティックの値を取得
+Vector2D InputControl::GetLeftStick() const
 {
-	return CheckButtonRange(button) && (now_button[button] && !old_button[button]);
+	return left_stick;
 }
 
-// ボタン取得 : 離した瞬間
-bool InputControl::GetButtonUp(int button)
+// 右スティックの値を取得
+Vector2D InputControl::GetRightStick() const
 {
-	return CheckButtonRange(button) && (!now_button[button] && old_button[button]);
+	return right_stick;
 }
 
-// 左トリガー取得
-float InputControl::GetLeftTrigger()
+// 左トリガーの値を取得
+int InputControl::GetLeftTrigger() const
 {
-	return trigger[0];
+	return left_trigger;
 }
 
-// 右トリガー取得
-float InputControl::GetRightTrigger()
+// 右トリガーの値を取得
+int InputControl::GetRightTrigger() const
 {
-	return trigger[1];
+	return right_trigger;
 }
 
-// 左スティック取得
-Vector2D InputControl::GetLeftStick()
+// 左スティックの傾きの割合を取得
+Vector2D InputControl::GetLeftStickTiltPercentage()
 {
-	return stick[0];
+	// 左スティックの傾き
+	Vector2D left_stick_tilt;
+
+	// 左スティックの傾きを-1.0f ～ 1.0fの間に変換
+	// x軸値の変換
+	left_stick_tilt.x = left_stick.x / PAD_STICK_MAX;
+	if (left_stick_tilt.x < -1.0f)
+	{
+		left_stick_tilt.x = -1.0f;
+	}
+	// y軸値の変換
+	left_stick_tilt.y = left_stick.y / PAD_STICK_MAX;
+	if (left_stick_tilt.y < -1.0f)
+	{
+		left_stick_tilt.y = -1.0f;
+	}
+
+	return left_stick_tilt;
 }
 
-// 右スティック取得
-Vector2D InputControl::GetRightStick()
+// 右スティックの傾きの割合を取得
+Vector2D InputControl::GetRightStickTiltPercentage()
 {
-	return stick[1];
+	// 右スティックの傾き
+	Vector2D right_stick_tilt;
+
+	// 右スティックの傾きを-1.0f ～ 1.0fの間に変換
+	// x軸値の変換
+	right_stick_tilt.x = right_stick.x / PAD_STICK_MAX;
+	if (right_stick_tilt.x < -1.0f)
+	{
+		right_stick_tilt.x = -1.0f;
+	}
+	// y軸値の変換
+	right_stick_tilt.y = right_stick.y / PAD_STICK_MAX;
+	if (right_stick_tilt.y < -1.0f)
+	{
+		right_stick_tilt.y = -1.0f;
+	}
+
+	return right_stick_tilt;
 }
 
-// ボタン配列範囲チェック
+// 入力が有効な範囲かチェック
 bool InputControl::CheckButtonRange(int button)
 {
-	return (0 <= button && button < 16);
+	// 現在の入力値がtrueかfalseか返す
+	return (0 <= button && button < PAD_BUTTON_MAX);
 }

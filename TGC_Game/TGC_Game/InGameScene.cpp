@@ -28,7 +28,7 @@ void InGameScene::Finalize()
 {
 }
 
-const eSceneType InGameScene::GetNowSceneType() const
+eSceneType InGameScene::GetNowSceneType() const
 {
-	return eSceneType::in_game;
+	return eSceneType::eInGame;
 }

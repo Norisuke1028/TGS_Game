@@ -1,33 +1,74 @@
 #pragma once
-
 #include "Vector2D.h"
 
-// 入力管理機能
+#define		PAD_BUTTON_MAX	(16)						// ゲームパッドのボタンの最大数
+#define		PAD_STICK_MAX	(32767.0f)					// スティックを傾けたときの最大値
+
+enum class ePadInputState : unsigned char
+{
+	eNone,					// 入力無し
+	ePress,					// ボタンを押した瞬間
+	eRelease,				// ボタンを離した瞬間
+	eHeld,					// ボタンを押し続けている
+};
+
 class InputControl
 {
 private:
-	static bool now_button[16];	// 現在フレーム入力値
-	static bool old_button[16];	// 過去フレーム入力値
-	static float trigger[2];	// 左右トリガー入力値
-	static Vector2D stick[2];	// 左右スティック入力値
+	static InputControl* instance;
+
+	unsigned char now_button[PAD_BUTTON_MAX] = {};		// 現在のボタンの入力
+	unsigned char old_button[PAD_BUTTON_MAX] = {};		// 前回のボタンの入力
+
+	Vector2D left_stick = 0.0f;							// 左スティック
+	Vector2D right_stick = 0.0f;						// 右スティック
+
+	int left_trigger = 0;								// 左トリガー
+	int right_trigger = 0;								// 右トリガー
+
+private:
+	// 他のところからオブジェクト化できないようにコンストラクタはprivate
+	InputControl() = default;
+	// コピーガード
+	// コピーコンストラクタの削除
+	InputControl(const InputControl&) = delete;
+	// コピー代入演算子の削除
+	InputControl& operator = (const InputControl&) = delete;
 
 public:
-	static void Update();
-
-	// ボタン入力取得処理
-	static bool GetButton(int button);		// 押し続けている間
-	static bool GetButtonDown(int button);	// 押した瞬間
-	static bool GetButtonUp(int button);	// 離した瞬間
-
-	// ボタン入力取得処理
-	static float GetLeftTrigger();			// 左トリガー
-	static float GetRightTrigger();			// 右トリガー
-
-	// スティック入力取得処理
-	static Vector2D GetLeftStick();			// 左スティック
-	static Vector2D GetRightStick();		// 右スティック
+	~InputControl() = default;
 
 public:
-	// ボタン配列範囲チェック
-	static bool CheckButtonRange(int button);
+	// インスタンスを取得
+	static InputControl* GetInstance();
+	// インスタンスの削除
+	static void DeleteInstance();
+
+public:
+	void Update();
+
+public:
+	// ボタンの入力状態を取得
+	ePadInputState GetButtonInputState(int button);
+
+	// 左スティックの値を取得
+	Vector2D GetLeftStick() const;
+	// 右スティックの値を取得
+	Vector2D GetRightStick() const;
+
+	// 左トリガーの値を取得
+	int GetLeftTrigger() const;
+	// 右トリガーの値を取得
+	int GetRightTrigger() const;
+
+	// 左スティックの傾きの割合を取得
+	Vector2D GetLeftStickTiltPercentage();
+	// 右スティックの傾きの割合を取得
+	Vector2D GetRightStickTiltPercentage();
+
+private:
+	// 入力が有効な範囲かチェック
+	bool CheckButtonRange(int button);
+
 };
+

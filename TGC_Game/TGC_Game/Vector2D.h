@@ -1,132 +1,50 @@
 #pragma once
 
-// 二次元ベクトルクラス
+// 2次元ベクトルクラス
 class Vector2D
 {
 public:
-	float x;
-	float y;
+	float x;				// x座標
+	float y;				// y座標
 
 public:
-	Vector2D() : x(0.0f), y(0.0f) {}
-	Vector2D(float scalar) : x(scalar), y(scalar) {}
-	Vector2D(float mx, float my) : x(mx), y(my) {}
+	// コンストラクタ
+	Vector2D();
+	Vector2D(float scalar);
+	Vector2D(float mx, float my);
+
+	// デストラクタ
+	~Vector2D();
 
 public:
-	Vector2D& operator = (const Vector2D& location)
-	{
-		this->x = location.x;
-		this->y = location.y;
+	// 代入
+	Vector2D& operator = (const Vector2D& location);
 
-		return *this;
-	}
+	// 加算
+	const Vector2D operator + (const Vector2D& location) const;
+	// 加算代入
+	Vector2D& operator += (const Vector2D& location);
 
-	const Vector2D operator + (const Vector2D& location)
-	{
-		float x = this->x + location.x;
-		float y = this->y + location.y;
+	// 減算
+	const Vector2D operator - (const Vector2D& location) const;
+	// 減算代入
+	Vector2D& operator -= (const Vector2D& location);
 
-		return Vector2D(x, y);
-	}
+	// 乗算
+	const Vector2D operator * (const float& scalar) const;
+	const Vector2D operator * (const Vector2D& location) const;
+	// 乗算代入
+	Vector2D& operator *= (const float& scalar);
+	Vector2D& operator *= (const Vector2D& location);
 
-	const Vector2D operator - (const Vector2D& location)
-	{
-		float x = this->x - location.x;
-		float y = this->y - location.y;
+	// 除算
+	const Vector2D operator / (const float& scalar) const;
+	const Vector2D operator / (const Vector2D& location) const;
+	// 除算代入
+	Vector2D& operator /= (const float& scalar);
+	Vector2D& operator /= (const Vector2D& location);
 
-		return Vector2D(x, y);
-	}
-
-	const Vector2D operator * (const float& scalar)
-	{
-		float x = this->x * scalar;
-		float y = this->y * scalar;
-
-		return Vector2D(x, y);
-	}
-
-	const Vector2D operator * (const Vector2D& location)
-	{
-		float x = this->x * location.x;
-		float y = this->y * location.y;
-
-		return Vector2D(x, y);
-	}
-
-	const Vector2D operator / (const float& scalar)
-	{
-		if (scalar < 1e-6f) {
-			return Vector2D(0.0f);
-		}
-		return Vector2D(this->x / scalar, this->y / scalar);
-	}
-
-	const Vector2D operator / (const Vector2D& location)
-	{
-		if (location.x < 1e-6f) {
-			return Vector2D(0.0f);
-		}
-		if (location.y < 1e-6f) {
-			return Vector2D(0.0f);
-		}
-
-		return Vector2D(this->x / location.x, this->y / location.y);
-	}
-
-	Vector2D& operator += (const Vector2D& location)
-	{
-		this->x += location.x;
-		this->y += location.y;
-
-		return *this;
-	}
-
-	Vector2D& operator -= (const Vector2D& location)
-	{
-		this->x -= location.x;
-		this->y -= location.y;
-
-		return *this;
-	}
-
-	Vector2D& operator *= (const Vector2D& location)
-	{
-		this->x *= location.x;
-		this->y *= location.y;
-
-		return *this;
-	}
-
-	Vector2D& operator /= (const float& scalar)
-	{
-		if (scalar < 1e-6f) {
-			this->x = 0.0f;
-			this->y = 0.0f;
-		}
-		else
-		{
-			this->x /= scalar;
-			this->y /= scalar;
-		}
-
-		return *this;
-	}
-
-	Vector2D& operator /= (const Vector2D& location)
-	{
-		if (location.x < 1e-6f) {
-			this->x = 0.0f;
-			this->y = 0.0f;
-		}
-		else if (location.y < 1e-6f) {
-			this->x = 0.0f;
-			this->y = 0.0f;
-		}
-		else {
-			this->x /= location.x;
-			this->y /= location.y;
-		}
-
-		return *this;
-	}
+public:
+	// int型に変換
+	void ToInt(int* x, int* y);
 };
