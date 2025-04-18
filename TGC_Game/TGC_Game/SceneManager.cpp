@@ -65,12 +65,12 @@ bool SceneManager::LoopCheck() const
 // シーン切り替え処理
 void SceneManager::ChangeScene(eSceneType new_scene_type)
 {
-	/*if (new_scene_type == eSceneType::eEnd)
+	if (new_scene_type == eSceneType::eEnd)
 	{
 		// ゲームループを終了させる
 		loop_flag = false;
 		return;
-	}*/
+	}
 
 	// シーンの生成で返ってきたポインタをnew_sceneに代入
 	SceneBase* new_scene = CreateScene(new_scene_type);
@@ -103,18 +103,18 @@ SceneBase* SceneManager::CreateScene(eSceneType new_scene_type)
 	// 生成したSceneのポインタを返す
 	switch (new_scene_type)
 	{
-	/*case eSceneType::eTitle:
+	case eSceneType::eTitle:
 		return dynamic_cast<SceneBase*>(new TitleScene());
 	case eSceneType::eInGame:
 		return dynamic_cast<SceneBase*>(new InGameScene());
-	case eSceneType::eTutorial:
+	/*case eSceneType::eTutorial:
 		return dynamic_cast<SceneBase*>(new TutorialScene());*/
 	case eSceneType::eRanking:
 		return dynamic_cast<SceneBase*>(new RankingScene());
 	case eSceneType::eResult:
 		return dynamic_cast<SceneBase*>(new ResultScene());
-	/*case eSceneType::eEnd:
-		return dynamic_cast<SceneBase*>(new EndScene());*/
+	case eSceneType::eEnd:
+		/*/return dynamic_cast<SceneBase*>(new EndScene()); */
 	default:
 		return nullptr;
 	}
