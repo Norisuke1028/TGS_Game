@@ -135,6 +135,7 @@
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="InputControl.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
@@ -142,9 +143,11 @@
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="InputControl.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResultScene.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

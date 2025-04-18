@@ -6,6 +6,8 @@
 // タイトルシーン
 class TitleScene : public SceneBase
 {
+private:
+	int background_image;	// 背景画像
 public:
 	TitleScene();
 	virtual ~TitleScene();
