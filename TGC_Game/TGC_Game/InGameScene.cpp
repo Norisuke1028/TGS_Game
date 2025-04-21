@@ -2,7 +2,8 @@
 #include "InputControl.h"
 #include "DxLib.h"
 
-InGameScene::InGameScene()
+InGameScene::InGameScene() :
+	guzai_image()
 {
 	ingame_cursol = 0;
 	counter_time = 0;
@@ -16,6 +17,7 @@ InGameScene::~InGameScene()
 
 void InGameScene::Initialize()
 {
+	guzai_image = LoadGraph("Resource/image/guzai.png");
 }
 
 eSceneType InGameScene::Update()
@@ -56,7 +58,9 @@ void InGameScene::Draw() const
 
 	DrawString(50,50,"InGameScene‚Å‚·",GetColor(255,255,255));
 	DrawFormatString(1200, 20, 0xffffff, "%d", counter_time/100);
-	DrawBox(200 + (ingame_cursol * 100), 500, 300 + (ingame_cursol * 100), 600, 0xffffff, true);
+	DrawBox(0, 0, 1280, 720, 0xffff00, true);
+	DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
+	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
 }
 
 void InGameScene::Finalize()

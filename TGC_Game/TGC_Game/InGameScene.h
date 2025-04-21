@@ -11,6 +11,9 @@ private:
 	int counter_time;  //ŠÔ§ŒÀ
 
 private:
+	int guzai_image;  //‹ïŞ‚Ì‰æ‘œ
+
+private:
 	eSceneType next_scene;
 
 public:
