@@ -5,7 +5,7 @@
 #include "InGameScene.h"
 #include "RankingScene.h"
 #include "ResultScene.h"
-//#include "End/EndScene.h"
+#include "EndScene.h"
 
 SceneManager::SceneManager()
 	: current_scene(nullptr)
@@ -65,12 +65,12 @@ bool SceneManager::LoopCheck() const
 // シーン切り替え処理
 void SceneManager::ChangeScene(eSceneType new_scene_type)
 {
-	if (new_scene_type == eSceneType::eEnd)
+	/*if (new_scene_type == eSceneType::eEnd)
 	{
 		// ゲームループを終了させる
 		loop_flag = false;
 		return;
-	}
+	}*/
 
 	// シーンの生成で返ってきたポインタをnew_sceneに代入
 	SceneBase* new_scene = CreateScene(new_scene_type);
@@ -114,7 +114,7 @@ SceneBase* SceneManager::CreateScene(eSceneType new_scene_type)
 	case eSceneType::eResult:
 		return dynamic_cast<SceneBase*>(new ResultScene());
 	case eSceneType::eEnd:
-		/*/return dynamic_cast<SceneBase*>(new EndScene()); */
+		return dynamic_cast<SceneBase*>(new EndScene()); 
 	default:
 		return nullptr;
 	}
