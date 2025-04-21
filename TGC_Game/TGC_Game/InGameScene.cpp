@@ -55,11 +55,15 @@ eSceneType InGameScene::Update()
 //描画処理
 void InGameScene::Draw() const
 {
-
+	//インゲームテキスト
 	DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
+	//時間制限
 	DrawFormatString(1200, 20, 0xffffff, "%d", counter_time/100);
+	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
+	//具材選択カーソル描画
 	DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
+	//具材画像の描画
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
 }
 
