@@ -10,6 +10,7 @@ RankingScene::RankingScene()
 	, text_image()
 	, num_image()
 	, certificate_image()
+	, ranking_next_scene()
 {
 
 }
@@ -21,34 +22,34 @@ RankingScene::~RankingScene()
 
 void RankingScene::Initialize()
 {
-	// ボタン押されたときのSE読み込み
-	a_button_push = LoadSoundMem("Resource/Sounds/SE/cursol_push_se.mp3");
+	/*/ ボタン押されたときのSE読み込み
+	a_button_push = LoadSoundMem("Resource/sounds/SE/");
 	// メインbgm
-	ranking_main_bgm = LoadSoundMem("Resource/Sounds/BGM/main_sound1.mp3");
+	ranking_main_bgm = LoadSoundMem("Resource/sounds/BGM/");
 	// リソース管理のインスタンスを取得
 	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 
 	// 背景画像読み込み
-	background_image = LoadGraph("Resource/Images/Scene/Tutorial/Background.png");
+	background_image = LoadGraph("Resource/images/");
 	// テキスト画像の読み込み
-	text_image = rm->GetImages("Resource/Images/Scene/Ranking/Text/Ranking.png");
-	tmp = rm->GetImages("Resource/Images/Scene/Ranking/Text/Back1.png");
+	text_image = rm->GetImages("Resource/images/");
+	tmp = rm->GetImages("Resource/images/");
 	text_image.push_back(tmp[0]);
 
-	certificate_image = rm->GetImages("Resource/Images/Scene/Ranking/Certificate.png");
+	certificate_image = rm->GetImages("Resource/images/");
 
 	// 数字画像（0?9）の読み込み
-	num_image = rm->GetImages("Resource/Images/Scene/InGame/Text/Num.png");
+	num_image = rm->GetImages("Resource/images/");
 
 	// 順位画像の読み込み
-	ranking_text_image = LoadGraph("Resource/Images/Scene/Ranking/Text/number_ranking.png");
+	ranking_text_image = LoadGraph("Resource/images/");
 	// レベル数画像の読み込み
-	level_text_image = LoadGraph("Resource/Images/Scene/Ranking/Text/level.png");
+	level_text_image = LoadGraph("Resource/images/");
 	// スコア画像の読み込み
-	score_text_image = LoadGraph("Resource/Images/Scene/Ranking/Text/score.png");
+	score_text_image = LoadGraph("Resource/images/");
 	// ミス数画像の読み込み
-	miss_text_image = LoadGraph("Resource/Images/Scene/Ranking/Text/miss.png");
+	miss_text_image = LoadGraph("Resource/images/");*/
 
 	// フェードをインスタンス化
 	fade = new Fade();
@@ -106,9 +107,10 @@ eSceneType RankingScene::Update()
 
 void RankingScene::Draw() const
 {
-	DrawString(10, 10, "Ranking", GetColor(255, 255, 255));
-	DrawString(10, 26, "Z : Title", GetColor(255, 255, 255));
-
+	// ランキングテキストの表示（座標: x=50, y=50、色: 白）
+	DrawString(50, 50, "ランキング画面です", GetColor(255, 255, 255));
+	DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
+	/*
 	DrawGraph(0, 0, background_image, TRUE);
 
 	DrawRotaGraphF(640.0f, 390.0f, 1.0, 0.0, certificate_image[0], TRUE);
@@ -128,7 +130,7 @@ void RankingScene::Draw() const
 	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, score_text_image, TRUE);
 
 	// ミス数
-	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);
+	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);*/
 
 	// ハイスコアを描画
 	DisplayHighScores();
