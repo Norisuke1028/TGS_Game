@@ -1,7 +1,7 @@
 #include "SceneManager.h"
 
 #include "TitleScene.h"
-//#include "TutorialScene.h"
+#include "TutorialScene.h"
 #include "InGameScene.h"
 #include "RankingScene.h"
 #include "ResultScene.h"
@@ -23,7 +23,7 @@ SceneManager::~SceneManager()
 void SceneManager::Initialize()
 {
 	// SceneManagerが生成されたときのScene（ゲーム開始時のScene）
-	ChangeScene(eSceneType::eInGame);
+	ChangeScene(eSceneType::eTitle);
 }
 
 void SceneManager::Update()
@@ -107,8 +107,8 @@ SceneBase* SceneManager::CreateScene(eSceneType new_scene_type)
 		return dynamic_cast<SceneBase*>(new TitleScene());
 	case eSceneType::eInGame:
 		return dynamic_cast<SceneBase*>(new InGameScene());
-	/*case eSceneType::eTutorial:
-		return dynamic_cast<SceneBase*>(new TutorialScene());*/
+	case eSceneType::eTutorial:
+		return dynamic_cast<SceneBase*>(new TutorialScene());
 	case eSceneType::eRanking:
 		return dynamic_cast<SceneBase*>(new RankingScene());
 	case eSceneType::eResult:
