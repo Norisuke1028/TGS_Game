@@ -23,8 +23,8 @@ void TitleScene::Initialize()
 	next_scene = eSceneType::eTitle;
 	
 	// 画像の読み込み
-	background_image = LoadGraph("Resource/images/");   // 背景画像
-	menu_image = LoadGraph("Resource/images/");         // メニュー画像
+	background_image = LoadGraph("Resource/image/burgertitle.png");   // 背景画像
+	menu_image = LoadGraph("Resource/image/menu.png");         // メニュー画像
 	cursor_image = LoadGraph("Resource/images/");		// カーソル画像
 
 	// 音源の読み込み
@@ -52,7 +52,7 @@ eSceneType TitleScene::Update()
 
 		if (menu_cursor < 0)
 		{
-			menu_cursor = 2;
+			menu_cursor = 3;
 		}
 	}
 	// 十字キー操作(下)
@@ -61,9 +61,19 @@ eSceneType TitleScene::Update()
 		menu_cursor++;
 		PlaySoundMem(cursol_move_se, DX_PLAYTYPE_BACK);
 
-		if (menu_cursor > 2)
+		if (menu_cursor > 3)
 		{
 			menu_cursor = 0;
+		}
+	}
+
+	// カーソル決定
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress)
+	{
+		switch (menu_cursor)
+		{
+		case 0:
+			return eSceneType::eInGame;
 		}
 	}
 
@@ -118,9 +128,6 @@ void TitleScene::Draw() const
 
 	// カーソル画像の描画
 	DrawRotaGraph(185, 340 + menu_cursor * 32, 1.6, DX_PI / 200.0, cursor_image, TRUE);
-
-	// タイトルテキストの表示（座標: x=50, y=50、色: 白）
-	DrawString(50, 50, "タイトル画面です", GetColor(255, 255, 255));
 
 	// フェード描画
 	fade->Draw();
