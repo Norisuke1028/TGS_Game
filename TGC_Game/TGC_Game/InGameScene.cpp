@@ -4,11 +4,14 @@
 
 InGameScene::InGameScene() :
 	guzai_image()
+	,guzai_select()
+	,next()
+
 {
 	ingame_cursol = 0;
 	counter_time = 0;
 	next_scene = eSceneType::eInGame;
-
+	next == 0;
 }
 
 InGameScene::~InGameScene()
@@ -29,25 +32,26 @@ eSceneType InGameScene::Update()
 		counter_time++;
 	}
 
-	// パッド入力制御のインスタンスを取得
-	InputControl* pad_input = InputControl::GetInstance();
-	if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
-	{
-		ingame_cursol--;
-		if (ingame_cursol < 0)
-		{
-			ingame_cursol = 4;
-		}
-	}
+	
+		// パッド入力制御のインスタンスを取得
+		InputControl* pad_input = InputControl::GetInstance();
 
-	if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
-	{
-		ingame_cursol++;
-		if (ingame_cursol >4)
-		{
-			ingame_cursol = 0;
-		}
-	}
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
+			{
+				ingame_cursol--;
+				if (ingame_cursol < 0)
+				{
+					ingame_cursol = 4;
+				}
+			}
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
+			{
+				ingame_cursol++;
+				if (ingame_cursol > 4)
+				{
+					ingame_cursol = 0;
+				}
+			}
 		select_guzai();
 
 	// 親クラスの更新処理を呼び出す
@@ -65,7 +69,11 @@ void InGameScene::Draw() const
 	//DrawFormatString(1200, 20, 0xffffff, "%d", counter_time / 100);
 	//具材選択
 	DrawFormatString(600, 20, 0xffffff, "%d", ingame_cursol);
-	//DrawFormatString(600, 40, 0xffffff, "%d", guzai_select);
+	DrawFormatString(600, 40, 0xffffff, "%d", guzai_select[0]);
+	DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);
+	DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);
+	DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);
+
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
 	DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
@@ -84,13 +92,39 @@ int InGameScene::select_guzai()
 	// パッド入力制御のインスタンスを取得
 	InputControl* pad_input = InputControl::GetInstance();
 	//具材を4回選ぶ
-	for (int i = 0; i < 3;i++)
+	switch (next)
 	{
-		if (ingame_cursol <4 && (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::eRelease))
+		case(0):
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
-			//選択した具材を配列に格納する
+			//guzai_select1 = ingame_cursol;
+			guzai_select[0] = ingame_cursol;
+			next += 1;
 		}
+		break;
+		case(1):
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			guzai_select[1] = ingame_cursol;
+			next += 1;
+		}
+		break;
+		case(2):
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			guzai_select[2] = ingame_cursol;
+			next += 1;
+		}
+		break;
+		case(3):
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			guzai_select[3] = ingame_cursol;
+				next += 1;
+		}
+		break;
 	}
+
 	return 0;
 }
 
