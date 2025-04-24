@@ -30,7 +30,7 @@ void InGameScene::Initialize()
 {
 	guzai_image = LoadGraph("Resource/image/guzai.png");
 	select_image = LoadGraph("Resource/image/kettei.png");
-	select_burger = LoadGraph("Resource/image/buns01.png");
+	select_burger = LoadGraph("Resource/image/buns02.png");
 }
 
 eSceneType InGameScene::Update()
@@ -91,15 +91,15 @@ void InGameScene::Draw() const
 	DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
 	//ãÔçﬁëIëï`âÊ
-	DrawBox(100, 150, 300, 180, 0xffffff, false);
-	DrawBox(100, 190, 300, 220, 0xffffff, false);
-	DrawBox(100, 230, 300, 260, 0xffffff, false);
-	DrawBox(100, 270, 300, 300, 0xffffff, false);
+	DrawBox(110, 150, 290, 180, 0xffffff, false);
+	DrawBox(110, 190, 290, 220, 0xffffff, false);
+	DrawBox(110, 230, 290, 260, 0xffffff, false);
+	DrawBox(110, 270, 290, 300, 0xffffff, false);
 
 	//ãÔçﬁâÊëúÇÃï`âÊ
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);
-	DrawRotaGraph(200, 200, 1.0, 0, select_burger, true);
+	DrawRotaGraph(180, 220, 1.0, 0, select_burger, true);
 }
 
 void InGameScene::Finalize()
