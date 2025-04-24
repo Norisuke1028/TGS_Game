@@ -39,6 +39,12 @@ eSceneType InGameScene::Update()
 	if (counter_time <= 3000)
 	{
 		counter_time++;
+		if (counter_time >= 3000)
+		{
+			//30秒経つとリザルト画面へ遷移する
+			//return eSceneType::eResult;
+		}
+
 	}
 
 	
@@ -65,6 +71,7 @@ eSceneType InGameScene::Update()
 
 	// 親クラスの更新処理を呼び出す
 	return GetNowSceneType();
+
 }
 
 //描画処理
@@ -104,6 +111,9 @@ void InGameScene::Draw() const
 
 void InGameScene::Finalize()
 {
+	DeleteGraph(background_image);
+	DeleteGraph(guzai_image);
+	DeleteGraph(select_image);
 }
 
 //具材選択処理
@@ -164,7 +174,7 @@ int InGameScene::select_guzai()
 			next += 1;
 			break;
 		case(6):
-			next = 0;
+				next = 0;
 			break;
 	}
 
