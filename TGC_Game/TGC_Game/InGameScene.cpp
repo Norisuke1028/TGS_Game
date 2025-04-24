@@ -90,7 +90,7 @@ void InGameScene::Draw() const
 	DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 	//具材画像の描画
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
-	DrawRotaGraph(1100, 600, 0.8, 0, select_image, true);
+	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);
 }
 
 void InGameScene::Finalize()
@@ -137,6 +137,7 @@ int InGameScene::select_guzai()
 		case(4):
 		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
+			//全て正解だったらスコアを1にする
 			check_guzai();
 			if (check_count == 4)
 			{
