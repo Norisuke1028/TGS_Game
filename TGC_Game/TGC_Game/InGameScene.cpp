@@ -99,7 +99,7 @@ void InGameScene::Draw() const
 	//‹ïŞ‰æ‘œ‚Ì•`‰æ
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);
-	DrawRotaGraph(100, 130, 1, 0, select_burger, false);
+	DrawRotaGraph(200, 200, 1.0, 0, select_burger, true);
 }
 
 void InGameScene::Finalize()
