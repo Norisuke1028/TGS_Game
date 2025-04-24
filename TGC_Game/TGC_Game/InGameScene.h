@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SceneBase.h"
+#include <vector>
 
 
 // インゲームシーン
@@ -9,7 +10,12 @@ class InGameScene : public SceneBase
 private:
 	int ingame_cursol;  //具材選択カーソル
 	int counter_time;  //時間制限
-	int guzai_select[4];
+	int guzai_select[4] = {0};  //選んだ具材の番号を格納
+	int next;  //具材を選ぶと次の選択へ
+	int check_count;  //チェックカウント
+
+private:
+	int burger[4];  //ハンバーガー1
 
 private:
 	int guzai_image;  //具材の画像
@@ -31,5 +37,8 @@ public:
 
 	//具材選択処理
 	int select_guzai();
+
+	//具材チェック判定処理
+	int check_guzai();
 };
 
