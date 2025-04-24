@@ -4,6 +4,7 @@
 
 InGameScene::InGameScene() :
 	guzai_image()
+	,select_image()
 	,guzai_select()
 	,burger()
 	,next()
@@ -28,6 +29,7 @@ InGameScene::~InGameScene()
 void InGameScene::Initialize()
 {
 	guzai_image = LoadGraph("Resource/image/guzai.png");
+	select_image = LoadGraph("Resource/image/kettei.png");
 }
 
 eSceneType InGameScene::Update()
@@ -88,6 +90,7 @@ void InGameScene::Draw() const
 	DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 	//ãÔçﬁâÊëúÇÃï`âÊ
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
+	DrawRotaGraph(1100, 600, 0.8, 0, select_image, true);
 }
 
 void InGameScene::Finalize()
