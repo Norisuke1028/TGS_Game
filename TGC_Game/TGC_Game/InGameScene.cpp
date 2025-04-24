@@ -30,6 +30,7 @@ void InGameScene::Initialize()
 {
 	guzai_image = LoadGraph("Resource/image/guzai.png");
 	select_image = LoadGraph("Resource/image/kettei.png");
+	select_burger = LoadGraph("Resource/image/buns01.png");
 }
 
 eSceneType InGameScene::Update()
@@ -98,6 +99,7 @@ void InGameScene::Draw() const
 	//ãÔçﬁâÊëúÇÃï`âÊ
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);
+	DrawRotaGraph(100, 130, 1, 0, select_burger, false);
 }
 
 void InGameScene::Finalize()
