@@ -5,11 +5,15 @@
 InGameScene::InGameScene() :
 	guzai_image()
 	,guzai_select()
+	,burger()
 	,next()
+	,check_count()
 
 {
 	ingame_cursol = 0;
 	counter_time = 0;
+	check_count = 0;
+	int burger[4] = { 0,1,2,3 };
 	next_scene = eSceneType::eInGame;
 	next == 0;
 }
@@ -73,6 +77,7 @@ void InGameScene::Draw() const
 	DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);
 	DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);
 	DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);
+	DrawFormatString(600, 120, 0xffffff, "%d", check_count);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -123,9 +128,30 @@ int InGameScene::select_guzai()
 				next += 1;
 		}
 		break;
+		case(4):
+		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			check_guzai();
+		}
 	}
 
 	return 0;
+}
+
+//具材チェック処理
+int InGameScene::check_guzai()
+{
+	int burger[4] = { 0,1,2,3 };
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (burger[i] == guzai_select[i])
+		{
+			check_count++;
+
+		}
+	}
+	return check_count;
 }
 
 eSceneType InGameScene::GetNowSceneType() const
