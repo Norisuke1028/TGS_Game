@@ -21,6 +21,7 @@ private:
 private:
 	int guzai_image;  //‹ïŞ‚Ì‰æ‘œ
 	int select_image;
+	int select_burger;
 
 private:
 	eSceneType next_scene;
