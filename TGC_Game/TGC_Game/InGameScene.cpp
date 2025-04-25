@@ -7,14 +7,13 @@ InGameScene::InGameScene() :
 	guzai_image()
 	,select_image()
 	,guzai_select()
-	,burger_A()
-	,burger_B()
 	,next()
 	,correct()
 	,sales()
 	,check_count()
 	,r_burger()
 	,random()
+	,select_burger()
 {
 	ingame_cursol = 0;
 	counter_time = 0;
@@ -94,7 +93,7 @@ void InGameScene::Draw() const
 	DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);  
 	DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);  
 	DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);  
-	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
+	DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
 	DrawFormatString(600, 140, 0xffffff, "%d", correct);
 	DrawFormatString(600, 160, 0xffffff, "%d", random);
 
@@ -193,12 +192,19 @@ int InGameScene::select_guzai()
 //指定されるハンバーガーをランダムに出力
 int InGameScene::rand_burger()
 {
+	//ハンバーガーのパターン
+	const int p_burger[4][4] = {
+		{0,1,2,3},
+		{1,2,3,0},
+		{2,3,0,1},
+		{3,0,1,2}
+	};
 	//ランダムに数字を出力
-	random = 0 + rand() % 3;
+	random = 0 + rand() % 4;
 	//出力された数字によってハンバーガーを出力する
-	if (random == 0)
+	for (int j = 0; j < 4; ++j)
 	{
-
+		r_burger[j] = p_burger[random][j];
 	}
 
 	return 0;
@@ -207,13 +213,9 @@ int InGameScene::rand_burger()
 //具材チェック処理
 int InGameScene::check_guzai()
 {
-	//int burger[4] = { 0,1,2,3 };
-	//burger_A[4];
-
-
 	for (int i = 0; i < 4; i++)
 	{
-		if (burger_A[i] == guzai_select[i])
+		if (r_burger[i] == guzai_select[i])
 		{
 			check_count++;
 		}

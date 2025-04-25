@@ -18,10 +18,10 @@ private:
 	int sales;  //売上
 
 private:
-	const int r_burger[2];  //ハンバーガーをランダムに出力
+	int r_burger[4];  //ハンバーガーをランダムに出力
 	int random;
-	const int burger_A[4];  //ハンバーガー1
-	int burger_B[4];
+	//const int burger_A[4];  //ハンバーガー1
+	//int burger_B[4];
 
 private:
 	int guzai_image;  //具材の画像
