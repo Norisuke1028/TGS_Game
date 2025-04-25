@@ -81,21 +81,35 @@ eSceneType InGameScene::Update()
 //描画処理
 void InGameScene::Draw() const
 {
+	const char* guzai_name[] = {
+		"トマト",
+		"チーズ",
+		"レタス",
+		"パティ"
+	};
+
 	//インゲームテキスト
 	DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
 	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
-	//DrawFormatString(1200, 20, 0xffffff, "%d", counter_time / 100);
-	//具材選択
-	//DrawFormatString(600, 20, 0xffffff, "%d", ingame_cursol);  //選択ナンバー
-	DrawFormatString(600, 40, 0xffffff, "%d", guzai_select[0]);  
-	DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);  
-	DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);  
-	DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);  
-	DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
-	DrawFormatString(600, 140, 0xffffff, "%d", correct);
-	DrawFormatString(600, 160, 0xffffff, "%d", random);
+	DrawFormatString(1200, 20, 0x000000, "%d", counter_time / 100);
+	
+	//選択した具材
+	DrawFormatString(600, 40, 0x000000, "%s", guzai_name[guzai_select[0]]);
+	DrawFormatString(600, 60, 0x000000, "%s", guzai_name[guzai_select[1]]);
+	DrawFormatString(600, 80, 0x000000, "%s", guzai_name[guzai_select[2]]);
+	DrawFormatString(600, 100, 0x000000, "%s", guzai_name[guzai_select[3]]); 
+
+	//指定されるハンバーガー
+	DrawFormatString(300, 40, 0x000000, "%s", guzai_name[r_burger[0]]);
+	DrawFormatString(300, 60, 0x000000, "%s", guzai_name[r_burger[1]]);
+	DrawFormatString(300, 80, 0x000000, "%s", guzai_name[r_burger[2]]);
+	DrawFormatString(300, 100, 0x000000, "%s", guzai_name[r_burger[3]]);
+
+	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
+	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
+	//DrawFormatString(600, 160, 0xffffff, "%d", random);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -220,8 +234,6 @@ int InGameScene::check_guzai()
 			check_count++;
 		}
 	}
-
-
 	return check_count;
 }
 
