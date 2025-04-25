@@ -1,24 +1,28 @@
 #include "InGameScene.h"
 #include "InputControl.h"
+#include "ResourceManager.h"
 #include "DxLib.h"
 
 InGameScene::InGameScene() :
 	guzai_image()
 	,select_image()
 	,guzai_select()
-	,burger()
+	,burger_A()
+	,burger_B()
 	,next()
-	,result()
+	,correct()
+	,sales()
 	,check_count()
-
+	,r_burger()
+	,random()
 {
 	ingame_cursol = 0;
 	counter_time = 0;
 	check_count = 0;
-	int burger[4] = { 0,1,2,3 };
 	next_scene = eSceneType::eInGame;
-	next == 0;
-	result = 0;
+	next = 0;
+	correct = 0;
+	sales = 0;
 }
 
 InGameScene::~InGameScene()
@@ -28,6 +32,8 @@ InGameScene::~InGameScene()
 
 void InGameScene::Initialize()
 {
+	ResourceManager* rm = ResourceManager::GetInstance();
+
 	guzai_image = LoadGraph("Resource/image/guzai.png");
 	select_image = LoadGraph("Resource/image/kettei.png");
 	select_burger = LoadGraph("Resource/image/buns02.png");
@@ -47,7 +53,6 @@ eSceneType InGameScene::Update()
 
 	}
 
-	
 		// パッド入力制御のインスタンスを取得
 		InputControl* pad_input = InputControl::GetInstance();
 
@@ -84,13 +89,14 @@ void InGameScene::Draw() const
 	//時間制限
 	//DrawFormatString(1200, 20, 0xffffff, "%d", counter_time / 100);
 	//具材選択
-	//DrawFormatString(600, 20, 0xffffff, "%d", ingame_cursol);
-	DrawFormatString(600, 40, 0xffffff, "%d", guzai_select[0]);
-	DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);
-	DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);
-	DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);
-	DrawFormatString(600, 120, 0xffffff, "%d", check_count);
-	DrawFormatString(600, 140, 0xffffff, "%d", result);
+	//DrawFormatString(600, 20, 0xffffff, "%d", ingame_cursol);  //選択ナンバー
+	//DrawFormatString(600, 40, 0xffffff, "%d", guzai_select[0]);  
+	//DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);  
+	//DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);  
+	//DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);  
+	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
+	DrawFormatString(600, 140, 0xffffff, "%d", correct);
+	DrawFormatString(600, 160, 0xffffff, "%d", random);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -125,35 +131,38 @@ int InGameScene::select_guzai()
 	switch (next)
 	{
 		case(0):
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			//guzai_select1 = ingame_cursol;
-			guzai_select[0] = ingame_cursol;
+			rand_burger();
 			next += 1;
-		}
-		break;
 		case(1):
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
-			guzai_select[1] = ingame_cursol;
+			guzai_select[0] = ingame_cursol;
+			DrawRotaGraph(180, 220, 1.0, 0, select_burger, true);
 			next += 1;
 		}
 		break;
 		case(2):
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
-			guzai_select[2] = ingame_cursol;
+			guzai_select[1] = ingame_cursol;
 			next += 1;
 		}
 		break;
 		case(3):
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
+			guzai_select[2] = ingame_cursol;
+			next += 1;
+		}
+		break;
+		case(4):
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
 			guzai_select[3] = ingame_cursol;
 				next += 1;
 		}
 		break;
-		case(4):
+		case(5):
 		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			//全て正解だったらスコアを1にする
@@ -168,15 +177,25 @@ int InGameScene::select_guzai()
 			}
 		}
 		break;
-		case(5):
-			result++;
+		case(6):
+			correct++;
 			check_count = 0;
 			next += 1;
 			break;
-		case(6):
+		case(7):
 				next = 0;
 			break;
 	}
+
+	return 0;
+}
+
+//指定されるハンバーガーをランダムに出力
+int InGameScene::rand_burger()
+{
+	//ランダムに数字を出力
+	random = 0 + rand() % 3;
+	r_burger[random];
 
 	return 0;
 }

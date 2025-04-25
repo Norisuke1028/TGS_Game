@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SceneBase.h"
+//#include "Vector2D.h"
 #include <vector>
 
 
@@ -13,15 +14,21 @@ private:
 	int guzai_select[4] = {0};  //選んだ具材の番号を格納
 	int next;  //具材を選ぶと次の選択へ
 	int check_count;  //チェックカウント
-	int result;  //正解数
+	int correct;  //正解数
+	int sales;  //売上
 
 private:
-	int burger[4];  //ハンバーガー1
+	const int r_burger[2];  //ハンバーガーをランダムに出力
+	int random;
+	int burger_A[4];  //ハンバーガー1
+	int burger_B[4];
 
 private:
 	int guzai_image;  //具材の画像
 	int select_image;
 	int select_burger;
+	//int select_guzai[4];
+	int select_guzai_image;
 
 private:
 	eSceneType next_scene;
@@ -40,6 +47,9 @@ public:
 
 	//具材選択処理
 	int select_guzai();
+
+	//指定されるハンバーガーをランダム出力
+	int rand_burger();
 
 	//具材チェック判定処理
 	int check_guzai();
