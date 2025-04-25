@@ -90,10 +90,10 @@ void InGameScene::Draw() const
 	//DrawFormatString(1200, 20, 0xffffff, "%d", counter_time / 100);
 	//具材選択
 	//DrawFormatString(600, 20, 0xffffff, "%d", ingame_cursol);  //選択ナンバー
-	//DrawFormatString(600, 40, 0xffffff, "%d", guzai_select[0]);  
-	//DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);  
-	//DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);  
-	//DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);  
+	DrawFormatString(600, 40, 0xffffff, "%d", guzai_select[0]);  
+	DrawFormatString(600, 60, 0xffffff, "%d", guzai_select[1]);  
+	DrawFormatString(600, 80, 0xffffff, "%d", guzai_select[2]);  
+	DrawFormatString(600, 100, 0xffffff, "%d", guzai_select[3]);  
 	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
 	DrawFormatString(600, 140, 0xffffff, "%d", correct);
 	DrawFormatString(600, 160, 0xffffff, "%d", random);
@@ -195,7 +195,11 @@ int InGameScene::rand_burger()
 {
 	//ランダムに数字を出力
 	random = 0 + rand() % 3;
-	r_burger[random];
+	//出力された数字によってハンバーガーを出力する
+	if (random == 0)
+	{
+
+	}
 
 	return 0;
 }
@@ -203,14 +207,13 @@ int InGameScene::rand_burger()
 //具材チェック処理
 int InGameScene::check_guzai()
 {
-	int burger[4] = { 0,1,2,3 };
-
-	//int burger[3] = { 0,1,2 };
+	//int burger[4] = { 0,1,2,3 };
+	//burger_A[4];
 
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (burger[i] == guzai_select[i])
+		if (burger_A[i] == guzai_select[i])
 		{
 			check_count++;
 		}

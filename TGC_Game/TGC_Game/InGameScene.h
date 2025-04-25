@@ -20,7 +20,7 @@ private:
 private:
 	const int r_burger[2];  //ハンバーガーをランダムに出力
 	int random;
-	int burger_A[4];  //ハンバーガー1
+	const int burger_A[4];  //ハンバーガー1
 	int burger_B[4];
 
 private:
