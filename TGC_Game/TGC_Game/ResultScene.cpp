@@ -10,14 +10,14 @@
 
 void ResultScene::Initialize()
 {
-    /*/ カーソル画像
-    cursor_image = LoadGraph("Resource/image/");
+    // カーソル画像
+    //cursor_image = LoadGraph("Resource/image/");
 
-    result_title_image = LoadGraph("Resource/image/");
-    result_player_title = LoadGraph("Resource/image/");
-    result_score_history = LoadGraph("Resource/image/");
+    result_title_image = LoadGraph("Resource/image/result_title.png");
+    result_player_title = LoadGraph("Resource/image/your_score.png");
+    result_score_history = LoadGraph("Resource/image/highscore_text.png");
 
-    cursor_se_move = LoadSoundMem("Resource/sounds/");
+   /* cursor_se_move = LoadSoundMem("Resource/sounds/");
     cursor_se_push = LoadSoundMem("Resource/sounds/");*/
 
     // コントローラーの入力インスタンス取得
@@ -26,10 +26,10 @@ void ResultScene::Initialize()
     // リソース管理のインスタンスを取得
     ResourceManager* rm = ResourceManager::GetInstance();
 
-    /*/ 背景画像
-    background_image = LoadGraph("Resource/image/");
+    // 背景画像
+    background_image = LoadGraph("Resource/image/burgertitle.png");
 
-    // リザルトメインbgm読み込み
+    /*/ リザルトメインbgm読み込み
     result_bgm = LoadSoundMem("Resource/sounds/");
 
     // ハイスコアデータを取得
@@ -130,21 +130,20 @@ eSceneType ResultScene::Update()
 void ResultScene::Draw() const
 {
 
-   // DrawGraph(0, 0, background_image, TRUE);
+   //DrawGraph(0, 0, background_image, TRUE);
    
    // リザルトテキストの表示（座標: x=50, y=50、色: 白）
     DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
     DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
 
-    /*/ リザルトシーン画像 (1280, 720 \ 460, 90)
-    DrawExtendGraph(410, 20, 870, 110, result_title_image, TRUE);
+    // リザルトタイトル画像 (1280, 720 \ 460, 90)
+    DrawExtendGraph(410, 20, 870, 130, result_title_image, TRUE);
+    // 自身のスコア画像描画
+    DrawExtendGraph(100, 130, 444, 211, result_player_title, TRUE);
+    // ハイスコア画像描画
+    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
 
-    // あなたのスコア画像描画
-    DrawExtendGraph(100, 130, 444, 181, result_player_title, TRUE);
-    // ハイスコア歴画像描画
-    DrawExtendGraph(100, 300, 381, 348, result_score_history, TRUE);
-
-    // 今回のスコアとレベルを描画
+    /*/ 今回のスコアとレベルを描画
     DisplayCurrentRunScores();
     DrawFormatString(10, 58, GetColor(255, 255, 255), "Level: %d", LevelReached);
     DrawFormatString(10, 74, GetColor(255, 255, 255), "Score: %d", FinalScore);
