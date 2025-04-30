@@ -6,7 +6,6 @@
 InGameScene::InGameScene() :
 	guzai_image()
 	,select_image()
-	,guzai_select()
 	,next()
 	,correct()
 	,sales()
@@ -91,18 +90,13 @@ void InGameScene::Draw() const
 	};
 
 	//インゲームテキスト
-	DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
+	//DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
 	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
 	DrawFormatString(1200, 20, 0x000000, "%d", counter_time / 100);
 	
-	//選択した具材
-	DrawFormatString(600, 40, 0x000000, "%s", guzai_name[guzai_select[0]]);
-	DrawFormatString(600, 60, 0x000000, "%s", guzai_name[guzai_select[1]]);
-	DrawFormatString(600, 80, 0x000000, "%s", guzai_name[guzai_select[2]]);
-	DrawFormatString(600, 100, 0x000000, "%s", guzai_name[guzai_select[3]]); 
-
+	//選択した具材(画像表示)
 	DrawRotaGraph(200,275,1.3,0, select_burger_image[guzai_select[0]],true);
 	DrawRotaGraph(200, 235, 1.3, 0, select_burger_image[guzai_select[1]], true);
 	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[2]], true);
@@ -151,6 +145,10 @@ int InGameScene::select_guzai()
 	switch (next)
 	{
 		case(0):
+			//初期化処理
+			for (int i = 0; i < 4; ++i) {
+				guzai_select[i] = -1;
+			}
 			rand_burger();
 			next += 1;
 		case(1):

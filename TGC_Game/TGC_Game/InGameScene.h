@@ -11,7 +11,7 @@ class InGameScene : public SceneBase
 private:
 	int ingame_cursol;  //具材選択カーソル
 	int counter_time;  //時間制限
-	int guzai_select[4] = {5};  //選んだ具材の番号を格納
+	int guzai_select[4] = {-1, -1, -1, -1};  //選んだ具材の番号を格納
 	int next;  //具材を選ぶと次の選択へ
 	int check_count;  //チェックカウント
 	int correct;  //正解数
