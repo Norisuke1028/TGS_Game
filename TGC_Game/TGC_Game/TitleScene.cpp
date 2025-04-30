@@ -25,7 +25,7 @@ void TitleScene::Initialize()
 	// 画像の読み込み
 	background_image = LoadGraph("Resource/image/burgertitle.png");   // 背景画像
 	menu_image = LoadGraph("Resource/image/menu.png");         // メニュー画像
-	cursor_image = LoadGraph("Resource/images/");		// カーソル画像
+	cursor_image = LoadGraph("Resource/images/male01.png");		// カーソル画像
 
 	// 音源の読み込み
 	title_bgm = LoadGraph("Resource/sounds/SE/");       // タイトルBGM
