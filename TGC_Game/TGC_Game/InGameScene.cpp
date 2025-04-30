@@ -47,7 +47,7 @@ eSceneType InGameScene::Update()
 		if (counter_time >= 3000)
 		{
 			//30•bŒo‚Â‚ÆƒŠƒUƒ‹ƒg‰æ–Ê‚Ö‘JˆÚ‚·‚é
-			//return eSceneType::eResult;
+			return eSceneType::eEnd;
 		}
 
 	}
