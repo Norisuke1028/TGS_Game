@@ -6,43 +6,27 @@
 class ResultScene : public SceneBase
 {
 private:
+	class Fade* fade;           // フェード
+	eSceneType result_next_scene;
+	int result_cursor;
 	Vector2D cursor_pos;		// カーソル座標
 	InputControl* pad_input;	// コントローラーの入力インスタンス
-	Vector2D LeftStickTilt;		// 左スティック入力値
-	bool cursorOnButton;	// カーソルがUIボタンの上にいるハンドル
-	int cursor_blank_Graph;		// カーソル画像ハンドル
-	int cursor_on_Graph;		// 選択カーソル画像ハンドル
-	int cursor_shadow_Graph;	// カーソル影画像ハンドル
+	int cursor_image;           // カーソルイメージ
+	int result_title_image;     // リザルトタイトル文字
+	int result_player_title;    // 自身のスコア上のタイトル文字
+	int result_score_history;   // １～３位のタイトル文字
 
 	int cursor_se_move;         // カーソルの移動SE
 	int cursor_se_push;         // カーソルの決定SE
 
-	int BackgroundGraph;	// 背景画像ハンドル
-
-	std::vector<int> num_image;
-
-	// リザルトシーン画像ハンドル
-	int ResultTitle_Graph;		// リザルトのタイトル画像ハンドル
-	int rank1_Graph;			// ランキング１位画像ハンドル
-	int rank2_Graph;			// ランキング２位画像ハンドル
-	int rank3_Graph;			// ランキング３位画像ハンドル
-	int YourScoreGraph;			// あなたのスコアフォント画像ハンドル
-	int HighScoreHistory;		// ハイスコア歴フォント画像ハンドル
-	int ReplayButton_Graph;		// リプレイボタン画像ハンドル
-	int TitleButton_Graph;		// タイトルボタン画像ハンドル
-
-	// 背景画像ハンドル
-	int backgroundWaves[4];
-	float backgroundY[4];
-	const int screenHeight = 720;
-	float scrollSpeedY = 5;
+	std::vector<int> num_image; // 数字用画像
 
 	int result_bgm;             // リザルトメインbgm
 
 	// ゲームデータ
-	int FinalScore;		// 最終スコア
-	int LevelReached;	// 最終レベル
-	int Misinputs;	// ミス数
+	int FinalScore;		        // 最終スコア
+	int LevelReached;	        // 最終レベル
+	int Misinputs;	            // ミス数
 
 	struct HighScoreEntry
 	{
@@ -63,8 +47,6 @@ private:
 	void DisplayHighScores() const;	// ハイスコアを描画する
 	void DrawNumber(int x, int y, int number) const;        // スコアを画像で描画
 
-	// 動く背景描画
-	void DrawBackground();
 	int offset_plus;
 
 
@@ -72,9 +54,6 @@ private:
 
 	// データを並べ替えるセッター
 	void DataSortDescending(std::vector<HighScoreEntry>& arr, int n);
-
-	// カーソル描画
-	void DrawCursor() const;
 
 
 	// UIボタンメンバー
