@@ -103,10 +103,14 @@ void InGameScene::Draw() const
 	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
 	//指定されるハンバーガー
-	DrawFormatString(300, 40, 0x000000, "%s", guzai_name[r_burger[0]]);
+	/*DrawFormatString(300, 40, 0x000000, "%s", guzai_name[r_burger[0]]);
 	DrawFormatString(300, 60, 0x000000, "%s", guzai_name[r_burger[1]]);
 	DrawFormatString(300, 80, 0x000000, "%s", guzai_name[r_burger[2]]);
-	DrawFormatString(300, 100, 0x000000, "%s", guzai_name[r_burger[3]]);
+	DrawFormatString(300, 100, 0x000000, "%s", guzai_name[r_burger[3]]);*/
+	DrawFormatString(300, 40, 0x000000, "%d", r_burger[0]);
+	DrawFormatString(300, 60, 0x000000, "%d", r_burger[1]);
+	DrawFormatString(300, 80, 0x000000, "%d", r_burger[2]);
+	DrawFormatString(300, 100, 0x000000, "%d", r_burger[3]);
 
 	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
 	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
@@ -145,13 +149,17 @@ int InGameScene::select_guzai()
 	switch (next)
 	{
 		case(0):
-			//初期化処理
+			//選んだ具材の初期化処理
 			for (int i = 0; i < 4; ++i) {
 				guzai_select[i] = -1;
 			}
 			rand_burger();
 			next += 1;
 		case(1):
+		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			next = 5;
+		}
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			guzai_select[0] = ingame_cursol;
@@ -159,6 +167,11 @@ int InGameScene::select_guzai()
 		}
 		break;
 		case(2):
+		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			next = 5;
+			
+		}
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			guzai_select[1] = ingame_cursol;
@@ -166,6 +179,10 @@ int InGameScene::select_guzai()
 		}
 		break;
 		case(3):
+		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			next = 5;
+		}
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			guzai_select[2] = ingame_cursol;
@@ -173,6 +190,10 @@ int InGameScene::select_guzai()
 		}
 		break;
 		case(4):
+		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+		{
+			next = 5;
+		}
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			guzai_select[3] = ingame_cursol;
@@ -209,18 +230,21 @@ int InGameScene::select_guzai()
 	return 0;
 }
 
+
 //指定されるハンバーガーをランダムに出力
 int InGameScene::rand_burger()
 {
 	//ハンバーガーのパターン
-	const int p_burger[4][4] = {
-		{0,1,2,3},
-		{1,2,3,0},
-		{2,3,0,1},
-		{3,0,1,2}
+	const int p_burger[6][4] = {
+		{3,-1,-1,-1},  //パティ、空、空、空
+		{3,1,-1,-1},   //パティ、チーズ、空、空
+		{3,1,2,-1},    //パティ、チーズ、レタス、空
+		{1,0,3,-1},    //チーズ、トマト、パティ、空
+		{2,3,0,1},     //レタス、パティ、トマト、チーズ
+		{3,0,2,1}      //パティ、トマト、レタス、チーズ
 	};
 	//ランダムに数字を出力
-	random = 0 + rand() % 4;
+	random = 0 + rand() % 6;
 	//出力された数字によってハンバーガーを出力する
 	for (int j = 0; j < 4; ++j)
 	{
