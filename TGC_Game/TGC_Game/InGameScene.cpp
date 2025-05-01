@@ -82,13 +82,6 @@ eSceneType InGameScene::Update()
 //描画処理
 void InGameScene::Draw() const
 {
-	const char* guzai_name[] = {
-		"トマト",
-		"チーズ",
-		"レタス",
-		"パティ"
-	};
-
 	//インゲームテキスト
 	//DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
 	//背景（適当）
@@ -103,10 +96,6 @@ void InGameScene::Draw() const
 	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
 	//指定されるハンバーガー
-	/*DrawFormatString(300, 40, 0x000000, "%s", guzai_name[r_burger[0]]);
-	DrawFormatString(300, 60, 0x000000, "%s", guzai_name[r_burger[1]]);
-	DrawFormatString(300, 80, 0x000000, "%s", guzai_name[r_burger[2]]);
-	DrawFormatString(300, 100, 0x000000, "%s", guzai_name[r_burger[3]]);*/
 	DrawFormatString(300, 40, 0x000000, "%d", r_burger[0]);
 	DrawFormatString(300, 60, 0x000000, "%d", r_burger[1]);
 	DrawFormatString(300, 80, 0x000000, "%d", r_burger[2]);
@@ -114,7 +103,7 @@ void InGameScene::Draw() const
 
 	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
 	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
-	DrawFormatString(600, 160, 0x000000, "%d", sales);
+	//DrawFormatString(600, 160, 0x000000, "%d", sales);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -203,13 +192,16 @@ int InGameScene::select_guzai()
 		case(5):
 		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
-			//全て正解だったらスコアを1にする
+			//決定ボタンを押すと具材チェック
 			check_guzai();
 			if (check_count == 4)
 			{
-				next += 1;
 				//ハンバーガーによって売上額を変更する
 				sales += 200 + (random * 50);
+				//スコアを1加算する
+				correct++;
+
+				next += 1;
 			}
 			else {
 				check_count = 0;
@@ -218,7 +210,6 @@ int InGameScene::select_guzai()
 		}
 		break;
 		case(6):
-			correct++;
 			check_count = 0;
 			next += 1;
 			break;
@@ -240,8 +231,8 @@ int InGameScene::rand_burger()
 		{3,1,-1,-1},   //パティ、チーズ、空、空
 		{3,1,2,-1},    //パティ、チーズ、レタス、空
 		{1,0,3,-1},    //チーズ、トマト、パティ、空
-		{2,3,0,1},     //レタス、パティ、トマト、チーズ
-		{3,0,2,1}      //パティ、トマト、レタス、チーズ
+		{2,3,0,-1},     //レタス、パティ、トマト、チーズ
+		{3,0,2,-1}      //パティ、トマト、レタス、チーズ
 	};
 	//ランダムに数字を出力
 	random = 0 + rand() % 6;
@@ -257,6 +248,8 @@ int InGameScene::rand_burger()
 //具材チェック処理
 int InGameScene::check_guzai()
 {
+	check_count = 0;
+
 	for (int i = 0; i < 4; i++)
 	{
 		if (r_burger[i] == guzai_select[i])
