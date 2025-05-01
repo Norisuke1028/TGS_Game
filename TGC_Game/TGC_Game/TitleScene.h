@@ -15,6 +15,7 @@ private:
 	int title_bgm;          // タイトルBGM
 	int cursol_move_se;     // カーソル移動SE
 	int cursol_push_se;     // カーソル決定SE
+	int ingame_cursol;
 
 private:
 	eSceneType next_scene; // 遷移先のシーン

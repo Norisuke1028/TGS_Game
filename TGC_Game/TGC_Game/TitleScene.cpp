@@ -3,8 +3,7 @@
 #include "InputControl.h"
 #include "DxLib.h"
 
-TitleScene::TitleScene() : menu_image(NULL),
-cursor_image(NULL), menu_cursor(0),next_scene()
+TitleScene::TitleScene() : menu_image(NULL),cursor_image(NULL), menu_cursor(0),next_scene()
 {
 }
 
@@ -23,9 +22,9 @@ void TitleScene::Initialize()
 	next_scene = eSceneType::eTitle;
 	
 	// 画像の読み込み
-	background_image = LoadGraph("Resource/image/burgertitle.png");   // 背景画像
+	background_image = LoadGraph("Resource/image/make_burger_image.png");   // 背景画像
 	menu_image = LoadGraph("Resource/image/menu.png");         // メニュー画像
-	cursor_image = LoadGraph("Resource/images/");		// カーソル画像
+	cursor_image = LoadGraph("Resource/image/buns02.png");		// カーソル画像
 
 	// 音源の読み込み
 	title_bgm = LoadGraph("Resource/sounds/SE/");       // タイトルBGM
@@ -121,13 +120,13 @@ eSceneType TitleScene::Update()
 void TitleScene::Draw() const
 {
 	// タイトル画像の描画
-	DrawGraph(0, 0, background_image, FALSE);
+	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// メニュー画像の描画
 	DrawGraph(215, 320, menu_image, FALSE);
 
 	// カーソル画像の描画
-	DrawRotaGraph(185, 340 + menu_cursor * 32, 1.6, DX_PI / 200.0, cursor_image, TRUE);
+	DrawRotaGraph(185, 340 + menu_cursor * 32, 0.25, DX_PI / 200.0, cursor_image, TRUE);
 
 	// フェード描画
 	fade->Draw();
@@ -140,6 +139,11 @@ void TitleScene::Finalize()
 	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
 
+	DeleteSoundMem(title_bgm);
+	DeleteSoundMem(cursol_move_se);
+	DeleteSoundMem(cursol_push_se);
+
+	delete fade;
 }
 
 eSceneType TitleScene::GetNowSceneType() const
