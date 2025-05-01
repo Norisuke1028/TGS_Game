@@ -11,7 +11,7 @@ void EndScene::Initialize()
 	fade->Initialize(true);
 
 	// ‰æ‘œ
-	background_image = LoadGraph("Resource/images/");
+	background_image = LoadGraph("Resource/image/Kabegami.png");
 	ty_text_image = LoadGraph("Resource/images");
 
 	// BGM
@@ -42,7 +42,7 @@ eSceneType EndScene::Update()
 void EndScene::Draw() const
 {
 	// ”wŒi‰æ‘œ
-	DrawGraph(0, 0, background_image, FALSE);
+	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// uthanks you for playingv•`Ê
 	DrawRotaGraph(770, 150, 1.5f, DX_PI / 0.5, ty_text_image, TRUE);
