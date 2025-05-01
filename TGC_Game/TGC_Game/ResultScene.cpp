@@ -1,6 +1,7 @@
 #include "ResultScene.h"
 #include "InputControl.h"
 #include "ResourceManager.h"
+#include "Fade.h"
 #include "DxLib.h"
 #include <stdio.h>
 
@@ -9,16 +10,15 @@
 
 void ResultScene::Initialize()
 {
-    // カーソルの初期位置
-    cursor_pos = { 600.0f, 300.0f };
-    cursorOnButton = false;
     // カーソル画像
-    cursor_blank_Graph = LoadGraph("Resource/Images/UI_Elements/cursor_blank.png");
-    cursor_on_Graph = LoadGraph("Resource/Images/UI_Elements/cursor_on.png");
-    cursor_shadow_Graph = LoadGraph("Resource/Images/UI_Elements/cursor_shadow.png");
+    //cursor_image = LoadGraph("Resource/image/");
 
-    cursor_se_move = LoadSoundMem("Resource/Sounds/SE/cursol_move_se.mp3");
-    cursor_se_push = LoadSoundMem("Resource/Sounds/SE/cursol_push_se.mp3");
+    result_title_image = LoadGraph("Resource/image/result_title.png");
+    result_player_title = LoadGraph("Resource/image/your_score.png");
+    result_score_history = LoadGraph("Resource/image/highscore_text.png");
+
+   /* cursor_se_move = LoadSoundMem("Resource/sounds/");
+    cursor_se_push = LoadSoundMem("Resource/sounds/");*/
 
     // コントローラーの入力インスタンス取得
     pad_input = InputControl::GetInstance();
@@ -27,135 +27,101 @@ void ResultScene::Initialize()
     ResourceManager* rm = ResourceManager::GetInstance();
 
     // 背景画像
-    BackgroundGraph = LoadGraph("Resource/Images/Scene/InGame/Background01.png");
+    background_image = LoadGraph("Resource/image/burgertitle.png");
 
-    // リザルトシーン画像ハンドル
-    ResultTitle_Graph = LoadGraph("Resource/Images/Scene/Result/Result_Title.png");
-    rank1_Graph = LoadGraph("Resource/Images/Scene/Result/Result_rank1.png");
-    rank2_Graph = LoadGraph("Resource/Images/Scene/Result/Result_rank2.png");
-    rank3_Graph = LoadGraph("Resource/Images/Scene/Result/Result_rank3.png");
-    YourScoreGraph = LoadGraph("Resource/Images/Scene/Result/Your_Score.png");
-    HighScoreHistory = LoadGraph("Resource/Images/Scene/Result/HighScore_History.png");
-    ReplayButton_Graph = LoadGraph("Resource/Images/Scene/Result/Result_Replay.png");
-    TitleButton_Graph = LoadGraph("Resource/Images/Scene/Result/Result_returnTitle.png");
-
-    // 背景画像
-    backgroundWaves[0] = LoadGraph("Resource/Images/Scene/Result/Backgrounds/BackgroundCloud_1.png");
-    backgroundWaves[1] = LoadGraph("Resource/Images/Scene/Result/Backgrounds/BackgroundCloud_2.png");
-    backgroundWaves[2] = LoadGraph("Resource/Images/Scene/Result/Backgrounds/BackgroundCloud_3.png");
-    backgroundWaves[3] = LoadGraph("Resource/Images/Scene/Result/Backgrounds/BackgroundCloud_4.png");
-    // 背景画像の座標
-    backgroundY[0] = 0;
-    backgroundY[1] = -screenHeight;
-    backgroundY[2] = -screenHeight * 2;
-    backgroundY[3] = -screenHeight * 3;
-
-    // リザルトメインbgm読み込み
-    result_bgm = LoadSoundMem("Resource/Sounds/BGM/Result.mp3");
+    /*/ リザルトメインbgm読み込み
+    result_bgm = LoadSoundMem("Resource/sounds/");
 
     // ハイスコアデータを取得
     LoadHighScores();
 
     // ハイスコアSEの読み込み
-    HighScore_SE = LoadSoundMem("Resource/Sounds/BGM/HighScore.mp3");
+    HighScore_SE = LoadSoundMem("Resource/sounds/");
 
     // 数字画像（0?9）の読み込み
-    num_image = rm->GetImages("Resource/Images/Scene/InGame/Text/NumWhite.png");
-
-    /************ UIボタン ************/
-    // リトライボタン
-    Button RetryButton;
-    RetryButton.GraphicHandle = ReplayButton_Graph;
-    RetryButton.x = 1030;
-    RetryButton.y = 520;
-    RetryButton.Width = UI_BUTTON_BASE_WIDTH;
-    RetryButton.Height = UI_BUTTON_BASE_HEIGHT;
-    RetryButton.TargetScene = eSceneType::eInGame;
-    buttons.push_back(RetryButton);
-
-    // タイトルボタン
-    Button TitleButton;
-    TitleButton.GraphicHandle = TitleButton_Graph;
-    TitleButton.x = 1030;
-    TitleButton.y = 620;
-    TitleButton.Width = UI_BUTTON_BASE_WIDTH;
-    TitleButton.Height = UI_BUTTON_BASE_HEIGHT;
-    TitleButton.TargetScene = eSceneType::eTitle;
-    buttons.push_back(TitleButton);
-    /***********************************/
+    num_image = rm->GetImages("Resource/images/");
 
     // リザルトメインbgm再生
-    PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);
+    PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
+
+    // フェードをインスタンス化
+    fade = new Fade();
+    // フェードの初期化処理（フェードイン）
+    fade->Initialize(true);
+
+    result_next_scene = eSceneType::eResult;
 }
 
 
 eSceneType ResultScene::Update()
 {
-    cursorOnButton = false;
-
-    // 背景画像の座標更新
-    for (int i = 0; i < 4; ++i)
-    {
-        backgroundY[i] -= scrollSpeedY;
-
-        // もし画像が画面外に行けば座標を初期化
-        if (backgroundY[i] < 0)
-        {
-            backgroundY[i] += screenHeight * 4;
-        }
-    }
 
     HandleNewHighScore();
 
-    // ボタンが押されたかチェック
-    for (size_t i = 0; i < buttons.size(); i++)
+    // パッド入力制御のインスタンスを取得
+    InputControl* pad_input = InputControl::GetInstance();
+
+    // 十字キー操作(上)
+    if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_UP) == ePadInputState::ePress)
     {
-        Button& button = buttons[i];
-        bool cursorOverButton = (cursor_pos.x >= button.x && cursor_pos.x <= button.x + button.Width &&
-            cursor_pos.y >= button.y && cursor_pos.y <= button.y + button.Height);
+       result_cursor--;
+        PlaySoundMem(cursor_se_move, DX_PLAYTYPE_BACK);
 
-        if (cursorOverButton)
+        if (result_cursor < 0)
         {
-            cursorOnButton = true;
-        }
-
-        if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::eRelease && cursorOverButton)
-        {
-
-            // ボタンが押されたときのSE
-            PlaySoundMem(cursor_se_push, DX_PLAYTYPE_BACK);
-            // メインBGMを止める
-            StopSoundMem(result_bgm);
-            return button.TargetScene;
-
+            result_cursor = 3;
         }
     }
+    // 十字キー操作(下)
+    if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_DOWN) == ePadInputState::ePress)
+    {
+        result_cursor++;
+        PlaySoundMem(cursor_se_move, DX_PLAYTYPE_BACK);
 
-    /*/ キーボード入力制御のインスタンスを取得
-    InputManager* key_input = InputManager::GetInstance();
-    if (key_input->GetKeyInputState(KEY_INPUT_Z) == eInputState::ePress)
-    {
-        // メインBGMを止める
-        StopSoundMem(result_bgm);
-        // Zキーが押されたらインゲーム画面に遷移
-        return eSceneType::eInGame;
+        if (result_cursor > 3)
+        {
+            result_cursor = 0;
+        }
     }
-    if (key_input->GetKeyInputState(KEY_INPUT_X) == eInputState::ePress)
-    {
-        // メインBGMを止める
-        StopSoundMem(result_bgm);
-        // Xキーが押されたらタイトル画面に遷移
-        return eSceneType::eTitle;
-    }*/
-    // 左スティック入力値取得
-    LeftStickTilt = pad_input->GetLeftStickTiltPercentage();
 
-    // 左スティック入力があればカーソル位置を更新
-    if (LeftStickTilt.x != 0.0f || LeftStickTilt.y != 0.0f)
-    {
-        cursor_pos.x += LeftStickTilt.x * 10;
-        cursor_pos.y -= LeftStickTilt.y * 10;
+
+    // フェードアウト中なら、フェード処理を続ける
+    if (result_next_scene != eSceneType::eResult) {
+        if (fade->GetEndFlag()) {
+            // フェードアウト完了後にシーン遷移
+            return result_next_scene;
+        }
+        fade->Update();
+        // フェードアウト中はタイトルシーンを維持
+        return eSceneType::eResult;
     }
+
+    // コントローラーの A ボタン処理(簡略化)
+    if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+        // 押したらSEを鳴らせる
+        PlaySoundMem(cursor_se_push, DX_PLAYTYPE_BACK);
+        // BGMを止める
+        StopSoundMem(result_bgm);
+        // フェード初期化
+        fade->Initialize(false);
+
+        // カーソル位置に応じてシーン遷移を予約
+        if (result_cursor == 0) {
+            result_next_scene = eSceneType::eTitle;
+        }
+        else if (result_cursor == 1) {
+            result_next_scene = eSceneType::eInGame;
+        }
+        else if (result_cursor == 2) {
+            result_next_scene = eSceneType::eRanking;
+        }
+    }
+
+    // フェード更新
+    fade->Update();
+    
+    // 親クラスの更新処理を呼び出す
+    return __super::Update();
 
     return GetNowSceneType();
 }
@@ -163,42 +129,28 @@ eSceneType ResultScene::Update()
 
 void ResultScene::Draw() const
 {
-    ////// 背景描画
-    //for (int i = 0; i < 4; ++i) 
-    //{
-    //    DrawExtendGraph(0, backgroundY[i], 1280, backgroundY[i] + 720, backgroundWaves[i], TRUE);
-    //}
 
-    DrawGraph(0, 0, BackgroundGraph, TRUE);
+   //DrawGraph(0, 0, background_image, TRUE);
+   
+   // リザルトテキストの表示（座標: x=50, y=50、色: 白）
+    DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
+    DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
 
-    DrawString(10, 10, "Result", GetColor(255, 255, 255));
-    DrawString(10, 26, "Z : InGame\nX : Title", GetColor(255, 255, 255));
+    // リザルトタイトル画像 (1280, 720 \ 460, 90)
+    DrawExtendGraph(410, 20, 870, 130, result_title_image, TRUE);
+    // 自身のスコア画像描画
+    DrawExtendGraph(100, 130, 444, 211, result_player_title, TRUE);
+    // ハイスコア画像描画
+    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
 
-    // リザルトシーン画像 (1280, 720 \ 460, 90)
-    DrawExtendGraph(410, 20, 870, 110, ResultTitle_Graph, TRUE);
-
-    // あなたのスコア画像描画
-    DrawExtendGraph(100, 130, 444, 181, YourScoreGraph, TRUE);
-    // ハイスコア歴画像描画
-    DrawExtendGraph(100, 300, 381, 348, HighScoreHistory, TRUE);
-
-    // 今回のスコアとレベルを描画
+    /*/ 今回のスコアとレベルを描画
     DisplayCurrentRunScores();
     DrawFormatString(10, 58, GetColor(255, 255, 255), "Level: %d", LevelReached);
     DrawFormatString(10, 74, GetColor(255, 255, 255), "Score: %d", FinalScore);
-    DrawFormatString(10, 90, GetColor(255, 255, 255), "Misinputs: %d", Misinputs);
+    DrawFormatString(10, 90, GetColor(255, 255, 255), "Misinputs: %d", Misinputs);*/
 
     // ハイスコアを描画
     DisplayHighScores();
-
-    // UIボタンを描画
-    for (size_t i = 0; i < buttons.size(); ++i)
-    {
-        DrawExtendGraph(buttons[i].x, buttons[i].y, buttons[i].x + buttons[i].Width, buttons[i].y + buttons[i].Height, buttons[i].GraphicHandle, TRUE);
-    }
-
-    // カーソル描画
-    DrawCursor();
 }
 
 void ResultScene::Finalize()
@@ -233,7 +185,7 @@ void ResultScene::DataSortDescending(std::vector<HighScoreEntry>& arr, int n)
         key = arr[i];
         j = i - 1;
 
-        while (j >= 0 && arr[j].score < key.score)  /***** 並べ替える条件 *****/
+        while (j >= 0 && arr[j].score < key.score)  //並べ替える条件
         {
             arr[j + 1] = arr[j];
             j = j - 1;
@@ -403,26 +355,4 @@ void ResultScene::DrawNumber(int x, int y, int number) const
         // 画像の一部を切り取って描画
         DrawRectGraph(x + i * digit_width, y, srcX, srcY, digit_width, digit_height, num_image[0], TRUE, FALSE);
     }
-}
-
-// カーソル描画処理
-void ResultScene::DrawCursor() const
-{
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);  // 画像を半透明にする
-    DrawExtendGraph(cursor_pos.x - 9, cursor_pos.y - 2, cursor_pos.x + 25, cursor_pos.y + 30, cursor_shadow_Graph, true);
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);  // 透明度を元に戻す
-
-    if (cursorOnButton)
-    {
-        DrawExtendGraph(cursor_pos.x - 20, cursor_pos.y - 20, cursor_pos.x + 20, cursor_pos.y + 20, cursor_on_Graph, true);
-    }
-    else
-    {
-        DrawExtendGraph(cursor_pos.x - 20, cursor_pos.y - 20, cursor_pos.x + 20, cursor_pos.y + 20, cursor_blank_Graph, true);
-    }
-}
-
-void ResultScene::DrawBackground()
-{
-    DrawExtendGraph(cursor_pos.x - 20, cursor_pos.y - 20, cursor_pos.x + 20, cursor_pos.y + 20, cursor_blank_Graph, true);
 }

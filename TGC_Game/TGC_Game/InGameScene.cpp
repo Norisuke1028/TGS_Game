@@ -6,14 +6,14 @@
 InGameScene::InGameScene() :
 	guzai_image()
 	,select_image()
-	,guzai_select()
 	,next()
 	,correct()
 	,sales()
 	,check_count()
 	,r_burger()
 	,random()
-	,select_burger()
+	,buns_image()
+	,select_burger_image()
 {
 	ingame_cursol = 0;
 	counter_time = 0;
@@ -33,9 +33,10 @@ void InGameScene::Initialize()
 {
 	ResourceManager* rm = ResourceManager::GetInstance();
 
-	guzai_image = LoadGraph("Resource/image/guzai.png");
-	select_image = LoadGraph("Resource/image/kettei.png");
-	select_burger = LoadGraph("Resource/image/buns02.png");
+	guzai_image = LoadGraph("Resource/image/guzai.png");  //具材の画像
+	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
+	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
+	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);
 }
 
 eSceneType InGameScene::Update()
@@ -47,7 +48,7 @@ eSceneType InGameScene::Update()
 		if (counter_time >= 3000)
 		{
 			//30秒経つとリザルト画面へ遷移する
-			//return eSceneType::eResult;
+			return eSceneType::eEnd;
 		}
 
 	}
@@ -89,17 +90,17 @@ void InGameScene::Draw() const
 	};
 
 	//インゲームテキスト
-	DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
+	//DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
 	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
 	DrawFormatString(1200, 20, 0x000000, "%d", counter_time / 100);
 	
-	//選択した具材
-	DrawFormatString(600, 40, 0x000000, "%s", guzai_name[guzai_select[0]]);
-	DrawFormatString(600, 60, 0x000000, "%s", guzai_name[guzai_select[1]]);
-	DrawFormatString(600, 80, 0x000000, "%s", guzai_name[guzai_select[2]]);
-	DrawFormatString(600, 100, 0x000000, "%s", guzai_name[guzai_select[3]]); 
+	//選択した具材(画像表示)
+	DrawRotaGraph(200,275,1.3,0, select_burger_image[guzai_select[0]],true);
+	DrawRotaGraph(200, 235, 1.3, 0, select_burger_image[guzai_select[1]], true);
+	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[2]], true);
+	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
 	//指定されるハンバーガー
 	DrawFormatString(300, 40, 0x000000, "%s", guzai_name[r_burger[0]]);
@@ -109,7 +110,7 @@ void InGameScene::Draw() const
 
 	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
 	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
-	//DrawFormatString(600, 160, 0xffffff, "%d", random);
+	DrawFormatString(600, 160, 0x000000, "%d", sales);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -125,7 +126,7 @@ void InGameScene::Draw() const
 	//具材画像の描画
 	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);
-	DrawRotaGraph(180, 220, 1.0, 0, select_burger, true);
+	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);
 }
 
 void InGameScene::Finalize()
@@ -144,13 +145,16 @@ int InGameScene::select_guzai()
 	switch (next)
 	{
 		case(0):
+			//初期化処理
+			for (int i = 0; i < 4; ++i) {
+				guzai_select[i] = -1;
+			}
 			rand_burger();
 			next += 1;
 		case(1):
 		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			guzai_select[0] = ingame_cursol;
-			DrawRotaGraph(180, 220, 1.0, 0, select_burger, true);
 			next += 1;
 		}
 		break;
@@ -183,6 +187,8 @@ int InGameScene::select_guzai()
 			if (check_count == 4)
 			{
 				next += 1;
+				//ハンバーガーによって売上額を変更する
+				sales += 200 + (random * 50);
 			}
 			else {
 				check_count = 0;
