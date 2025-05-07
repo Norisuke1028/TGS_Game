@@ -16,7 +16,7 @@ private:
 	int check_count;  //チェックカウント
 	int correct;  //正解数
 	int sales;  //売上
-	int sozai_count;  
+	int sozai_count;  //お題の素材数
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力
@@ -26,8 +26,8 @@ private:
 
 private:
 	int guzai_image;  //具材の画像
-	int select_image;
-	int buns_image;
+	int select_image;  //決定ボタン画像
+	int buns_image;  //バンズの画像
 	int select_guzai_image;
 	int select_burger_image[4];  //選んだ具材画像
 	int burger_model[6];  //お題バーガー画像

@@ -4,26 +4,10 @@
 #include "DxLib.h"
 
 InGameScene::InGameScene() :
-	guzai_image()
-	,select_image()
-	,next()
-	,correct()
-	,sales()
-	,check_count()
-	,r_burger()
-	,random()
-	,buns_image()
-	,select_burger_image()
-	,burger_model()
-	,sozai_count()
+	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
+	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
 {
-	ingame_cursol = 0;
-	counter_time = 0;
-	check_count = 0;
 	next_scene = eSceneType::eInGame;
-	next = 0;
-	correct = 0;
-	sales = 0;
 }
 
 InGameScene::~InGameScene()
@@ -59,6 +43,8 @@ eSceneType InGameScene::Update()
 		// パッド入力制御のインスタンスを取得
 		InputControl* pad_input = InputControl::GetInstance();
 
+		//十字キーの操作
+			//左用
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
 			{
 				ingame_cursol--;
@@ -67,6 +53,7 @@ eSceneType InGameScene::Update()
 					ingame_cursol = 4;
 				}
 			}
+			//右用
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
 			{
 				ingame_cursol++;
@@ -101,15 +88,9 @@ void InGameScene::Draw() const
 	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[2]], true);
 	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
-	//指定されるハンバーガー
-	DrawFormatString(300, 40, 0x000000, "%d", r_burger[0]);
-	DrawFormatString(300, 60, 0x000000, "%d", r_burger[1]);
-	DrawFormatString(300, 80, 0x000000, "%d", r_burger[2]);
-	DrawFormatString(300, 100, 0x000000, "%d", r_burger[3]);
-
-	DrawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
-	//DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
-	DrawFormatString(600, 180, 0x000000, "%d", sales);
+	//DrawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
+	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
+	DrawFormatString(600, 180, 0x000000, "%d", sales);  //売り上げ
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -122,10 +103,9 @@ void InGameScene::Draw() const
 	DrawBox(110, 230, 290, 260, 0xffffff, false);
 	DrawBox(110, 270, 290, 300, 0xffffff, false);
 
-	//具材画像の描画
-	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);
-	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);
-	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);
+	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);  //具材画像の描画
+	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
+	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);  //バンズの画像の描画
 }
 
 void InGameScene::Finalize()
@@ -153,10 +133,12 @@ int InGameScene::select_guzai()
 		case(1):
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
+				//決定ボタンを押すとジャッジ処理へ
 				if (ingame_cursol == 4)
 				{
 					next = 5;
 				}
+				//具材を選択すると1つ目に具材を選択
 				else
 				{
 					guzai_select[0] = ingame_cursol;
@@ -167,10 +149,12 @@ int InGameScene::select_guzai()
 		case(2):
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
+				//決定ボタンを押すとジャッジ処理へ
 				if (ingame_cursol == 4)
 				{
 					next = 5;
 				}
+				//具材を選択すると2つ目に具材を選択
 				else
 				{
 					guzai_select[1] = ingame_cursol;
@@ -181,10 +165,12 @@ int InGameScene::select_guzai()
 		case(3):
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
+				//決定ボタンを押すとジャッジ処理へ
 				if (ingame_cursol == 4)
 				{
 					next = 5;
 				}
+				//具材を選択すると3つ目に具材を選択
 				else
 				{
 					guzai_select[2] = ingame_cursol;
@@ -196,6 +182,7 @@ int InGameScene::select_guzai()
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
 				// 決定ボタンが押されていてカーソルが素材選択位置なら素材を選択
+				//4つ目に具材を選択
 				if (ingame_cursol < 4)
 				{
 					guzai_select[3] = ingame_cursol;
@@ -210,6 +197,8 @@ int InGameScene::select_guzai()
 		case(5):
 			//決定ボタンを押すと具材チェック
 			check_guzai();
+
+			//お題の素材の数とチェックカウントが同じ(ジャッジ判定に成功)だったら
 			if (check_count == sozai_count)
 			{
 				//ハンバーガーによって売上額を変更する
@@ -219,6 +208,7 @@ int InGameScene::select_guzai()
 
 				next += 1;
 			}
+			//ジャッジ判定に失敗するとリセット
 			else {
 				check_count = 0;
 				next = 0;
@@ -256,6 +246,7 @@ int InGameScene::rand_burger()
 	//出力された数字によってハンバーガーを出力する
 	for (int j = 0; j < 4; ++j)
 	{
+		//お題の素材数をカウントする
 		r_burger[j] = p_burger[random][j];
 		if (r_burger[j] != -1)
 		{
@@ -271,8 +262,10 @@ int InGameScene::check_guzai()
 {
 	check_count = 0;
 
+	//お題の素材の数分ジャッジ判定を行う
 	for (int i = 0; i < sozai_count; i++)
 	{
+		//お題通りに選択できればカウントする
 		if (guzai_select[i] != -1 && r_burger[i] == guzai_select[i])
 		{
 			check_count++;
