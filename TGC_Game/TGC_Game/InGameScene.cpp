@@ -14,6 +14,7 @@ InGameScene::InGameScene() :
 	,random()
 	,buns_image()
 	,select_burger_image()
+	,sozai_count()
 {
 	ingame_cursol = 0;
 	counter_time = 0;
@@ -42,10 +43,10 @@ void InGameScene::Initialize()
 eSceneType InGameScene::Update()
 {
 	//制限時間処理
-	if (counter_time <= 3000)
+	if (counter_time <= 6000)
 	{
 		counter_time++;
-		if (counter_time >= 3000)
+		if (counter_time >= 6000)
 		{
 			//30秒経つとリザルト画面へ遷移する
 			return eSceneType::eEnd;
@@ -101,9 +102,10 @@ void InGameScene::Draw() const
 	DrawFormatString(300, 80, 0x000000, "%d", r_burger[2]);
 	DrawFormatString(300, 100, 0x000000, "%d", r_burger[3]);
 
-	//DrawFormatString(600, 120, 0xffffff, "%d", check_count);  //ジャッジ
+	DrawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
 	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
 	//DrawFormatString(600, 160, 0x000000, "%d", sales);
+	DrawFormatString(600, 180, 0x000000, "%d", sozai_count);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -145,56 +147,66 @@ int InGameScene::select_guzai()
 			rand_burger();
 			next += 1;
 		case(1):
-		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			next = 5;
-		}
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			guzai_select[0] = ingame_cursol;
-			next += 1;
-		}
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			{
+				if (ingame_cursol == 4)
+				{
+					next = 5;
+				}
+				else
+				{
+					guzai_select[0] = ingame_cursol;
+					next += 1;
+				}
+			}
 		break;
 		case(2):
-		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			next = 5;
-			
-		}
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			guzai_select[1] = ingame_cursol;
-			next += 1;
-		}
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			{
+				if (ingame_cursol == 4)
+				{
+					next = 5;
+				}
+				else
+				{
+					guzai_select[1] = ingame_cursol;
+					next += 1;
+				}
+			}
 		break;
 		case(3):
-		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			next = 5;
-		}
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			guzai_select[2] = ingame_cursol;
-			next += 1;
-		}
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			{
+				if (ingame_cursol == 4)
+				{
+					next = 5;
+				}
+				else
+				{
+					guzai_select[2] = ingame_cursol;
+					next += 1;
+				}
+			}
 		break;
 		case(4):
-		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			next = 5;
-		}
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
-			guzai_select[3] = ingame_cursol;
-				next += 1;
-		}
-		break;
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			{
+				// 決定ボタンが押されていてカーソルが素材選択位置なら素材を選択
+				if (ingame_cursol < 4)
+				{
+					guzai_select[3] = ingame_cursol;
+				}
+				// 決定ボタンが押されていてカーソルが決定位置ならジャッジへ
+				else if (ingame_cursol == 4)
+				{
+					next += 1;
+				}
+			}
+			break;
 		case(5):
-		if (ingame_cursol == 4 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
-		{
 			//決定ボタンを押すと具材チェック
 			check_guzai();
-			if (check_count == 4)
+			if (check_count == sozai_count)
 			{
 				//ハンバーガーによって売上額を変更する
 				sales += 200 + (random * 50);
@@ -207,7 +219,6 @@ int InGameScene::select_guzai()
 				check_count = 0;
 				next = 0;
 			}
-		}
 		break;
 		case(6):
 			check_count = 0;
@@ -232,14 +243,20 @@ int InGameScene::rand_burger()
 		{3,1,2,-1},    //パティ、チーズ、レタス、空
 		{1,0,3,-1},    //チーズ、トマト、パティ、空
 		{2,3,0,-1},     //レタス、パティ、トマト、チーズ
-		{3,0,2,-1}      //パティ、トマト、レタス、チーズ
+		{3,0,2,1}      //パティ、トマト、レタス、チーズ
 	};
 	//ランダムに数字を出力
 	random = 0 + rand() % 6;
+
+	sozai_count = 0;
 	//出力された数字によってハンバーガーを出力する
 	for (int j = 0; j < 4; ++j)
 	{
 		r_burger[j] = p_burger[random][j];
+		if (r_burger[j] != -1)
+		{
+			sozai_count++;
+		}
 	}
 
 	return 0;
@@ -250,9 +267,9 @@ int InGameScene::check_guzai()
 {
 	check_count = 0;
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < sozai_count; i++)
 	{
-		if (r_burger[i] == guzai_select[i])
+		if (guzai_select[i] != -1 && r_burger[i] == guzai_select[i])
 		{
 			check_count++;
 		}

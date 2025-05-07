@@ -16,6 +16,7 @@ private:
 	int check_count;  //チェックカウント
 	int correct;  //正解数
 	int sales;  //売上
+	int sozai_count;  
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力
