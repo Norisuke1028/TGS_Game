@@ -14,6 +14,7 @@ InGameScene::InGameScene() :
 	,random()
 	,buns_image()
 	,select_burger_image()
+	,burger_model()
 	,sozai_count()
 {
 	ingame_cursol = 0;
@@ -37,7 +38,8 @@ void InGameScene::Initialize()
 	guzai_image = LoadGraph("Resource/image/guzai.png");  //具材の画像
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
-	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);
+	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
+	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
 }
 
 eSceneType InGameScene::Update()
@@ -89,6 +91,9 @@ void InGameScene::Draw() const
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
 	DrawFormatString(1200, 20, 0x000000, "%d", counter_time / 100);
+
+	//お題のバーガーの表示
+	DrawRotaGraph(950, 170, 3.0, 0, burger_model[random], true);
 	
 	//選択した具材(画像表示)
 	DrawRotaGraph(200,275,1.3,0, select_burger_image[guzai_select[0]],true);
