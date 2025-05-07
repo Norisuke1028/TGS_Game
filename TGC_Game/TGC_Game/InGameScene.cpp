@@ -103,9 +103,8 @@ void InGameScene::Draw() const
 	DrawFormatString(300, 100, 0x000000, "%d", r_burger[3]);
 
 	DrawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
-	DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
-	//DrawFormatString(600, 160, 0x000000, "%d", sales);
-	DrawFormatString(600, 180, 0x000000, "%d", sozai_count);
+	//DrawFormatString(600, 140, 0x000000, "%d", correct);  //正解数
+	DrawFormatString(600, 180, 0x000000, "%d", sales);
 
 	//具材選択カーソル描画
 	DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
