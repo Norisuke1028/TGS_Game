@@ -31,6 +31,8 @@ private:
 	int select_guzai_image;
 	int select_burger_image[4];  //選んだ具材画像
 	int burger_model[6];  //お題バーガー画像
+	int customer_image;  //客の画像
+	int hukidasi_image;  //吹き出しの画像
 
 private:
 	eSceneType next_scene;
