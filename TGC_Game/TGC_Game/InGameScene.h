@@ -2,6 +2,7 @@
 
 #include "SceneBase.h"
 //#include "Vector2D.h"
+#include "Customer.h"
 #include <vector>
 
 
@@ -9,6 +10,8 @@
 class InGameScene : public SceneBase
 {
 private:
+	Customer* customer;
+
 	int ingame_cursol;  //具材選択カーソル
 	int counter_time;  //時間制限
 	int guzai_select[4] = {-1, -1, -1, -1};  //選んだ具材の番号を格納
@@ -17,6 +20,7 @@ private:
 	int correct;  //正解数
 	int sales;  //売上
 	int sozai_count;  //お題の素材数
+	int delay;  //ディレイ用カウント
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力
