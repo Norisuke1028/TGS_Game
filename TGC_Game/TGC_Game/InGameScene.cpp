@@ -6,14 +6,16 @@
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,customer_image(),hukidasi_image()
+	,customer_image(),hukidasi_image(),delay()
 {
 	next_scene = eSceneType::eInGame;
+	customer = new Customer;
+	customer->Initialize();
 }
 
 InGameScene::~InGameScene()
 {
-
+	delete customer;
 }
 
 void InGameScene::Initialize()
@@ -43,6 +45,12 @@ eSceneType InGameScene::Update()
 
 	//}
 
+	if (delay <= 300)
+	{
+		delay++;
+	}
+
+
 		// パッド入力制御のインスタンスを取得
 		InputControl* pad_input = InputControl::GetInstance();
 
@@ -65,7 +73,10 @@ eSceneType InGameScene::Update()
 					ingame_cursol = 0;
 				}
 			}
-		select_guzai();
+			if (delay >= 300)
+			{
+				select_guzai();
+			}
 
 	// 親クラスの更新処理を呼び出す
 	return GetNowSceneType();
@@ -82,20 +93,18 @@ void InGameScene::Draw() const
 	//時間制限
 	//DrawFormatString(1200, 20, 0x000000, "%d", counter_time / 100);
 
-	DrawRotaGraph(600, 280, 1.3, 0, customer_image, true);  //客の画像
+	//DrawRotaGraph(600, 280, 1.3, 0, customer_image, true);  //客の画像
 	DrawRotaGraph(900, 200, 0.6, 0, hukidasi_image, true);  //吹き出しの画像
-
-
 	//お題のバーガーの表示
 	DrawRotaGraph(870, 100, 3.0, 0, burger_model[random], true);
-	
+
 	//選択した具材(画像表示)
-	DrawRotaGraph(200,275,1.3,0, select_burger_image[guzai_select[0]],true);
+	DrawRotaGraph(200, 275, 1.3, 0, select_burger_image[guzai_select[0]], true);
 	DrawRotaGraph(200, 235, 1.3, 0, select_burger_image[guzai_select[1]], true);
 	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[2]], true);
 	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
-	//DrawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
+	//rawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
 	DrawFormatString(1150, 140, 0x000000, "正解数　　%d", correct);  //正解数
 	DrawFormatString(1150, 180, 0x000000, "売上　　　%d", sales);  //売り上げ
 
@@ -110,9 +119,15 @@ void InGameScene::Draw() const
 	DrawBox(110, 230, 290, 260, 0xffffff, false);
 	DrawBox(110, 270, 290, 300, 0xffffff, false);
 
-	DrawRotaGraph(510, 600,1.0,0,guzai_image, true);  //具材画像の描画
+	DrawRotaGraph(510, 600, 1.0, 0, guzai_image, true);  //具材画像の描画
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
 	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);  //バンズの画像の描画
+
+		if (next >= 0 && next <= 4)
+		{
+			customer->Draw();
+		}
+
 }
 
 void InGameScene::Finalize()
@@ -131,12 +146,12 @@ int InGameScene::select_guzai()
 	switch (next)
 	{
 		case(0):
-			//選んだ具材の初期化処理
-			for (int i = 0; i < 4; ++i) {
-				guzai_select[i] = -1;
-			}
-			rand_burger();
-			next += 1;
+				//選んだ具材の初期化処理
+				for (int i = 0; i < 4; ++i) {
+					guzai_select[i] = -1;
+				}
+				rand_burger();
+				next += 1;
 		case(1):
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
@@ -226,7 +241,9 @@ int InGameScene::select_guzai()
 			next += 1;
 			break;
 		case(7):
-				next = 0;
+			
+			next = 0;
+		
 			break;
 	}
 
