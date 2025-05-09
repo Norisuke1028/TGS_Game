@@ -22,7 +22,7 @@ void TutorialScene::Initialize()
 	next_scene = eSceneType::eTutorial;
 
 	// 画像の読み込み
-	background_image = LoadGraph("Resource/images/");   // 背景画像
+	background_image = LoadGraph("Resource/image/tutorial.png");   // 背景画像
 	button_gaid_images = LoadGraph("Resource/images/"); // ボタン案内画像
 	
 	// 音源の読み込み
@@ -55,7 +55,7 @@ eSceneType TutorialScene::Update()
 		// フェード初期化
 		fade->Initialize(false);
 		// ゲームメインに遷移
-		next_scene = eSceneType::eInGame;
+		next_scene = eSceneType::eTitle;
 	}
 
 	// フェード更新
@@ -69,14 +69,11 @@ eSceneType TutorialScene::Update()
 
 void TutorialScene::Draw() const
 {
-	// タイトル画像の描画
-	DrawGraph(0, 0, background_image, FALSE);
-
-	// メニュー画像の描画
-	DrawGraph(215, 320, button_gaid_images, FALSE);
-
 	// タイトルテキストの表示（座標: x=50, y=50、色: 白）
-	DrawString(50, 50, "チュートリアル画面です", GetColor(255, 255, 255));
+	//DrawString(50, 50, "チュートリアル画面です", GetColor(255, 255, 255));
+	
+	// タイトル画像の描画
+	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// フェード描画
 	fade->Draw();

@@ -104,6 +104,9 @@ eSceneType TitleScene::Update()
 			next_scene = eSceneType::eRanking;
 		}
 		else if (menu_cursor == 2) {
+			next_scene = eSceneType::eTutorial;
+		}
+		else if (menu_cursor == 3) {
 			next_scene = eSceneType::eEnd;
 		}
 	}
