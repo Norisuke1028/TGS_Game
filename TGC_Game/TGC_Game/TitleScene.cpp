@@ -22,7 +22,7 @@ void TitleScene::Initialize()
 	next_scene = eSceneType::eTitle;
 	
 	// ‰æ‘œ‚Ì“Ç‚Ýž‚Ý
-	background_image = LoadGraph("Resource/image/make_burger_image.png");   // ”wŒi‰æ‘œ
+	background_image = LoadGraph("Resource/image/kabegami.png");   // ”wŒi‰æ‘œ
 	menu_image = LoadGraph("Resource/image/menu.png");         // ƒƒjƒ…[‰æ‘œ
 	cursor_image = LoadGraph("Resource/image/buns02.png");		// ƒJ[ƒ\ƒ‹‰æ‘œ
 
@@ -123,10 +123,10 @@ void TitleScene::Draw() const
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// ƒƒjƒ…[‰æ‘œ‚Ì•`‰æ
-	DrawGraph(215, 320, menu_image, FALSE);
+	DrawGraph(550, 500, menu_image, FALSE);
 
 	// ƒJ[ƒ\ƒ‹‰æ‘œ‚Ì•`‰æ
-	DrawRotaGraph(185, 340 + menu_cursor * 32, 0.25, DX_PI / 200.0, cursor_image, TRUE);
+	DrawRotaGraph(520, 520 + menu_cursor * 32, 0.25, DX_PI / 200.0, cursor_image, TRUE);
 
 	// ƒtƒF[ƒh•`‰æ
 	fade->Draw();
