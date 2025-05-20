@@ -3,6 +3,7 @@
 #include "SceneBase.h"
 //#include "Vector2D.h"
 #include "Customer.h"
+#include "Timer.h"
 #include <vector>
 
 
@@ -11,6 +12,7 @@ class InGameScene : public SceneBase
 {
 private:
 	Customer* customer;
+	Timer timer;
 
 	int ingame_cursol;  //具材選択カーソル
 	int counter_time;  //時間制限

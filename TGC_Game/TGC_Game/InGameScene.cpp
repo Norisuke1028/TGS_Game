@@ -3,10 +3,13 @@
 #include "ResourceManager.h"
 #include "DxLib.h"
 
+#include <string>
+#include <iostream>
+
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,customer_image(),hukidasi_image(),delay()
+	,customer_image(),hukidasi_image(),delay(), timer(30)
 {
 	next_scene = eSceneType::eInGame;
 	customer = new Customer;
@@ -44,42 +47,39 @@ eSceneType InGameScene::Update()
 	//	}
 
 	//}
+	timer.start();
 
-	if (delay <= 300)
-	{
-		delay++;
-	}
-
+	while (!timer.isTimeUp()) {
 
 		// パッド入力制御のインスタンスを取得
 		InputControl* pad_input = InputControl::GetInstance();
 
 		//十字キーの操作
 			//左用
-			if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
+		{
+			ingame_cursol--;
+			if (ingame_cursol < 0)
 			{
-				ingame_cursol--;
-				if (ingame_cursol < 0)
-				{
-					ingame_cursol = 4;
-				}
+				ingame_cursol = 4;
 			}
-			//右用
-			if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
+		}
+		//右用
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
+		{
+			ingame_cursol++;
+			if (ingame_cursol > 4)
 			{
-				ingame_cursol++;
-				if (ingame_cursol > 4)
-				{
-					ingame_cursol = 0;
-				}
+				ingame_cursol = 0;
 			}
-			if (delay >= 300)
-			{
-				select_guzai();
-			}
+		}
+		Draw();
+		select_guzai();
 
-	// 親クラスの更新処理を呼び出す
-	return GetNowSceneType();
+		// 親クラスの更新処理を呼び出す
+		return GetNowSceneType();
+	}
+
 
 }
 
@@ -91,9 +91,9 @@ void InGameScene::Draw() const
 	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
-	//DrawFormatString(1200, 20, 0x000000, "%d", counter_time / 100);
+	//DrawFormatString(50, 50, GetColor(0, 0, 0), "残り時間: %d 秒", timer.getRemainingTime());
+	std::cout << "残り時間: " << timer.getRemainingTime() << std::endl;
 
-	//DrawRotaGraph(600, 280, 1.3, 0, customer_image, true);  //客の画像
 	DrawRotaGraph(900, 200, 0.6, 0, hukidasi_image, true);  //吹き出しの画像
 	//お題のバーガーの表示
 	DrawRotaGraph(870, 100, 3.0, 0, burger_model[random], true);
