@@ -3,6 +3,7 @@
 #include "SceneBase.h"
 //#include "Vector2D.h"
 #include "Customer.h"
+#include "Timer.h"
 #include <vector>
 
 
@@ -11,6 +12,7 @@ class InGameScene : public SceneBase
 {
 private:
 	Customer* customer;
+	Timer timer;
 
 	int ingame_cursol;  //具材選択カーソル
 	int counter_time;  //時間制限
@@ -21,6 +23,7 @@ private:
 	int sales;  //売上
 	int sozai_count;  //お題の素材数
 	int delay;  //ディレイ用カウント
+	const double limit = 30.0;  //制限時間
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力
