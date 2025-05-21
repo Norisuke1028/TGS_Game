@@ -3,13 +3,13 @@
 
 class Timer {
 public:
-    Timer(int limitSeconds);  // 制限時間（秒）を指定して初期化
-    void start();
-    void reset();
-    int getRemainingTime() const;
-    bool isTimeUp() const;
+    Timer();  //コンストラクタ
+
+    void Start();  //スタート処理
+    void Reset();  //リセット処理
+    double GetElapsedSeconds() const;  //経過秒数取得処理
+    bool IsTimeUp(double durationSeconds) const;  //タイムアップ処理
 
 private:
-    int limitSeconds;
-    std::chrono::steady_clock::time_point startTime;
+    std::chrono::steady_clock::time_point startTime;  //
 };

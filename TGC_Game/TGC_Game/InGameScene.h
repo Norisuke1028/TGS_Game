@@ -23,6 +23,7 @@ private:
 	int sales;  //売上
 	int sozai_count;  //お題の素材数
 	int delay;  //ディレイ用カウント
+	const double limit = 30.0;  //制限時間
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力

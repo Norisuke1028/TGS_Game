@@ -5,11 +5,12 @@
 
 #include <string>
 #include <iostream>
+#include <thread>
 
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,customer_image(),hukidasi_image(),delay(), timer(30)
+	,customer_image(),hukidasi_image(),delay()
 {
 	next_scene = eSceneType::eInGame;
 	customer = new Customer;
@@ -37,19 +38,11 @@ void InGameScene::Initialize()
 eSceneType InGameScene::Update()
 {
 	//制限時間処理
-	//if (counter_time <= 6000)
-	//{
-	//	counter_time++;
-	//	if (counter_time >= 6000)
-	//	{
-	//		//30秒経つとリザルト画面へ遷移する
-	//		return eSceneType::eResult;
-	//	}
-
-	//}
-	timer.start();
-
-	while (!timer.isTimeUp()) {
+	//limitに代入されてる値(30)になるとループ処理をやめる
+	while (!timer.IsTimeUp(limit)) 
+	{
+		//
+		std::this_thread::sleep_for(std::chrono::milliseconds(60));
 
 		// パッド入力制御のインスタンスを取得
 		InputControl* pad_input = InputControl::GetInstance();
@@ -79,8 +72,8 @@ eSceneType InGameScene::Update()
 		// 親クラスの更新処理を呼び出す
 		return GetNowSceneType();
 	}
-
-
+	//30秒経つとリザルト画面へ遷移する	
+	return eSceneType::eResult;
 }
 
 //描画処理
@@ -91,8 +84,7 @@ void InGameScene::Draw() const
 	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
-	//DrawFormatString(50, 50, GetColor(0, 0, 0), "残り時間: %d 秒", timer.getRemainingTime());
-	std::cout << "残り時間: " << timer.getRemainingTime() << std::endl;
+	DrawFormatString(1150, 50, 0x000000, "制限時間　　%d", static_cast<int>(timer.GetElapsedSeconds()));
 
 	DrawRotaGraph(900, 200, 0.6, 0, hukidasi_image, true);  //吹き出しの画像
 	//お題のバーガーの表示

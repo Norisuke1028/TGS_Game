@@ -1,21 +1,24 @@
 #include "Timer.h"
 
-Timer::Timer(int limitSeconds) : limitSeconds(limitSeconds) {}
-
-void Timer::start() {
+//コンストラクタ
+Timer::Timer() {
+    Start();
+}
+//スタート処理
+void Timer::Start() {
     startTime = std::chrono::steady_clock::now();
 }
-
-void Timer::reset() {
-    start();
+//リセット処理
+void Timer::Reset() {
+    Start();
 }
-
-int Timer::getRemainingTime() const {
+//経過秒数取得処理
+double Timer::GetElapsedSeconds() const {
     auto now = std::chrono::steady_clock::now();
-    int elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - startTime).count();
-    return limitSeconds - elapsed;
+    std::chrono::duration<double> elapsed = now - startTime;
+    return elapsed.count();
 }
-
-bool Timer::isTimeUp() const {
-    return getRemainingTime() <= 0;
+//タイムアップ処理
+bool Timer::IsTimeUp(double durationSeconds) const {
+    return GetElapsedSeconds() >= durationSeconds;
 }
