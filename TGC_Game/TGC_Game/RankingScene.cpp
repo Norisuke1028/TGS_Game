@@ -25,24 +25,25 @@ void RankingScene::Initialize()
 	/*/ ボタン押されたときのSE読み込み
 	a_button_push = LoadSoundMem("Resource/sounds/SE/");
 	// メインbgm
-	ranking_main_bgm = LoadSoundMem("Resource/sounds/BGM/");
+	ranking_main_bgm = LoadSoundMem("Resource/sounds/BGM/");*/
 	// リソース管理のインスタンスを取得
 	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 
 	// 背景画像読み込み
-	background_image = LoadGraph("Resource/images/");
-	// テキスト画像の読み込み
+	background_image = LoadGraph("Resource/image/ranking_background.png");
+
+	/*/ テキスト画像の読み込み
 	text_image = rm->GetImages("Resource/images/");
 	tmp = rm->GetImages("Resource/images/");
 	text_image.push_back(tmp[0]);
 
-	certificate_image = rm->GetImages("Resource/images/");
+	certificate_image = rm->GetImages("Resource/images/");*/
 
 	// 数字画像（0?9）の読み込み
-	num_image = rm->GetImages("Resource/images/");
+	num_image = rm->GetImages("Resource/image/number.png");
 
-	// 順位画像の読み込み
+	/*/ 順位画像の読み込み
 	ranking_text_image = LoadGraph("Resource/images/");
 	// レベル数画像の読み込み
 	level_text_image = LoadGraph("Resource/images/");
@@ -110,9 +111,11 @@ void RankingScene::Draw() const
 	// ランキングテキストの表示（座標: x=50, y=50、色: 白）
 	DrawString(50, 50, "ランキング画面です", GetColor(255, 255, 255));
 	DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
-	/*
-	DrawGraph(0, 0, background_image, TRUE);
+	
+	// 背景画像の描画
+	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
+	/*
 	DrawRotaGraphF(640.0f, 390.0f, 1.0, 0.0, certificate_image[0], TRUE);
 
 	// "ランキング"テキスト描画
@@ -253,12 +256,12 @@ void RankingScene::HandleNewHighScore()
 void RankingScene::DisplayHighScores() const
 {
 	int yOffset = 290;      // y軸オフセット
-	int rankX = 250;        // 順位のX座標
+	int rankX = 25;        // 順位のX座標
 	int levelX = 350;       // レベルのX座標
 	int scoreX = 500;       // スコアのX座標
 	int missX = 800;        // ミスのX座標
 	int rowSpacing = 100;    // 行間のスペース
-	int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
+	int digitWidth = 22;    // 1桁の幅（使用するフォント画像に合わせる）
 
 	for (size_t i = 0; i < HighScores.size(); ++i)
 	{
