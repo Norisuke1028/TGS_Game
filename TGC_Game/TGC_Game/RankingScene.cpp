@@ -261,7 +261,7 @@ void RankingScene::DisplayHighScores() const
 	int scoreX = 500;       // スコアのX座標
 	int missX = 800;        // ミスのX座標
 	int rowSpacing = 100;    // 行間のスペース
-	int digitWidth = 22;    // 1桁の幅（使用するフォント画像に合わせる）
+	int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
 	for (size_t i = 0; i < HighScores.size(); ++i)
 	{
