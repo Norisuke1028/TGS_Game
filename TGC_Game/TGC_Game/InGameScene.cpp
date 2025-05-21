@@ -41,31 +41,12 @@ eSceneType InGameScene::Update()
 	//limitに代入されてる値(30)になるとループ処理をやめる
 	while (!timer.IsTimeUp(limit)) 
 	{
-		//
 		std::this_thread::sleep_for(std::chrono::milliseconds(60));
+		
+		//カーソル操作設定
+		CursolControl();
 
-		// パッド入力制御のインスタンスを取得
-		InputControl* pad_input = InputControl::GetInstance();
-
-		//十字キーの操作
-			//左用
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
-		{
-			ingame_cursol--;
-			if (ingame_cursol < 0)
-			{
-				ingame_cursol = 4;
-			}
-		}
-		//右用
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
-		{
-			ingame_cursol++;
-			if (ingame_cursol > 4)
-			{
-				ingame_cursol = 0;
-			}
-		}
+		//描画処理
 		Draw();
 		select_guzai();
 
@@ -304,4 +285,31 @@ int InGameScene::check_guzai()
 eSceneType InGameScene::GetNowSceneType() const
 {
 	return eSceneType::eInGame;
+}
+
+//カーソル操作設定
+void InGameScene::CursolControl()
+{
+	// パッド入力制御のインスタンスを取得
+	InputControl* pad_input = InputControl::GetInstance();
+
+	//十字キーの操作
+		//左用
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
+	{
+		ingame_cursol--;
+		if (ingame_cursol < 0)
+		{
+			ingame_cursol = 4;
+		}
+	}
+	//右用
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
+	{
+		ingame_cursol++;
+		if (ingame_cursol > 4)
+		{
+			ingame_cursol = 0;
+		}
+	}
 }

@@ -64,5 +64,8 @@ public:
 
 	//具材チェック判定処理
 	int check_guzai();
+
+	//カーソルの操作設定
+	void CursolControl();
 };
 
