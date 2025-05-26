@@ -10,7 +10,7 @@
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,customer_image(),hukidasi_image(),delay()
+	,delay()
 {
 	next_scene = eSceneType::eInGame;
 	customer = new Customer;
@@ -29,47 +29,82 @@ void InGameScene::Initialize()
 	guzai_image = LoadGraph("Resource/image/guzai.png");  //具材の画像
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
-	customer_image = LoadGraph("Resource/image/student_male01.png");  //客の画像
-	hukidasi_image = LoadGraph("Resource/image/hukidasi.png");  //吹き出しの画像
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
 }
 
 eSceneType InGameScene::Update()
 {
-	//制限時間処理
-	//limitに代入されてる値(30)になるとループ処理をやめる
-	while (!timer.IsTimeUp(limit)) 
+	switch (gameState)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(60));
-		
+	case GameState::Countdown:
+	{
+		double elapsed = countDownTimer.GetElapsedSeconds();
+
+		ClearDrawScreen();
+		Draw(); // 背景描画など
+
+		if (elapsed < 3.0) {
+			int count = 3 - static_cast<int>(elapsed);
+			DrawFormatString(600, 300, 0xFFFFFF, "%d", count);
+		}
+		else if (elapsed < 3.8) {
+			DrawString(600, 300, "スタート！", 0xFFFFFF);
+		}
+		else {
+			timer.Start();  // 本編のタイマー開始
+			gameState = GameState::Playing; // 次の状態へ遷移
+		}
+
+		ScreenFlip();
+		break;
+	}
+
+	case GameState::Playing:
+	{
+		ClearDrawScreen();
 		//カーソル操作設定
 		CursolControl();
 
 		//描画処理
 		Draw();
+		customer->Draw();
 		select_guzai();
 
-		// 親クラスの更新処理を呼び出す
-		return GetNowSceneType();
+		// 制限時間チェック
+		if (timer.IsTimeUp(limit)) {
+			gameState = GameState::Result;
+		}
+		else {
+			return GetNowSceneType();
+		}
+
+		ScreenFlip();
+		break;
 	}
-	//30秒経つとリザルト画面へ遷移する	
-	return eSceneType::eResult;
+
+	case GameState::Result:
+	{
+		//30秒経つとリザルト画面へ遷移する	
+		return eSceneType::eResult;
+	}
+	}
+	return eSceneType::eInGame;
 }
 
 //描画処理
 void InGameScene::Draw() const
 {
-	//インゲームテキスト
-	//DrawString(50,50,"InGameSceneです",GetColor(255,255,255));
 	//背景（適当）
 	DrawBox(0, 0, 1280, 720, 0xffff00, true);
 	//時間制限
 	DrawFormatString(1150, 50, 0x000000, "制限時間　　%d", static_cast<int>(timer.GetElapsedSeconds()));
 
-	DrawRotaGraph(900, 200, 0.6, 0, hukidasi_image, true);  //吹き出しの画像
-	//お題のバーガーの表示
-	DrawRotaGraph(870, 100, 3.0, 0, burger_model[random], true);
+	if (gameState == GameState::Playing)
+	{
+		//お題のバーガーの表示
+		DrawRotaGraph(870, 100, 3.0, 0, burger_model[random], true);
+	}
 
 	//選択した具材(画像表示)
 	DrawRotaGraph(200, 275, 1.3, 0, select_burger_image[guzai_select[0]], true);
@@ -77,7 +112,6 @@ void InGameScene::Draw() const
 	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[2]], true);
 	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
-	//rawFormatString(600, 160, 0x000000, "%d", check_count);  //ジャッジ
 	DrawFormatString(1150, 140, 0x000000, "正解数　　%d", correct);  //正解数
 	DrawFormatString(1150, 180, 0x000000, "売上　　　%d", sales);  //売り上げ
 
@@ -95,11 +129,6 @@ void InGameScene::Draw() const
 	DrawRotaGraph(510, 600, 1.0, 0, guzai_image, true);  //具材画像の描画
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
 	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);  //バンズの画像の描画
-
-		if (next >= 0 && next <= 4)
-		{
-			customer->Draw();
-		}
 
 }
 
