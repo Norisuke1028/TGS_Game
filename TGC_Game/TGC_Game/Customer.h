@@ -11,6 +11,7 @@ class Customer
 {
 private:
     int customer_image;  //‹q‚Ì‰æ‘œ
+    int hukidasi_image;  //‚«o‚µ‚Ì‰æ‘œ
 
 public:
     CustomerState customer_state;
