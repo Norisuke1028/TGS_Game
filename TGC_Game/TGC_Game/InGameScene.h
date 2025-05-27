@@ -18,11 +18,11 @@ enum class GameState
 class InGameScene : public SceneBase
 {
 private:
-	GameState gameState = GameState::Countdown;
-	Timer countDownTimer;
-	Timer gameTimer;
+	GameState gameState = GameState::Countdown;  //ゲームステートをカウントダウンに設定
+	Timer countDownTimer;  //カウントダウン用タイマー
+	Timer gameTimer;  //ゲームメインタイマー
 
-	Customer* customer;
+	Customer customer;
 	Timer timer;
 
 	int ingame_cursol;  //具材選択カーソル
@@ -46,9 +46,11 @@ private:
 	int guzai_image;  //具材の画像
 	int select_image;  //決定ボタン画像
 	int buns_image;  //バンズの画像
+	int back_image;  //背景画像
 	int select_guzai_image;
 	int select_burger_image[4];  //選んだ具材画像
 	int burger_model[6];  //お題バーガー画像
+	
 
 private:
 	eSceneType next_scene;
