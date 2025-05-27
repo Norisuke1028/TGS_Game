@@ -85,7 +85,7 @@ eSceneType RankingScene::Update()
 		// パッド入力制御のインスタンスを取得
 		InputControl* pad_input = InputControl::GetInstance();
 
-		if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress)
+		if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 		{
 			// フェードアウト処理
 			fade->Initialize(false);

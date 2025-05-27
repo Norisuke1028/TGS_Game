@@ -22,7 +22,7 @@ void TitleScene::Initialize()
 	next_scene = eSceneType::eTitle;
 	
 	// 画像の読み込み
-	background_image = LoadGraph("Resource/image/kabegami.png");   // 背景画像
+	background_image = LoadGraph("Resource/image/title.png");   // 背景画像
 	menu_image = LoadGraph("Resource/image/menu.png");         // メニュー画像
 	cursor_image = LoadGraph("Resource/image/buns02.png");		// カーソル画像
 
@@ -67,7 +67,7 @@ eSceneType TitleScene::Update()
 	}
 
 	// カーソル決定
-	if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress)
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 	{
 		switch (menu_cursor)
 		{
@@ -88,7 +88,7 @@ eSceneType TitleScene::Update()
 	}
 
 	// コントローラーの A ボタン処理(簡略化)
-	if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
 		// 押したらSEを鳴らせる
 		PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		// BGMを止める
