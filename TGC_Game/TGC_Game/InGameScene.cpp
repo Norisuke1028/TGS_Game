@@ -9,7 +9,7 @@
 
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
-	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image()
+	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image(),g_number_image()
 	,delay()
 {
 	next_scene = eSceneType::eInGame;
@@ -29,6 +29,7 @@ void InGameScene::Initialize()
 	back_image = LoadGraph("Resource/image/background.png");  //背景画像
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
+	LoadDivGraph("Resource/image/number.png", 10, 5, 2, 132, 330, g_number_image);  //ゲーム内で使用するナンバー画像
 	customer.Initialize();  //客クラスの初期化処理
 }
 
@@ -48,7 +49,8 @@ eSceneType InGameScene::Update()
 		//3カウント用
 		if (elapsed < 3.0) {
 			int count = 3 - static_cast<int>(elapsed);
-			DrawFormatString(600, 300, 0xFFFFFF, "%d", count);
+			DrawRotaGraph(640, 360, 2.0, 0, g_number_image[count-1], true);
+			//DrawFormatString(600, 300, 0xFFFFFF, "%d", count);
 		}
 		else if (elapsed < 3.8) {
 			DrawString(600, 300, "スタート！", 0xFFFFFF);
