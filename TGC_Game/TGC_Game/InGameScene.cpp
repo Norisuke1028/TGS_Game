@@ -69,11 +69,6 @@ eSceneType InGameScene::Update()
 
 		//•`‰æˆ—
 		Draw();
-		////­‚µ’x‚ç‚¹‚Ä•`‰æ‚·‚é
-		//if (next >= 1 && next < 7) {
-		//	//‹q‚Æ‚«o‚µ‚Ì•`‰æˆ—
-		//	customer.Draw();
-		//}
 
 		select_guzai();
 
@@ -136,8 +131,8 @@ void InGameScene::Draw() const
 
 		DrawRotaGraph(1170, 230, 1.0, 0, g_number_image[correct], true);  //³‰ğ”
 
-		int s_thousands = (sales / 1000) % 1000;   // ç‚ÌˆÊ(”„ã)
-		int s_hundreds = (sales / 100) % 100;    // •S‚ÌˆÊ(”„ã)
+		int s_thousands = (sales / 1000) % 10;   // ç‚ÌˆÊ(”„ã)
+		int s_hundreds = (sales / 100) % 10;    // •S‚ÌˆÊ(”„ã)
 		int s_tens = (sales / 10) % 10;     // \‚ÌˆÊ(”„ã)
 		int s_ones = sales % 10;            // ˆê‚ÌˆÊ(”„ã)
 		if (sales >= 1000)DrawRotaGraph(1055, 300, 1.0, 0, g_number_image[s_thousands], true);  // ç‚ÌˆÊ(”„ã)
