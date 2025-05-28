@@ -8,7 +8,7 @@
 #include <thread>
 
 InGameScene::InGameScene() :
-	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
+	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random(),sb_image()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image(),g_number_image()
 	,delay(),countdown(),GM_timer(), elapsed()
 {
@@ -27,9 +27,15 @@ void InGameScene::Initialize()
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
 	back_image = LoadGraph("Resource/image/background.png");  //背景画像
+	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
 	LoadDivGraph("Resource/image/Num.png", 10, 10, 1, 49, 80, g_number_image);  //ゲーム内で使用するナンバー画像
+	cursol_se = LoadSoundMem("Resource/sounds/cursol.mp3");  //カーソル音
+	correct_se = LoadSoundMem("Resource/sounds/correct.mp3");  //正解音
+	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
+	sales_se = LoadSoundMem("Resource/sounds/sales.mp3");  //売上音
+	GM_bgm = LoadSoundMem("Resource/sounds/MainBGM.mp3");  //ゲームメインBGM
 	customer.Initialize();  //客クラスの初期化処理
 }
 
@@ -44,6 +50,7 @@ eSceneType InGameScene::Update()
 		elapsed = countDownTimer.GetElapsedSeconds();
 
 		ClearDrawScreen();
+		PlaySoundMem(GM_bgm, DX_PLAYTYPE_LOOP);
 		Draw(); // 背景描画など
 
 		//3カウント用
@@ -61,7 +68,6 @@ eSceneType InGameScene::Update()
 	case GameState::Playing:
 	{
 		ClearDrawScreen();
-
 		if (next != 0) {
 			//カーソル操作設定
 			CursolControl();
@@ -129,24 +135,25 @@ void InGameScene::Draw() const
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
-		DrawRotaGraph(1170, 230, 1.0, 0, g_number_image[correct], true);  //正解数
+		DrawRotaGraph(1145, 300, 1.0, 0, sb_image, false);  //スコアボード(伝票)の画像
+
+		DrawRotaGraph(1180, 285, 1.0, 0, g_number_image[correct], true);  //正解数
 
 		int s_thousands = (sales / 1000) % 10;   // 千の位(売上)
 		int s_hundreds = (sales / 100) % 10;    // 百の位(売上)
 		int s_tens = (sales / 10) % 10;     // 十の位(売上)
 		int s_ones = sales % 10;            // 一の位(売上)
-		if (sales >= 1000)DrawRotaGraph(1055, 300, 1.0, 0, g_number_image[s_thousands], true);  // 千の位(売上)
-		DrawRotaGraph(1100, 300, 1.0, 0, g_number_image[s_hundreds], true);  // 百の位(売上)
-		DrawRotaGraph(1145, 300, 1.0, 0, g_number_image[s_tens], true);  // 十の位(売上)
-		DrawRotaGraph(1190, 300, 1.0, 0, g_number_image[s_ones], true);  // 一の位(売上)
-		DrawFormatString(1150, 450, 0x000000, "売上　　　%d", sales);  //売り上げ
+		if (sales >= 1000)DrawRotaGraph(1095, 400, 1.0, 0, g_number_image[s_thousands], true);  // 千の位(売上)
+		if (sales >= 100)DrawRotaGraph(1140, 400, 1.0, 0, g_number_image[s_hundreds], true);  // 百の位(売上)
+		if (sales >= 10)DrawRotaGraph(1185, 400, 1.0, 0, g_number_image[s_tens], true);  // 十の位(売上)
+		DrawRotaGraph(1230, 400, 1.0, 0, g_number_image[s_ones], true);  // 一の位(売上)
 
 		//ディレイをかけて表示する
 		if (next >= 1 && next < 7) {
 			//客と吹き出しの描画処理
 			customer.Draw();
 			//お題のバーガーの表示
-			DrawRotaGraph(820, 150, 3.0, 0, burger_model[random], true);
+			DrawRotaGraph(790, 150, 3.0, 0, burger_model[random], true);
 		}
 	}
 
@@ -280,11 +287,13 @@ int InGameScene::select_guzai()
 				sales += 200 + (random * 50);
 				//スコアを1加算する
 				correct++;
+				PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
 
 				next += 1;
 			}
 			//ジャッジ判定に失敗するとリセット
 			else {
+				PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
 				check_count = 0;
 				next = 0;
 			}
@@ -378,6 +387,7 @@ void InGameScene::CursolControl()
 	if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_LEFT) == ePadInputState::ePress)
 	{
 		ingame_cursol--;
+		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
 		if (ingame_cursol < 0)
 		{
 			ingame_cursol = 4;
@@ -387,6 +397,7 @@ void InGameScene::CursolControl()
 	if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_RIGHT) == ePadInputState::ePress)
 	{
 		ingame_cursol++;
+		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
 		if (ingame_cursol > 4)
 		{
 			ingame_cursol = 0;
