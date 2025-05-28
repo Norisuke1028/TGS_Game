@@ -10,7 +10,7 @@
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image(),g_number_image()
-	,delay()
+	,delay(),countdown(),GM_timer(), elapsed()
 {
 	next_scene = eSceneType::eInGame;
 }
@@ -41,25 +41,19 @@ eSceneType InGameScene::Update()
 	//始めに3カウントする
 	case GameState::Countdown:
 	{
-		double elapsed = countDownTimer.GetElapsedSeconds();
+		elapsed = countDownTimer.GetElapsedSeconds();
 
 		ClearDrawScreen();
 		Draw(); // 背景描画など
 
 		//3カウント用
 		if (elapsed < 3.0) {
-			int count = 3 - static_cast<int>(elapsed);
-			DrawRotaGraph(640, 360, 3.0, 0, g_number_image[count], true);
-			//DrawFormatString(600, 300, 0xFFFFFF, "%d", count);
+			countdown = 3 - static_cast<int>(elapsed);
 		}
-		else if (elapsed < 3.8) {
-			DrawString(600, 300, "スタート！", 0xFFFFFF);
-		}
-		else {
+		else if (elapsed > 4.1) {
 			timer.Start();  // 本編のタイマー開始
 			gameState = GameState::Playing; // 次の状態へ遷移
 		}
-
 		ScreenFlip();
 		break;
 	}
@@ -67,16 +61,19 @@ eSceneType InGameScene::Update()
 	case GameState::Playing:
 	{
 		ClearDrawScreen();
-		//カーソル操作設定
-		CursolControl();
+
+		if (next != 0) {
+			//カーソル操作設定
+			CursolControl();
+		}
 
 		//描画処理
 		Draw();
-		//少し遅らせて描画する
-		if (next >= 1 && next < 7) {
-			//客と吹き出しの描画処理
-			customer.Draw();
-		}
+		////少し遅らせて描画する
+		//if (next >= 1 && next < 7) {
+		//	//客と吹き出しの描画処理
+		//	customer.Draw();
+		//}
 
 		select_guzai();
 
@@ -104,29 +101,49 @@ void InGameScene::Draw() const
 	//背景（適当）
 	DrawRotaGraph(640, 360, 1.0, 0, back_image, true);
 
+	//Countdownになると実行
+	if (gameState == GameState::Countdown)
+	{
+		//3カウントダウン用
+		if (elapsed < 3.0) {
+			DrawRotaGraph(640, 360, 3.0, 0, g_number_image[countdown], true);
+		}
+		//スタート表示用
+		else if (elapsed < 3.8) {
+			DrawString(600, 300, "スタート！", 0xFFFFFF);
+		}
+	}
+
 	//Playingになると実行
 	if (gameState == GameState::Playing)
 	{
 		//制限時間の値を受け取る
-		int elapsed = 30-static_cast<int>(timer.GetElapsedSeconds());
+		int GM_timer = 30-static_cast<int>(timer.GetElapsedSeconds());
 
-		int tens = (elapsed / 10) % 10;  // 十の位
-		int ones = elapsed % 10;        // 一の位
+		int tens = (GM_timer / 10) % 10;  // 十の位
+		int ones = GM_timer % 10;        // 一の位
 
 		//時間制限
-		DrawRotaGraph(1135, 100, 1.0, 0, g_number_image[tens], true);
-		DrawRotaGraph(1180, 100, 1.0, 0, g_number_image[ones], true);
-
+		DrawCircle(1175, 80, 75, 0x000000, true);
+		DrawCircle(1175, 80, 70, 0xffffff, true);
+		DrawRotaGraph(1155, 80, 1.0, 0, g_number_image[tens], true);
+		DrawRotaGraph(1200, 80, 1.0, 0, g_number_image[ones], true);
 
 		//具材選択カーソル描画
 		DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
+		//少し遅らせて描画する
+		if (next >= 1 && next < 7) {
+			//客と吹き出しの描画処理
+			customer.Draw();
+		}
+
 		//ディレイをかけて表示する
 		if (next >= 1 && next < 7) {
 			//お題のバーガーの表示
-			DrawRotaGraph(870, 100, 3.0, 0, burger_model[random], true);
+			DrawRotaGraph(820, 100, 3.0, 0, burger_model[random], true);
 		}
 	}
 
@@ -173,7 +190,7 @@ int InGameScene::select_guzai()
 				}
 
 				//ディレイをかける
-				if (delay < 150)
+				if (delay < 100)
 				{
 					delay++;
 				}
