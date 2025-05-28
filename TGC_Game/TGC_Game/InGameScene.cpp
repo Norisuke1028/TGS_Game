@@ -106,7 +106,7 @@ void InGameScene::Draw() const
 	{
 		//3カウントダウン用
 		if (elapsed < 3.0) {
-			DrawRotaGraph(640, 360, 3.0, 0, g_number_image[countdown], true);
+			DrawRotaGraph(640, 340, 3.0, 0, g_number_image[countdown], true);
 		}
 		//スタート表示用
 		else if (elapsed < 3.8) {
@@ -120,30 +120,38 @@ void InGameScene::Draw() const
 		//制限時間の値を受け取る
 		int GM_timer = 30-static_cast<int>(timer.GetElapsedSeconds());
 
-		int tens = (GM_timer / 10) % 10;  // 十の位
-		int ones = GM_timer % 10;        // 一の位
+		int t_tens = (GM_timer / 10) % 10;  // 十の位(制限時間)
+		int t_ones = GM_timer % 10;        // 一の位(制限時間)
 
 		//時間制限
 		DrawCircle(1175, 80, 75, 0x000000, true);
 		DrawCircle(1175, 80, 70, 0xffffff, true);
-		DrawRotaGraph(1155, 80, 1.0, 0, g_number_image[tens], true);
-		DrawRotaGraph(1200, 80, 1.0, 0, g_number_image[ones], true);
+		DrawRotaGraph(1155, 80, 1.0, 0, g_number_image[t_tens], true);
+		DrawRotaGraph(1200, 80, 1.0, 0, g_number_image[t_ones], true);
 
 		//具材選択カーソル描画
 		DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
-		//少し遅らせて描画する
-		if (next >= 1 && next < 7) {
-			//客と吹き出しの描画処理
-			customer.Draw();
-		}
+		DrawRotaGraph(1170, 230, 1.0, 0, g_number_image[correct], true);  //正解数
+
+		int s_thousands = (sales / 1000) % 1000;   // 千の位(売上)
+		int s_hundreds = (sales / 100) % 100;    // 百の位(売上)
+		int s_tens = (sales / 10) % 10;     // 十の位(売上)
+		int s_ones = sales % 10;            // 一の位(売上)
+		if (sales >= 1000)DrawRotaGraph(1055, 300, 1.0, 0, g_number_image[s_thousands], true);  // 千の位(売上)
+		DrawRotaGraph(1100, 300, 1.0, 0, g_number_image[s_hundreds], true);  // 百の位(売上)
+		DrawRotaGraph(1145, 300, 1.0, 0, g_number_image[s_tens], true);  // 十の位(売上)
+		DrawRotaGraph(1190, 300, 1.0, 0, g_number_image[s_ones], true);  // 一の位(売上)
+		DrawFormatString(1150, 450, 0x000000, "売上　　　%d", sales);  //売り上げ
 
 		//ディレイをかけて表示する
 		if (next >= 1 && next < 7) {
+			//客と吹き出しの描画処理
+			customer.Draw();
 			//お題のバーガーの表示
-			DrawRotaGraph(820, 100, 3.0, 0, burger_model[random], true);
+			DrawRotaGraph(820, 150, 3.0, 0, burger_model[random], true);
 		}
 	}
 
@@ -159,10 +167,8 @@ void InGameScene::Draw() const
 	DrawBox(110, 230, 290, 260, 0xffffff, false);
 	DrawBox(110, 270, 290, 300, 0xffffff, false);
 
-	DrawFormatString(1150, 140, 0x000000, "正解数　　%d", correct);  //正解数
-	DrawFormatString(1150, 180, 0x000000, "売上　　　%d", sales);  //売り上げ
-
 	DrawRotaGraph(510, 600, 1.0, 0, guzai_image, true);  //具材画像の描画
+	DrawBox(1035, 535, 1235, 645, 0x000000, true);  //決定ボタン外枠
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
 	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);  //バンズの画像の描画
 
