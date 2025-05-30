@@ -26,7 +26,7 @@ void InGameScene::Initialize()
 	guzai_image = LoadGraph("Resource/image/guzai.png");  //具材の画像
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
-	back_image = LoadGraph("Resource/image/background.png");  //背景画像
+	back_image = LoadGraph("Resource/image/main_background.png");  //背景画像
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
@@ -135,18 +135,22 @@ void InGameScene::Draw() const
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
+<<<<<<< HEAD
 		DrawRotaGraph(1155, 300, 1.0, 0, sb_image, true);  //スコアボード(伝票)の画像
+=======
+		DrawRotaGraph(1145, 330, 1.0, 0, sb_image, false);  //スコアボード(伝票)の画像
+>>>>>>> main
 
-		DrawRotaGraph(1180, 285, 1.0, 0, g_number_image[correct], true);  //正解数
+		DrawRotaGraph(1180, 315, 1.0, 0, g_number_image[correct], true);  //正解数
 
 		int s_thousands = (sales / 1000) % 10;   // 千の位(売上)
 		int s_hundreds = (sales / 100) % 10;    // 百の位(売上)
 		int s_tens = (sales / 10) % 10;     // 十の位(売上)
 		int s_ones = sales % 10;            // 一の位(売上)
-		if (sales >= 1000)DrawRotaGraph(1095, 400, 1.0, 0, g_number_image[s_thousands], true);  // 千の位(売上)
-		if (sales >= 100)DrawRotaGraph(1140, 400, 1.0, 0, g_number_image[s_hundreds], true);  // 百の位(売上)
-		if (sales >= 10)DrawRotaGraph(1185, 400, 1.0, 0, g_number_image[s_tens], true);  // 十の位(売上)
-		DrawRotaGraph(1230, 400, 1.0, 0, g_number_image[s_ones], true);  // 一の位(売上)
+		if (sales >= 1000)DrawRotaGraph(1095, 430, 1.0, 0, g_number_image[s_thousands], true);  // 千の位(売上)
+		if (sales >= 100)DrawRotaGraph(1140, 430, 1.0, 0, g_number_image[s_hundreds], true);  // 百の位(売上)
+		if (sales >= 10)DrawRotaGraph(1185, 430, 1.0, 0, g_number_image[s_tens], true);  // 十の位(売上)
+		DrawRotaGraph(1230, 430, 1.0, 0, g_number_image[s_ones], true);  // 一の位(売上)
 
 		//ディレイをかけて表示する
 		if (next >= 1 && next < 7) {
@@ -158,21 +162,21 @@ void InGameScene::Draw() const
 	}
 
 	//選択した具材(画像表示)
-	DrawRotaGraph(200, 275, 1.3, 0, select_burger_image[guzai_select[0]], true);
-	DrawRotaGraph(200, 235, 1.3, 0, select_burger_image[guzai_select[1]], true);
-	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[2]], true);
-	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[3]], true);
+	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[0]], true);
+	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[1]], true);
+	DrawRotaGraph(200, 115, 1.3, 0, select_burger_image[guzai_select[2]], true);
+	DrawRotaGraph(200, 75, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
 	//具材選択描画
-	DrawBox(110, 150, 290, 180, 0xffffff, false);
-	DrawBox(110, 190, 290, 220, 0xffffff, false);
-	DrawBox(110, 230, 290, 260, 0xffffff, false);
-	DrawBox(110, 270, 290, 300, 0xffffff, false);
+	DrawBox(110, 100, 290, 80, 0xffffff, false);
+	DrawBox(110, 140, 290, 120, 0xffffff, false);
+	DrawBox(110, 180, 290, 160, 0xffffff, false);
+	DrawBox(110, 220, 290, 200, 0xffffff, false);
 
 	DrawRotaGraph(510, 600, 1.0, 0, guzai_image, true);  //具材画像の描画
 	DrawBox(1035, 535, 1235, 645, 0x000000, true);  //決定ボタン外枠
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
-	DrawRotaGraph(180, 220, 1.0, 0, buns_image, true);  //バンズの画像の描画
+	DrawRotaGraph(180, 140, 1.0, 0, buns_image, true);  //バンズの画像の描画
 
 }
 
