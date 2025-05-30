@@ -135,11 +135,8 @@ void InGameScene::Draw() const
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
-<<<<<<< HEAD
-		DrawRotaGraph(1155, 300, 1.0, 0, sb_image, true);  //スコアボード(伝票)の画像
-=======
-		DrawRotaGraph(1145, 330, 1.0, 0, sb_image, false);  //スコアボード(伝票)の画像
->>>>>>> main
+		DrawRotaGraph(1155, 330, 1.0, 0, sb_image, true);  //スコアボード(伝票)の画像
+
 
 		DrawRotaGraph(1180, 315, 1.0, 0, g_number_image[correct], true);  //正解数
 
