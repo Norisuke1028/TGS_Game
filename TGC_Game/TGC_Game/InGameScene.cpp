@@ -11,7 +11,8 @@
 
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random(),sb_image()
-	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image(),g_number_image()
+	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
+	,back_image(),gb_number_image(),gr_number_image(),start_image()
 	,delay(),countdown(),GM_timer(), elapsed()
 {
 	next_scene = eSceneType::eInGame;
@@ -30,9 +31,11 @@ void InGameScene::Initialize()
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
 	back_image = LoadGraph("Resource/image/main_background.png");  //背景画像
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
+	start_image = LoadGraph("Resource/image/start.png");  //スタート画像
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
-	LoadDivGraph("Resource/image/Num.png", 10, 10, 1, 49, 80, g_number_image);  //ゲーム内で使用するナンバー画像
+	LoadDivGraph("Resource/image/Num.png", 10, 10, 1, 49, 80, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
+	LoadDivGraph("Resource/image/red_number.png", 10, 10, 1, 48, 80, gr_number_image);  //ゲーム内で使用するナンバー画像(赤)
 	cursol_se = LoadSoundMem("Resource/sounds/cursol.mp3");  //カーソル音
 	correct_se = LoadSoundMem("Resource/sounds/correct.mp3");  //正解音
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
@@ -56,10 +59,10 @@ eSceneType InGameScene::Update()
 		Draw(); // 背景描画など
 
 		//3カウント用
-		if (elapsed < 3.0) {
-			countdown = 3 - static_cast<int>(elapsed);
+		if (elapsed < 4.0) {
+			countdown = 4 - static_cast<int>(elapsed);
 		}
-		else if (elapsed > 4.1) {
+		else if (elapsed > 5.1) {
 			timer.Start();  // 本編のタイマー開始
 			gameState = GameState::Playing; // 次の状態へ遷移
 		}
@@ -111,12 +114,12 @@ void InGameScene::Draw() const
 	if (gameState == GameState::Countdown)
 	{
 		//3カウントダウン用
-		if (elapsed < 3.0) {
-			DrawRotaGraph(640, 340, 3.0, 0, g_number_image[countdown], true);
+		if (elapsed < 4.0) {
+			DrawRotaGraph(640, 340, 3.0, 0, gr_number_image[countdown], true);
 		}
 		//スタート表示用
-		else if (elapsed < 3.8) {
-			DrawString(600, 300, "スタート！", 0xFFFFFF);
+		else if (elapsed < 4.8) {
+			DrawRotaGraph(640, 340, 2.0, 0, start_image, true);
 		}
 	}
 
@@ -132,8 +135,8 @@ void InGameScene::Draw() const
 		//時間制限
 		DrawCircle(1175, 80, 75, 0x000000, true);
 		DrawCircle(1175, 80, 70, 0xffffff, true);
-		DrawRotaGraph(1155, 80, 1.0, 0, g_number_image[t_tens], true);
-		DrawRotaGraph(1200, 80, 1.0, 0, g_number_image[t_ones], true);
+		DrawRotaGraph(1155, 80, 1.0, 0, gb_number_image[t_tens], true);
+		DrawRotaGraph(1200, 80, 1.0, 0, gb_number_image[t_ones], true);
 
 		//具材選択カーソル描画
 		DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -143,16 +146,16 @@ void InGameScene::Draw() const
 		DrawRotaGraph(1155, 330, 1.0, 0, sb_image, true);  //スコアボード(伝票)の画像
 
 
-		DrawRotaGraph(1180, 315, 1.0, 0, g_number_image[correct], true);  //正解数
+		DrawRotaGraph(1180, 315, 1.0, 0, gb_number_image[correct], true);  //正解数
 
 		int s_thousands = (sales / 1000) % 10;   // 千の位(売上)
 		int s_hundreds = (sales / 100) % 10;    // 百の位(売上)
 		int s_tens = (sales / 10) % 10;     // 十の位(売上)
 		int s_ones = sales % 10;            // 一の位(売上)
-		if (sales >= 1000)DrawRotaGraph(1095, 430, 1.0, 0, g_number_image[s_thousands], true);  // 千の位(売上)
-		if (sales >= 100)DrawRotaGraph(1140, 430, 1.0, 0, g_number_image[s_hundreds], true);  // 百の位(売上)
-		if (sales >= 10)DrawRotaGraph(1185, 430, 1.0, 0, g_number_image[s_tens], true);  // 十の位(売上)
-		DrawRotaGraph(1230, 430, 1.0, 0, g_number_image[s_ones], true);  // 一の位(売上)
+		if (sales >= 1000)DrawRotaGraph(1095, 430, 1.0, 0, gb_number_image[s_thousands], true);  // 千の位(売上)
+		if (sales >= 100)DrawRotaGraph(1140, 430, 1.0, 0, gb_number_image[s_hundreds], true);  // 百の位(売上)
+		if (sales >= 10)DrawRotaGraph(1185, 430, 1.0, 0, gb_number_image[s_tens], true);  // 十の位(売上)
+		DrawRotaGraph(1230, 430, 1.0, 0, gb_number_image[s_ones], true);  // 一の位(売上)
 
 		//ディレイをかけて表示する
 		if (next >= 1 && next < 7) {
@@ -204,7 +207,7 @@ int InGameScene::select_guzai()
 				}
 
 				//ディレイをかける
-				if (delay < 100)
+				if (delay < 50)
 				{
 					delay++;
 				}

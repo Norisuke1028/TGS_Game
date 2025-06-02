@@ -53,8 +53,10 @@ private:
 	int select_guzai_image;
 	int select_burger_image[4];  //選んだ具材画像
 	int burger_model[6];  //お題バーガー画像
-	int g_number_image[10];  //ゲーム内で使うナンバー画像
+	int gb_number_image[10];  //ゲーム内で使うナンバー画像(黒) gamebrack
+	int gr_number_image[10];  //ゲーム内で使うナンバー画像(赤) gamered
 	int sb_image;  //スコアボード画像
+	int start_image;  //ゲーム開始画像
 	
 	int cursol_se;  //カーソル音
 	int correct_se;  //正解音
