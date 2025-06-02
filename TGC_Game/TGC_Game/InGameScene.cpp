@@ -1,11 +1,13 @@
 #include "InGameScene.h"
 #include "InputControl.h"
 #include "ResourceManager.h"
+#include "GameDataManager.h"
 #include "DxLib.h"
 
 #include <string>
 #include <iostream>
 #include <thread>
+#include <fstream>
 
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random(),sb_image()
@@ -89,6 +91,9 @@ eSceneType InGameScene::Update()
 	//リザルトへ
 	case GameState::Result:
 	{
+		GameDataManager::GetInstance().SetCorrect(correct);
+		GameDataManager::GetInstance().SetSales(sales);
+
 		//30秒経つとリザルト画面へ遷移する	
 		return eSceneType::eResult;
 	}
