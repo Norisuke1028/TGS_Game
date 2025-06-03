@@ -23,7 +23,9 @@ private:
 
 	int result_bgm;             // リザルトメインbgm
 
-	
+
+	void DrawNumber(int x, int y, int number) const;        // スコアを画像で描画
+
 public:
 	virtual void Initialize() override;
 	virtual eSceneType Update() override;
