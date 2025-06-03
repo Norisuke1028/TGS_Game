@@ -35,7 +35,7 @@ void InGameScene::Initialize()
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
 	LoadDivGraph("Resource/image/Num.png", 10, 10, 1, 49, 80, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
-	LoadDivGraph("Resource/image/red_number.png", 10, 10, 1, 48, 80, gr_number_image);  //ゲーム内で使用するナンバー画像(赤)
+	LoadDivGraph("Resource/image/red_number.png", 10, 10, 1, 50, 80, gr_number_image);  //ゲーム内で使用するナンバー画像(赤)
 	cursol_se = LoadSoundMem("Resource/sounds/cursol.mp3");  //カーソル音
 	correct_se = LoadSoundMem("Resource/sounds/correct.mp3");  //正解音
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
