@@ -67,7 +67,7 @@ eSceneType TitleScene::Update()
 	}
 
 	// カーソル決定
-	if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress)
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 	{
 		switch (menu_cursor)
 		{
@@ -93,7 +93,7 @@ eSceneType TitleScene::Update()
 		PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		// BGMを止める
 		StopSoundMem(title_bgm);
-		// フェード初期化
+		// フェードアウト
 		fade->Initialize(false);
 
 		// カーソル位置に応じてシーン遷移を予約

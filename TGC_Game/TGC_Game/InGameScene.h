@@ -21,6 +21,7 @@ private:
 	GameState gameState = GameState::Countdown;  //ゲームステートをカウントダウンに設定
 	Timer countDownTimer;  //カウントダウン用タイマー
 	Timer gameTimer;  //ゲームメインタイマー
+	class Fade* fade;        // フェード
 
 	Customer customer;
 	Timer timer;
@@ -34,7 +35,7 @@ private:
 	int sales;  //売上
 	int sozai_count;  //お題の素材数
 	int delay;  //ディレイ用カウント
-	const double limit = 30.0;  //制限時間
+	const double limit = 5.0;  //制限時間
 	int countdown;  //カウントダウン用
 	int GM_timer;  //ゲームメインタイマー
 	double elapsed;  //経過した時間

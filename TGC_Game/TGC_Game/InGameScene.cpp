@@ -2,6 +2,7 @@
 #include "InputControl.h"
 #include "ResourceManager.h"
 #include "GameDataManager.h"
+#include "Fade.h"
 #include "DxLib.h"
 
 #include <string>
@@ -25,6 +26,10 @@ InGameScene::~InGameScene()
 void InGameScene::Initialize()
 {
 	ResourceManager* rm = ResourceManager::GetInstance();
+	// フェードをインスタンス化
+	fade = new Fade();
+	// フェードの初期化処理（フェードイン）
+	fade->Initialize(true);
 
 	guzai_image = LoadGraph("Resource/image/guzai.png");  //具材の画像
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
@@ -46,6 +51,18 @@ void InGameScene::Initialize()
 
 eSceneType InGameScene::Update()
 {
+	// フェードアウト中なら、フェード処理を続ける
+	if (next_scene != eSceneType::eInGame) {
+		if (fade->GetEndFlag()) {
+			// フェードアウト完了後にシーン遷移
+			return next_scene;
+		}
+		fade->Update();
+		// フェードアウト中はゲームメインシーンを維持
+		return eSceneType::eInGame;
+	}
+	fade->Update();
+
 	//ゲームの進行順序
 	switch (gameState)
 	{
@@ -96,9 +113,12 @@ eSceneType InGameScene::Update()
 	{
 		GameDataManager::GetInstance().SetCorrect(correct);
 		GameDataManager::GetInstance().SetSales(sales);
+		// フェードアウト
+		fade->Initialize(false);
 
 		//30秒経つとリザルト画面へ遷移する	
 		return eSceneType::eResult;
+
 	}
 	}
 	return eSceneType::eInGame;
@@ -183,6 +203,9 @@ void InGameScene::Draw() const
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
 	DrawRotaGraph(180, 140, 1.0, 0, buns_image, true);  //バンズの画像の描画
 
+	// フェード描画
+	fade->Draw();
+
 }
 
 void InGameScene::Finalize()
@@ -190,6 +213,7 @@ void InGameScene::Finalize()
 	DeleteGraph(background_image);
 	DeleteGraph(guzai_image);
 	DeleteGraph(select_image);
+	delete fade;
 }
 
 //具材選択処理
