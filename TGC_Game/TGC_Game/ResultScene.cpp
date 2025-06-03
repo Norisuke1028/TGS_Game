@@ -98,7 +98,7 @@ eSceneType ResultScene::Update()
     }
 
     // コントローラーの A ボタン処理(簡略化)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+    if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
         // 押したらSEを鳴らせる
         PlaySoundMem(cursor_se_push, DX_PLAYTYPE_BACK);
         // BGMを止める
@@ -131,7 +131,7 @@ eSceneType ResultScene::Update()
 void ResultScene::Draw() const
 {
 
-   //DrawGraph(0, 0, background_image, TRUE);
+   DrawGraph(0, 0, background_image, TRUE);
    
    // リザルトテキストの表示（座標: x=50, y=50、色: 白）(完成次第削除予定)
     DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
@@ -151,6 +151,21 @@ void ResultScene::Draw() const
 
     DrawFormatString(100, 100, GetColor(255, 255, 255), "接客人数: %d", correct);
     DrawFormatString(100, 140, GetColor(255, 255, 255), "売上: %d 円", sales);
+
+
+    int yOffset = 290;      // y軸オフセット
+    int rankX = 25;        // 順位のX座標
+    int levelX = 350;       // レベルのX座標
+    int scoreX = 500;       // スコアのX座標
+    int missX = 800;        // ミスのX座標
+    int rowSpacing = 100;    // 行間のスペース
+    int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
+
+    // レベルを描画
+    DrawNumber(levelX, yOffset, correct);
+
+    // スコアを描画
+    DrawNumber(scoreX, yOffset, sales);
 }
 
 void ResultScene::Finalize()
@@ -163,5 +178,27 @@ eSceneType ResultScene::GetNowSceneType() const
     return eSceneType::eResult;
 }
 
+// 指定位置に数値を画像で描画する
+void ResultScene::DrawNumber(int x, int y, int number) const
+{
+    if (num_image.empty()) return;  // 画像が未ロードなら描画しない
 
+    int image_width, image_height;
+    GetGraphSize(num_image[0], &image_width, &image_height);  // 画像のサイズ取得
+
+    int digit_width = image_width / 10;  // 各数字の幅（10桁に分割）
+    int digit_height = image_height;  // 画像の高さ
+
+    std::string numStr = std::to_string(number); // 数字を文字列に変換
+
+    for (size_t i = 0; i < numStr.length(); ++i)
+    {
+        int digit = numStr[i] - '0';  // 文字から数値へ変換
+        int srcX = digit * digit_width;  // 画像内のX座標
+        int srcY = 0;  // Y座標（1行の画像なら0）
+
+        // 画像の一部を切り取って描画
+        DrawRectGraph(x + i * digit_width, y, srcX, srcY, digit_width, digit_height, num_image[0], TRUE, FALSE);
+    }
+}
 
