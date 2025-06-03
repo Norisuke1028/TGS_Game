@@ -133,7 +133,7 @@ void ResultScene::Draw() const
 
    //DrawGraph(0, 0, background_image, TRUE);
    
-   // リザルトテキストの表示（座標: x=50, y=50、色: 白）
+   // リザルトテキストの表示（座標: x=50, y=50、色: 白）(完成次第削除予定)
     DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
     DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
 
@@ -144,17 +144,10 @@ void ResultScene::Draw() const
     // ハイスコア画像描画
     DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
 
-    /*/ 今回のスコアとレベルを描画
-    DisplayCurrentRunScores();
-    DrawFormatString(10, 58, GetColor(255, 255, 255), "Level: %d", LevelReached);
-    DrawFormatString(10, 74, GetColor(255, 255, 255), "Score: %d", FinalScore);
-    DrawFormatString(10, 90, GetColor(255, 255, 255), "Misinputs: %d", Misinputs);*/
-
-  
-
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
     int sales = GameDataManager::GetInstance().GetSales();
+
 
     DrawFormatString(100, 100, GetColor(255, 255, 255), "接客人数: %d", correct);
     DrawFormatString(100, 140, GetColor(255, 255, 255), "売上: %d 円", sales);
@@ -163,19 +156,12 @@ void ResultScene::Draw() const
 void ResultScene::Finalize()
 {
     
-    // 画像を解放する
-    /*for (size_t i = 0; buttons.size(); ++i)
-    {
-        if (buttons[i].GraphicHandle != -1)
-        {
-            DeleteGraph(buttons[i].GraphicHandle);
-        }
-    }*/
 }
 
 eSceneType ResultScene::GetNowSceneType() const
 {
     return eSceneType::eResult;
 }
+
 
 

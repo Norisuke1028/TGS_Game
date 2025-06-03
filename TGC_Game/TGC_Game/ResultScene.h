@@ -31,6 +31,7 @@ public:
 	virtual void Finalize() override;
 
 
+
 public:
 	virtual eSceneType GetNowSceneType() const override;
 };
