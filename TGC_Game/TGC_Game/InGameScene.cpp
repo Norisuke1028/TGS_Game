@@ -167,8 +167,11 @@ void InGameScene::Draw() const
 
 		DrawRotaGraph(1155, 330, 1.0, 0, sb_image, true);  //スコアボード(伝票)の画像
 
+		int c_tens = (correct / 10) % 10;
+		int c_ones = correct % 10;
 
-		DrawRotaGraph(1180, 315, 1.0, 0, gb_number_image[correct], true);  //正解数
+		if (correct >= 10)DrawRotaGraph(1130, 315, 1.0, 0, gb_number_image[c_tens], true);  //正解数(十の位)
+		DrawRotaGraph(1180, 315, 1.0, 0, gb_number_image[c_ones], true);  //正解数(一の位)
 
 		int s_thousands = (sales / 1000) % 10;   // 千の位(売上)
 		int s_hundreds = (sales / 100) % 10;    // 百の位(売上)
