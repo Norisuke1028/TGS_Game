@@ -47,7 +47,7 @@ eSceneType TutorialScene::Update()
 	}
 
 	// コントローラーの A ボタン処理(簡略化)
-	if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+	if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
 		// 押したらSEを鳴らせる
 		PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		// BGMを止める
