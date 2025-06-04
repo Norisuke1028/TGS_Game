@@ -25,6 +25,7 @@ private:
 
 
 	void DrawNumber(int x, int y, int number) const;        // ƒXƒRƒA‚ð‰æ‘œ‚Å•`‰æ
+	
 
 public:
 	virtual void Initialize() override;
@@ -32,7 +33,7 @@ public:
 	virtual void Draw() const override;
 	virtual void Finalize() override;
 
-
+    void SaveScore(int correct, int sales);
 
 public:
 	virtual eSceneType GetNowSceneType() const override;

@@ -11,7 +11,7 @@
 #include <fstream>
 
 InGameScene::InGameScene() :
-	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random(),sb_image()
+	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random(),sb_image(),select()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
 	,back_image(),gb_number_image(),gr_number_image(),start_image()
 	,delay(),countdown(),GM_timer(), elapsed()
@@ -130,6 +130,8 @@ void InGameScene::Draw() const
 	//背景（適当）
 	DrawRotaGraph(640, 360, 1.0, 0, back_image, true);
 
+	DrawFormatString(20, 400, 0x000000, "%d", select);
+
 	//Countdownになると実行
 	if (gameState == GameState::Countdown)
 	{
@@ -226,9 +228,10 @@ int InGameScene::select_guzai()
 	{
 		case(0):
 				//選んだ具材の初期化処理
-				for (int i = 0; i < 4; ++i) {
-					guzai_select[i] = -1;
+				for (select = 0; select < 4; ++select) {
+					guzai_select[select] = -1;
 				}
+				ingame_cursol = 0;
 
 				//ディレイをかける
 				if (delay < 50)
@@ -239,23 +242,18 @@ int InGameScene::select_guzai()
 					//少し遅らせて実行する
 					delay = 0;
 					rand_burger();
+					customer.RandomCustomer();
+					select = 0;
 					next += 1;
 				}
 		//具材一枠目
 		case(1):
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
-				//決定ボタンを押すとジャッジ処理へ
-				if (ingame_cursol == 4)
-				{
-					next = 5;
-				}
 				//具材を選択すると1つ目に具材を選択
-				else
-				{
-					guzai_select[0] = ingame_cursol;
-					next += 1;
-				}
+				guzai_select[select] = ingame_cursol;
+				select += 1;
+				next += 1;
 			}
 		break;
 		//具材二枠目
@@ -270,8 +268,17 @@ int InGameScene::select_guzai()
 				//具材を選択すると2つ目に具材を選択
 				else
 				{
-					guzai_select[1] = ingame_cursol;
+					guzai_select[select] = ingame_cursol;
+					select += 1;
 					next += 1;
+				}
+			}
+			//Aボタンを押すと具材をまた選べるようになる(一枠目)
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				if (select > 0) {
+					select -= 1;
+					guzai_select[select] = -1;
+					next -= 1;
 				}
 			}
 		break;
@@ -287,9 +294,16 @@ int InGameScene::select_guzai()
 				//具材を選択すると3つ目に具材を選択
 				else
 				{
-					guzai_select[2] = ingame_cursol;
+					guzai_select[select] = ingame_cursol;
+					select += 1;
 					next += 1;
 				}
+			}
+			//Aボタンを押すと具材をまた選べるようになる(二枠目)
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				select -= 1;
+				guzai_select[select] = -1;
+				next -= 1;
 			}
 		break;
 		//具材四枠目
@@ -300,7 +314,9 @@ int InGameScene::select_guzai()
 				//4つ目に具材を選択
 				if (ingame_cursol < 4)
 				{
-					guzai_select[3] = ingame_cursol;
+					guzai_select[select] = ingame_cursol;
+					select += 1;
+					next += 1;
 				}
 				// 決定ボタンが押されていてカーソルが決定位置ならジャッジへ
 				else if (ingame_cursol == 4)
@@ -308,27 +324,42 @@ int InGameScene::select_guzai()
 					next += 1;
 				}
 			}
+			//Aボタンを押すと具材をまた選べるようになる(三枠目)
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				select -= 1;
+				guzai_select[select] = -1;
+				next -= 1;
+			}
 			break;
 		case(5):
-			//決定ボタンを押すと具材チェック
-			check_guzai();
-
-			//お題の素材の数とチェックカウントが同じ(ジャッジ判定に成功)だったら
-			if (check_count == sozai_count)
-			{
-				//ハンバーガーによって売上額を変更する
-				sales += 200 + (random * 50);
-				//スコアを1加算する
-				correct++;
-				PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
-
-				next += 1;
+			//Aボタンを押すと具材をまた選べるようになる(四枠目)
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				select -= 1;
+				guzai_select[select] = -1;
+				next -= 1;
 			}
-			//ジャッジ判定に失敗するとリセット
-			else {
-				PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
-				check_count = 0;
-				next = 0;
+			//決定ボタンを選んでる時にBボタンを押すとジャッジへ
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress && ingame_cursol == 4 || select < 4) {
+				//決定ボタンを押すと具材チェック
+				check_guzai();
+
+				//お題の素材の数とチェックカウントが同じ(ジャッジ判定に成功)だったら
+				if (check_count == sozai_count)
+				{
+					//ハンバーガーによって売上額を変更する
+					sales += 200 + (random * 50);
+					//スコアを1加算する
+					correct++;
+					PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
+
+					next += 1;
+				}
+				//ジャッジ判定に失敗するとリセット
+				else {
+					PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
+					check_count = 0;
+					next = 0;
+				}
 			}
 		break;
 		case(6):
@@ -421,9 +452,16 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol--;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
+
+		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
 		if (ingame_cursol < 0)
 		{
-			ingame_cursol = 4;
+			if (next > 1) {
+				ingame_cursol = 4;
+			}
+			else {
+				ingame_cursol = 3;
+			}
 		}
 	}
 	//右用
@@ -431,9 +469,19 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol++;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
-		if (ingame_cursol > 4)
-		{
-			ingame_cursol = 0;
+
+		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
+		if (next > 1) {
+			if (ingame_cursol > 4)
+			{
+				ingame_cursol = 0;
+			}
+		}
+		else {
+			if (ingame_cursol > 3)
+			{
+				ingame_cursol = 0;
+			}
 		}
 	}
 }

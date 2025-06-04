@@ -1,8 +1,15 @@
 #include "RankingScene.h"
 #include "InputControl.h"
 #include "ResourceManager.h"
+#include "GameDataManager.h"
 #include "Fade.h"
 #include "DxLib.h"
+#include <algorithm>
+#include <vector>
+#include <fstream>
+
+
+
 
 RankingScene::RankingScene()
 	: fade(nullptr)
@@ -56,9 +63,6 @@ void RankingScene::Initialize()
 	fade = new Fade();
 	// フェードの初期化処理（フェードイン）
 	fade->Initialize(true);
-
-	// ハイスコアデータを取得
-	LoadHighScores();
 
 	ChangeVolumeSoundMem(255 * 70 / 100, ranking_main_bgm);
 	PlaySoundMem(ranking_main_bgm, DX_PLAYTYPE_BACK);
@@ -135,8 +139,7 @@ void RankingScene::Draw() const
 	// ミス数
 	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);*/
 
-	// ハイスコアを描画
-	DisplayHighScores();
+
 
 	// フェード描画
 	fade->Draw();
@@ -144,8 +147,7 @@ void RankingScene::Draw() const
 
 void RankingScene::Finalize()
 {
-	// スコアを保存
-	SaveHighScores();
+	;
 }
 
 eSceneType RankingScene::GetNowSceneType() const
@@ -153,133 +155,38 @@ eSceneType RankingScene::GetNowSceneType() const
 	return eSceneType::eRanking;
 }
 
-// ハイスコアをソートする
-void RankingScene::DataSortDescending(std::vector<HighScoreEntry>& arr, int n)
+// ランキングデータ読み込み & ソート
+void RankingScene::LoadRankingData()
 {
-	int i, j;
-	HighScoreEntry key;
+	std::ifstream file("Resource/ScoreData/ranking.txt");
+	rankList.clear();
 
-	for (i = 1; i < n; i++)
-	{
-		key = arr[i];
-		j = i - 1;
-
-		while (j >= 0 && arr[j].score < key.score)  /***** 並べ替える条件 *****/
-		{
-			arr[j + 1] = arr[j];
-			j = j - 1;
+	if (file.is_open()) {
+		int correct, sales;
+		while (file >> correct >> sales) {
+			rankList.push_back({ correct, sales });
 		}
-
-		arr[j + 1] = key;
+		file.close();
 	}
+
+	// 売上（sales）で降順にソート
+	std::sort(rankList.begin(), rankList.end(), [](const RankData& a, const RankData& b) {
+		return a.sales > b.sales;
+		});
 }
 
-// ハイスコアのデータを取得する
-void RankingScene::LoadHighScores()
+void RankingScene::DrawRanking()
 {
-	// ファイルを開ける
-	FILE* inputFile;
-	fopen_s(&inputFile, HighScoreFileName, "r");
-
-	//エラーチェック
-	if (inputFile != NULL)
-	{
-		HighScoreEntry entry;
-		int i = 0;
-
-		// ファイルからレベル、スコア、ミス数の順番で読み込む
-		while (fscanf_s(inputFile, "%d %d %d", &entry.level, &entry.score, &entry.misinputs) == 3 && i < MaxHighScores)
-		{
-			HighScores.push_back(entry);
-			i++;
-		}
-		fclose(inputFile);
-
-		// スコアをソートする
-		if (HighScores.size() > 1)
-		{
-			DataSortDescending(HighScores, HighScores.size());
-		}
-	}
-}
-
-// ハイスコアを保存する
-void RankingScene::SaveHighScores()
-{
-	// 今回のスコアがハイスコアより高いかチェック
-	HandleNewHighScore();
-
-	FILE* outputFile;
-	fopen_s(&outputFile, HighScoreFileName, "w");
-
-	// エラーチェック
-	if (outputFile != NULL)
-	{
-		// レベル、スコア、ミス数の順番でファイルに書き込む
-		for (size_t i = 0; i < HighScores.size(); ++i)
-		{
-			fprintf_s(outputFile, "%d %d %d\n", HighScores[i].level, HighScores[i].score, HighScores[i].misinputs);
-		}
-
-		fclose(outputFile);
-	}
+	/*
+	int y = 100;
+	for (int i = 0; i < std::min(3, (int)rankList.size()); ++i) {
+		DrawFormatString(100, y, GetColor(255, 255, 255), "%d位: 接客数:%d 売上:%d円",
+			i + 1, rankList[i].correct, rankList[i].sales);
+		y += 40;
+	}*/
 }
 
 
-// スコアがハイスコアより高いか確認
-void RankingScene::HandleNewHighScore()
-{
-	HighScoreEntry newEntry;
-	newEntry.level = LevelReached;
-	newEntry.score = FinalScore;
-	newEntry.misinputs = Misinputs;
-
-	if (HighScores.size() < MaxHighScores || FinalScore > HighScores.back().score)
-	{
-		HighScores.push_back(newEntry);
-
-		// データを並べ替える
-		if (HighScores.size() > 1)
-		{
-			DataSortDescending(HighScores, HighScores.size());
-		}
-
-		// データ数が保存できる数より多ければ、一番下のデータを消去する
-		if (HighScores.size() > MaxHighScores)
-		{
-			HighScores.pop_back();
-		}
-	}
-}
-
-// ハイスコアの描画
-void RankingScene::DisplayHighScores() const
-{
-	int yOffset = 290;      // y軸オフセット
-	int rankX = 25;        // 順位のX座標
-	int levelX = 350;       // レベルのX座標
-	int scoreX = 500;       // スコアのX座標
-	int missX = 800;        // ミスのX座標
-	int rowSpacing = 100;    // 行間のスペース
-	int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
-
-	for (size_t i = 0; i < HighScores.size(); ++i)
-	{
-		// 順位を描画（画像で）
-		DrawNumber(rankX, yOffset, i + 1);
-
-		// レベルを描画
-		DrawNumber(levelX, yOffset, HighScores[i].level);
-
-		// スコアを描画
-		DrawNumber(scoreX, yOffset, HighScores[i].score);
-
-		// ミスの回数を描画
-		DrawNumber(missX, yOffset, HighScores[i].misinputs);
-
-		yOffset += rowSpacing; // 次の行へ
-	}
-}
 
 // 指定位置に数値を画像で描画する
 void RankingScene::DrawNumber(int x, int y, int number) const

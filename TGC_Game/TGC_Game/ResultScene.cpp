@@ -5,18 +5,24 @@
 #include "Fade.h"
 #include "DxLib.h"
 #include <stdio.h>
+#include <fstream>
 
 #define UI_BUTTON_BASE_WIDTH (220)
 #define UI_BUTTON_BASE_HEIGHT (70)
 
 void ResultScene::Initialize()
 {
+    // フェードをインスタンス化
+    fade = new Fade();
+    // フェードの初期化処理（フェードイン）
+    fade->Initialize(true);
+
     // カーソル画像
     //cursor_image = LoadGraph("Resource/image/");
 
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
-    result_score_history = LoadGraph("Resource/image/highscore_text.png");
+    //result_score_history = LoadGraph("Resource/image/highscore_text.png");
 
    /* cursor_se_move = LoadSoundMem("Resource/sounds/");
     cursor_se_push = LoadSoundMem("Resource/sounds/");*/
@@ -28,16 +34,10 @@ void ResultScene::Initialize()
     ResourceManager* rm = ResourceManager::GetInstance();
 
     // 背景画像
-    background_image = LoadGraph("Resource/image/burgertitle.png");
+    background_image = LoadGraph("Resource/image/result_background.png");
 
     /*/ リザルトメインbgm読み込み
-    result_bgm = LoadSoundMem("Resource/sounds/");
-
-    // ハイスコアデータを取得
-    LoadHighScores();
-
-    // ハイスコアSEの読み込み
-    HighScore_SE = LoadSoundMem("Resource/sounds/");*/
+    result_bgm = LoadSoundMem("Resource/sounds/");*/
 
    // 数字画像（0?9）の読み込み
 	num_image = rm->GetImages("Resource/image/number.png");
@@ -45,20 +45,12 @@ void ResultScene::Initialize()
     /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
 
-    // フェードをインスタンス化
-    fade = new Fade();
-    // フェードの初期化処理（フェードイン）
-    fade->Initialize(true);
-
     result_next_scene = eSceneType::eResult;
 }
 
 
 eSceneType ResultScene::Update()
 {
-
-    
-
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
 
@@ -130,19 +122,14 @@ eSceneType ResultScene::Update()
 
 void ResultScene::Draw() const
 {
-
-   DrawGraph(0, 0, background_image, TRUE);
-   
-   // リザルトテキストの表示（座標: x=50, y=50、色: 白）(完成次第削除予定)
-    DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
-    DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
-
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
-    DrawExtendGraph(410, 20, 870, 130, result_title_image, TRUE);
+    DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
+    
     // 自身のスコア画像描画
-    DrawExtendGraph(100, 130, 444, 211, result_player_title, TRUE);
-    // ハイスコア画像描画
-    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
+    DrawGraph(50, 200, result_player_title, TRUE);
+    
+    /*/ ハイスコア画像描画
+    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);*/
 
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
@@ -155,17 +142,19 @@ void ResultScene::Draw() const
 
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
-    int levelX = 350;       // レベルのX座標
-    int scoreX = 500;       // スコアのX座標
-    int missX = 800;        // ミスのX座標
+    int correctX = 350;       //  接客数のX座標
+    int salesX = 500;       // 売上のX座標
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    // レベルを描画
-    DrawNumber(levelX, yOffset, correct);
+    // 接客数を描画
+    DrawNumber(correctX, yOffset, correct);
 
-    // スコアを描画
-    DrawNumber(scoreX, yOffset, sales);
+    // 売上を描画
+    DrawNumber(salesX, yOffset, sales);
+
+    // フェード描画
+    fade->Draw();
 }
 
 void ResultScene::Finalize()
@@ -202,3 +191,10 @@ void ResultScene::DrawNumber(int x, int y, int number) const
     }
 }
 
+void ResultScene::SaveScore(int correct, int sales) {
+    std::ofstream file("Resource/ScoreData/ranking.txt", std::ios::app); // appendモードで追記
+    if (file.is_open()) {
+        file << correct << " " << sales << std::endl;
+        file.close();
+    }
+}

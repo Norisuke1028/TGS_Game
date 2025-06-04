@@ -2,7 +2,7 @@
 #include "DxLib.h"
 
 Customer::Customer() :
-	customer_image(),hukidasi_image()
+	customer_image(),hukidasi_image(),r_customer()
 
 {
 
@@ -10,17 +10,24 @@ Customer::Customer() :
 
 void Customer::Initialize()
 {
-	customer_image = LoadGraph("Resource/image/student_male01.png");  //‹q‚Ì‰æ‘œ
+	//customer_image = LoadGraph("Resource/image/student_male01.png");  //‹q‚Ì‰æ‘œ
+	LoadDivGraph("Resource/image/b_customer.png", 4, 4, 1, 250.5, 359, customer_image);  //ƒQ[ƒ€“à‚Åg—p‚·‚éƒiƒ“ƒo[‰æ‘œ(Ô)
 	hukidasi_image = LoadGraph("Resource/image/hukidasi.png");  //‚«o‚µ‚Ì‰æ‘œ
 }
 
 void Customer::Draw() const
 {
-	DrawRotaGraph(520, 330, 1.3, 0, customer_image, TRUE);  //‹q‚Ì‰æ‘œ
+	DrawRotaGraph(520, 330, 1.0, 0, customer_image[r_customer], TRUE);  //‹q‚Ì‰æ‘œ
 	DrawRotaGraph(820, 250, 0.6, 0, hukidasi_image, TRUE);  //‚«o‚µ‚Ì‰æ‘œ
 }
 
 void Customer::Finalize()
 {
-	DeleteGraph(customer_image);
+	DeleteGraph(customer_image[0]);
+}
+
+int Customer::RandomCustomer()
+{
+	r_customer = 0 + rand() % 4;
+	return 0;
 }
