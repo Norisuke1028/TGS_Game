@@ -274,6 +274,11 @@ int InGameScene::select_guzai()
 					next += 1;
 				}
 			}
+			//Aボタンを押すと具材をまた選べるようになる(一枠目)
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				guzai_select[0] = -1;
+				next -= 1;
+			}
 		break;
 		//具材三枠目
 		case(3):
@@ -291,6 +296,11 @@ int InGameScene::select_guzai()
 					next += 1;
 				}
 			}
+			//Aボタンを押すと具材をまた選べるようになる(二枠目)
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				guzai_select[1] = -1;
+				next -= 1;
+			}
 		break;
 		//具材四枠目
 		case(4):
@@ -301,6 +311,7 @@ int InGameScene::select_guzai()
 				if (ingame_cursol < 4)
 				{
 					guzai_select[3] = ingame_cursol;
+					next += 1;
 				}
 				// 決定ボタンが押されていてカーソルが決定位置ならジャッジへ
 				else if (ingame_cursol == 4)
@@ -308,27 +319,40 @@ int InGameScene::select_guzai()
 					next += 1;
 				}
 			}
+			//Aボタンを押すと具材をまた選べるようになる(三枠目)
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				guzai_select[2] = -1;
+				next -= 1;
+			}
 			break;
 		case(5):
-			//決定ボタンを押すと具材チェック
-			check_guzai();
-
-			//お題の素材の数とチェックカウントが同じ(ジャッジ判定に成功)だったら
-			if (check_count == sozai_count)
-			{
-				//ハンバーガーによって売上額を変更する
-				sales += 200 + (random * 50);
-				//スコアを1加算する
-				correct++;
-				PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
-
-				next += 1;
+			//Aボタンを押すと具材をまた選べるようになる(四枠目)
+			if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				guzai_select[3] = -1;
+				next -= 1;
 			}
-			//ジャッジ判定に失敗するとリセット
-			else {
-				PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
-				check_count = 0;
-				next = 0;
+			//決定ぼたんを選んでる時にBボタンを押すとジャッジへ
+			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress && ingame_cursol == 4) {
+				//決定ボタンを押すと具材チェック
+				check_guzai();
+
+				//お題の素材の数とチェックカウントが同じ(ジャッジ判定に成功)だったら
+				if (check_count == sozai_count)
+				{
+					//ハンバーガーによって売上額を変更する
+					sales += 200 + (random * 50);
+					//スコアを1加算する
+					correct++;
+					PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
+
+					next += 1;
+				}
+				//ジャッジ判定に失敗するとリセット
+				else {
+					PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
+					check_count = 0;
+					next = 0;
+				}
 			}
 		break;
 		case(6):
