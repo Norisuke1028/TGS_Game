@@ -14,10 +14,10 @@ void Customer::Initialize()
 	hukidasi_image = LoadGraph("Resource/image/hukidasi.png");  //‚«o‚µ‚Ì‰æ‘œ
 }
 
-void Customer::Draw()
+void Customer::Draw() const
 {
-	DrawRotaGraph(600, 280, 1.3, 0, customer_image, TRUE);  //‹q‚Ì‰æ‘œ
-	DrawRotaGraph(900, 200, 0.6, 0, hukidasi_image, TRUE);  //‚«o‚µ‚Ì‰æ‘œ
+	DrawRotaGraph(520, 330, 1.3, 0, customer_image, TRUE);  //‹q‚Ì‰æ‘œ
+	DrawRotaGraph(820, 250, 0.6, 0, hukidasi_image, TRUE);  //‚«o‚µ‚Ì‰æ‘œ
 }
 
 void Customer::Finalize()

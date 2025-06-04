@@ -19,7 +19,7 @@ public:
 public:
     Customer();
     void Initialize();
-    void Draw();
+    void Draw() const;
     void Finalize();
 };
 

@@ -21,6 +21,7 @@ private:
 	GameState gameState = GameState::Countdown;  //ゲームステートをカウントダウンに設定
 	Timer countDownTimer;  //カウントダウン用タイマー
 	Timer gameTimer;  //ゲームメインタイマー
+	class Fade* fade;        // フェード
 
 	Customer customer;
 	Timer timer;
@@ -35,6 +36,9 @@ private:
 	int sozai_count;  //お題の素材数
 	int delay;  //ディレイ用カウント
 	const double limit = 30.0;  //制限時間
+	int countdown;  //カウントダウン用
+	int GM_timer;  //ゲームメインタイマー
+	double elapsed;  //経過した時間
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力
@@ -50,8 +54,16 @@ private:
 	int select_guzai_image;
 	int select_burger_image[4];  //選んだ具材画像
 	int burger_model[6];  //お題バーガー画像
-	int g_number_image[10];  //ゲーム内で使うナンバー画像
+	int gb_number_image[10];  //ゲーム内で使うナンバー画像(黒) gamebrack
+	int gr_number_image[10];  //ゲーム内で使うナンバー画像(赤) gamered
+	int sb_image;  //スコアボード画像
+	int start_image;  //ゲーム開始画像
 	
+	int cursol_se;  //カーソル音
+	int correct_se;  //正解音
+	int incorrect_se;  //不正解音
+	int sales_se;  //売上音
+	int GM_bgm;  //ゲームメインBGM
 
 private:
 	eSceneType next_scene;

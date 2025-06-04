@@ -1,6 +1,7 @@
 #include "ResultScene.h"
 #include "InputControl.h"
 #include "ResourceManager.h"
+#include "GameDataManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 #include <stdio.h>
@@ -36,12 +37,12 @@ void ResultScene::Initialize()
     LoadHighScores();
 
     // ハイスコアSEの読み込み
-    HighScore_SE = LoadSoundMem("Resource/sounds/");
+    HighScore_SE = LoadSoundMem("Resource/sounds/");*/
 
-    // 数字画像（0?9）の読み込み
-    num_image = rm->GetImages("Resource/images/");
+   // 数字画像（0?9）の読み込み
+	num_image = rm->GetImages("Resource/image/number.png");
 
-    // リザルトメインbgm再生
+    /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
 
     // フェードをインスタンス化
@@ -56,7 +57,7 @@ void ResultScene::Initialize()
 eSceneType ResultScene::Update()
 {
 
-    HandleNewHighScore();
+    
 
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
@@ -97,7 +98,7 @@ eSceneType ResultScene::Update()
     }
 
     // コントローラーの A ボタン処理(簡略化)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+    if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
         // 押したらSEを鳴らせる
         PlaySoundMem(cursor_se_push, DX_PLAYTYPE_BACK);
         // BGMを止める
@@ -130,9 +131,9 @@ eSceneType ResultScene::Update()
 void ResultScene::Draw() const
 {
 
-   //DrawGraph(0, 0, background_image, TRUE);
+   DrawGraph(0, 0, background_image, TRUE);
    
-   // リザルトテキストの表示（座標: x=50, y=50、色: 白）
+   // リザルトテキストの表示（座標: x=50, y=50、色: 白）(完成次第削除予定)
     DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
     DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
 
@@ -143,151 +144,17 @@ void ResultScene::Draw() const
     // ハイスコア画像描画
     DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
 
-    /*/ 今回のスコアとレベルを描画
-    DisplayCurrentRunScores();
-    DrawFormatString(10, 58, GetColor(255, 255, 255), "Level: %d", LevelReached);
-    DrawFormatString(10, 74, GetColor(255, 255, 255), "Score: %d", FinalScore);
-    DrawFormatString(10, 90, GetColor(255, 255, 255), "Misinputs: %d", Misinputs);*/
-
-    // ハイスコアを描画
-    DisplayHighScores();
-}
-
-void ResultScene::Finalize()
-{
-    // スコアを保存
-    SaveHighScores();
-
-    // 画像を解放する
-    /*for (size_t i = 0; buttons.size(); ++i)
-    {
-        if (buttons[i].GraphicHandle != -1)
-        {
-            DeleteGraph(buttons[i].GraphicHandle);
-        }
-    }*/
-}
-
-eSceneType ResultScene::GetNowSceneType() const
-{
-    return eSceneType::eResult;
-}
+    // データ
+    int correct = GameDataManager::GetInstance().GetCorrect();
+    int sales = GameDataManager::GetInstance().GetSales();
 
 
-// ハイスコアをソートする
-void ResultScene::DataSortDescending(std::vector<HighScoreEntry>& arr, int n)
-{
-    int i, j;
-    HighScoreEntry key;
-
-    for (i = 1; i < n; i++)
-    {
-        key = arr[i];
-        j = i - 1;
-
-        while (j >= 0 && arr[j].score < key.score)  //並べ替える条件
-        {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-
-        arr[j + 1] = key;
-    }
-}
+    DrawFormatString(100, 100, GetColor(255, 255, 255), "接客人数: %d", correct);
+    DrawFormatString(100, 140, GetColor(255, 255, 255), "売上: %d 円", sales);
 
 
-// ハイスコアのデータを取得
-void ResultScene::LoadHighScores()
-{
-    // ファイルを開ける
-    FILE* inputFile;
-    fopen_s(&inputFile, HighScoreFileName, "r");
-
-    //エラーチェック
-    if (inputFile != NULL)
-    {
-        HighScoreEntry entry;
-        int i = 0;
-        int lineNumber = 1;
-
-        // ファイルからレベル、スコア、ミス数の順番で読み込む
-        while (fscanf_s(inputFile, "%d %d %d", &entry.level, &entry.score, &entry.misinputs) == 3)
-        {
-            if (lineNumber != 4)
-            {
-                HighScores.push_back(entry);
-            }
-            else
-            {
-                FinalScore = entry.score;
-                LevelReached = entry.level;
-                Misinputs = entry.misinputs;
-            }
-
-            i++;
-            lineNumber++;
-        }
-        fclose(inputFile);
-
-        // スコアをソートする
-        if (HighScores.size() > 1)
-        {
-            DataSortDescending(HighScores, HighScores.size());
-        }
-    }
-}
-
-// ハイスコアを保存する
-void ResultScene::SaveHighScores()
-{
-    // 今回のスコアがハイスコアより高いかチェック
-    HandleNewHighScore();
-
-    FILE* outputFile;
-    fopen_s(&outputFile, HighScoreFileName, "w");
-
-    // エラーチェック
-    if (outputFile != NULL)
-    {
-        // レベル、スコア、ミス数の順番でファイルに書き込む
-        for (size_t i = 0; i < HighScores.size(); ++i)
-        {
-            fprintf_s(outputFile, "%d %d %d\n", HighScores[i].level, HighScores[i].score, HighScores[i].misinputs);
-        }
-
-        fclose(outputFile);
-    }
-}
-
-
-// スコアがハイスコアより高いか確認
-void ResultScene::HandleNewHighScore()
-{
-    HighScoreEntry newEntry;
-    newEntry.level = LevelReached;
-    newEntry.score = FinalScore;
-    newEntry.misinputs = Misinputs;
-
-    HighScores.push_back(newEntry);
-
-    // ランキングソート
-    DataSortDescending(HighScores, HighScores.size());
-
-    // ランキングの数が多くないかチェック
-    if (HighScores.size() > MaxHighScores)
-    {
-        // もし多かったら、一番下のハイスコアを削除
-        while (HighScores.size() > MaxHighScores)
-        {
-            HighScores.pop_back();
-        }
-    }
-}
-
-// ハイスコアの描画
-void ResultScene::DisplayCurrentRunScores() const
-{
-    int yOffset = 180;      // y軸オフセット
+    int yOffset = 290;      // y軸オフセット
+    int rankX = 25;        // 順位のX座標
     int levelX = 350;       // レベルのX座標
     int scoreX = 500;       // スコアのX座標
     int missX = 800;        // ミスのX座標
@@ -295,42 +162,20 @@ void ResultScene::DisplayCurrentRunScores() const
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
     // レベルを描画
-    DrawNumber(levelX, yOffset, LevelReached);
+    DrawNumber(levelX, yOffset, correct);
 
     // スコアを描画
-    DrawNumber(scoreX, yOffset, FinalScore);
-
-    // ミスの回数を描画
-    DrawNumber(missX, yOffset, Misinputs);
+    DrawNumber(scoreX, yOffset, sales);
 }
 
-// ハイスコアの描画
-void ResultScene::DisplayHighScores() const
+void ResultScene::Finalize()
 {
-    int yOffset = 350;      // y軸オフセット
-    int rankX = 250;        // 順位のX座標
-    int levelX = 350;       // レベルのX座標
-    int scoreX = 500;       // スコアのX座標
-    int missX = 800;        // ミスのX座標
-    int rowSpacing = 100;    // 行間のスペース
-    int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
+    
+}
 
-    for (size_t i = 0; i < HighScores.size(); ++i)
-    {
-        // 順位を描画（画像で）
-        DrawNumber(rankX, yOffset, i + 1);
-
-        // レベルを描画
-        DrawNumber(levelX, yOffset, HighScores[i].level);
-
-        // スコアを描画
-        DrawNumber(scoreX, yOffset, HighScores[i].score);
-
-        // ミスの回数を描画
-        DrawNumber(missX, yOffset, HighScores[i].misinputs);
-
-        yOffset += rowSpacing; // 次の行へ
-    }
+eSceneType ResultScene::GetNowSceneType() const
+{
+    return eSceneType::eResult;
 }
 
 // 指定位置に数値を画像で描画する
@@ -356,3 +201,4 @@ void ResultScene::DrawNumber(int x, int y, int number) const
         DrawRectGraph(x + i * digit_width, y, srcX, srcY, digit_width, digit_height, num_image[0], TRUE, FALSE);
     }
 }
+
