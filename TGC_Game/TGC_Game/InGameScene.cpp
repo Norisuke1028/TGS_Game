@@ -231,6 +231,7 @@ int InGameScene::select_guzai()
 				for (select = 0; select < 4; ++select) {
 					guzai_select[select] = -1;
 				}
+				ingame_cursol = 0;
 
 				//ディレイをかける
 				if (delay < 50)
@@ -249,18 +250,10 @@ int InGameScene::select_guzai()
 		case(1):
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
-				//決定ボタンを押すとジャッジ処理へ
-				if (ingame_cursol == 4)
-				{
-					next = 5;
-				}
 				//具材を選択すると1つ目に具材を選択
-				else
-				{
-					guzai_select[select] = ingame_cursol;
-					select += 1;
-					next += 1;
-				}
+				guzai_select[select] = ingame_cursol;
+				select += 1;
+				next += 1;
 			}
 		break;
 		//具材二枠目
@@ -459,9 +452,16 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol--;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
+
+		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
 		if (ingame_cursol < 0)
 		{
-			ingame_cursol = 4;
+			if (next > 1) {
+				ingame_cursol = 4;
+			}
+			else {
+				ingame_cursol = 3;
+			}
 		}
 	}
 	//右用
@@ -469,9 +469,19 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol++;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
-		if (ingame_cursol > 4)
-		{
-			ingame_cursol = 0;
+
+		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
+		if (next > 1) {
+			if (ingame_cursol > 4)
+			{
+				ingame_cursol = 0;
+			}
+		}
+		else {
+			if (ingame_cursol > 3)
+			{
+				ingame_cursol = 0;
+			}
 		}
 	}
 }

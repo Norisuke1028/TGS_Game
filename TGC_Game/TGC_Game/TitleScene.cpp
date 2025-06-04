@@ -23,8 +23,8 @@ void TitleScene::Initialize()
 	
 	// 画像の読み込み
 	background_image = LoadGraph("Resource/image/title.png");   // 背景画像
-	menu_image = LoadGraph("Resource/image/menu.png");         // メニュー画像
-	cursor_image = LoadGraph("Resource/image/buns02.png");		// カーソル画像
+	menu_image = LoadGraph("Resource/image/menu2.png");         // メニュー画像
+	cursor_image = LoadGraph("Resource/image/cursor.png");		// カーソル画像
 
 	// 音源の読み込み
 	title_bgm = LoadGraph("Resource/sounds/SE/");       // タイトルBGM
@@ -87,7 +87,7 @@ eSceneType TitleScene::Update()
 		return eSceneType::eTitle;
 	}
 
-	// コントローラーの A ボタン処理(簡略化)
+	// コントローラーの B ボタン処理(簡略化)
 	if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
 		// 押したらSEを鳴らせる
 		PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
@@ -126,7 +126,7 @@ void TitleScene::Draw() const
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// メニュー画像の描画
-	DrawGraph(550, 500, menu_image, FALSE);
+	DrawGraph(80, 350, menu_image, TRUE);
 
 	// カーソル画像の描画
 	DrawRotaGraph(520, 520 + menu_cursor * 32, 0.25, DX_PI / 200.0, cursor_image, TRUE);
