@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneBase.h"
+#include "GameDataManager.h"
 
 // ランキング画面クラス
 class RankingScene : public SceneBase
@@ -27,9 +28,9 @@ private:
 
 	struct HighScoreEntry
 	{
-		int score;
-		int misinputs;
-		int level;
+		// データ
+		int correct = GameDataManager::GetInstance().GetCorrect();
+		int sales = GameDataManager::GetInstance().GetSales();
 	};
 
 	// ハイスコア

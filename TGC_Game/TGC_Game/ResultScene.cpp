@@ -11,6 +11,11 @@
 
 void ResultScene::Initialize()
 {
+    // フェードをインスタンス化
+    fade = new Fade();
+    // フェードの初期化処理（フェードイン）
+    fade->Initialize(true);
+
     // カーソル画像
     //cursor_image = LoadGraph("Resource/image/");
 
@@ -31,13 +36,7 @@ void ResultScene::Initialize()
     background_image = LoadGraph("Resource/image/burgertitle.png");
 
     /*/ リザルトメインbgm読み込み
-    result_bgm = LoadSoundMem("Resource/sounds/");
-
-    // ハイスコアデータを取得
-    LoadHighScores();
-
-    // ハイスコアSEの読み込み
-    HighScore_SE = LoadSoundMem("Resource/sounds/");*/
+    result_bgm = LoadSoundMem("Resource/sounds/");*/
 
    // 数字画像（0?9）の読み込み
 	num_image = rm->GetImages("Resource/image/number.png");
@@ -45,20 +44,12 @@ void ResultScene::Initialize()
     /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
 
-    // フェードをインスタンス化
-    fade = new Fade();
-    // フェードの初期化処理（フェードイン）
-    fade->Initialize(true);
-
     result_next_scene = eSceneType::eResult;
 }
 
 
 eSceneType ResultScene::Update()
 {
-
-    
-
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
 
@@ -166,6 +157,9 @@ void ResultScene::Draw() const
 
     // スコアを描画
     DrawNumber(scoreX, yOffset, sales);
+
+    // フェード描画
+    fade->Draw();
 }
 
 void ResultScene::Finalize()

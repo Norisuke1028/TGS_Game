@@ -1,6 +1,7 @@
 #include "RankingScene.h"
 #include "InputControl.h"
 #include "ResourceManager.h"
+#include "GameDataManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 
@@ -164,7 +165,7 @@ void RankingScene::DataSortDescending(std::vector<HighScoreEntry>& arr, int n)
 		key = arr[i];
 		j = i - 1;
 
-		while (j >= 0 && arr[j].score < key.score)  /***** 並べ替える条件 *****/
+		while (j >= 0 && arr[j].sales < key.sales)  /***** 並べ替える条件 *****/
 		{
 			arr[j + 1] = arr[j];
 			j = j - 1;
@@ -177,6 +178,9 @@ void RankingScene::DataSortDescending(std::vector<HighScoreEntry>& arr, int n)
 // ハイスコアのデータを取得する
 void RankingScene::LoadHighScores()
 {
+
+	
+
 	// ファイルを開ける
 	FILE* inputFile;
 	fopen_s(&inputFile, HighScoreFileName, "r");
@@ -188,7 +192,7 @@ void RankingScene::LoadHighScores()
 		int i = 0;
 
 		// ファイルからレベル、スコア、ミス数の順番で読み込む
-		while (fscanf_s(inputFile, "%d %d %d", &entry.level, &entry.score, &entry.misinputs) == 3 && i < MaxHighScores)
+		while (fscanf_s(inputFile, "%d %d", &entry.correct, &entry.sales) == 2 && i < MaxHighScores)
 		{
 			HighScores.push_back(entry);
 			i++;
@@ -218,7 +222,7 @@ void RankingScene::SaveHighScores()
 		// レベル、スコア、ミス数の順番でファイルに書き込む
 		for (size_t i = 0; i < HighScores.size(); ++i)
 		{
-			fprintf_s(outputFile, "%d %d %d\n", HighScores[i].level, HighScores[i].score, HighScores[i].misinputs);
+			fprintf_s(outputFile, "%d %d %d\n", HighScores[i].correct, HighScores[i].sales);
 		}
 
 		fclose(outputFile);
@@ -230,11 +234,10 @@ void RankingScene::SaveHighScores()
 void RankingScene::HandleNewHighScore()
 {
 	HighScoreEntry newEntry;
-	newEntry.level = LevelReached;
-	newEntry.score = FinalScore;
-	newEntry.misinputs = Misinputs;
+	newEntry.correct = LevelReached;
+	newEntry.sales = FinalScore;
 
-	if (HighScores.size() < MaxHighScores || FinalScore > HighScores.back().score)
+	if (HighScores.size() < MaxHighScores || FinalScore > HighScores.back().sales)
 	{
 		HighScores.push_back(newEntry);
 
@@ -255,6 +258,8 @@ void RankingScene::HandleNewHighScore()
 // ハイスコアの描画
 void RankingScene::DisplayHighScores() const
 {
+	
+
 	int yOffset = 290;      // y軸オフセット
 	int rankX = 25;        // 順位のX座標
 	int levelX = 350;       // レベルのX座標
@@ -269,13 +274,11 @@ void RankingScene::DisplayHighScores() const
 		DrawNumber(rankX, yOffset, i + 1);
 
 		// レベルを描画
-		DrawNumber(levelX, yOffset, HighScores[i].level);
+		DrawNumber(levelX, yOffset, HighScores[i].correct);
 
 		// スコアを描画
-		DrawNumber(scoreX, yOffset, HighScores[i].score);
+		DrawNumber(scoreX, yOffset, HighScores[i].sales);
 
-		// ミスの回数を描画
-		DrawNumber(missX, yOffset, HighScores[i].misinputs);
 
 		yOffset += rowSpacing; // 次の行へ
 	}
