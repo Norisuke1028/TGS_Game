@@ -9,7 +9,7 @@
 
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random()
-	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image()
+	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),back_image(),g_number_image()
 	,delay()
 {
 	next_scene = eSceneType::eInGame;
@@ -29,6 +29,7 @@ void InGameScene::Initialize()
 	back_image = LoadGraph("Resource/image/background.png");  //背景画像
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
+	LoadDivGraph("Resource/image/Num.png", 10, 10, 1, 49, 80, g_number_image);  //ゲーム内で使用するナンバー画像
 	customer.Initialize();  //客クラスの初期化処理
 }
 
@@ -48,7 +49,8 @@ eSceneType InGameScene::Update()
 		//3カウント用
 		if (elapsed < 3.0) {
 			int count = 3 - static_cast<int>(elapsed);
-			DrawFormatString(600, 300, 0xFFFFFF, "%d", count);
+			DrawRotaGraph(640, 360, 3.0, 0, g_number_image[count], true);
+			//DrawFormatString(600, 300, 0xFFFFFF, "%d", count);
 		}
 		else if (elapsed < 3.8) {
 			DrawString(600, 300, "スタート！", 0xFFFFFF);
@@ -105,8 +107,16 @@ void InGameScene::Draw() const
 	//Playingになると実行
 	if (gameState == GameState::Playing)
 	{
+		//制限時間の値を受け取る
+		int elapsed = 30-static_cast<int>(timer.GetElapsedSeconds());
+
+		int tens = (elapsed / 10) % 10;  // 十の位
+		int ones = elapsed % 10;        // 一の位
+
 		//時間制限
-		DrawFormatString(1150, 50, 0x000000, "制限時間　　%d", static_cast<int>(timer.GetElapsedSeconds()));
+		DrawRotaGraph(1135, 100, 1.0, 0, g_number_image[tens], true);
+		DrawRotaGraph(1180, 100, 1.0, 0, g_number_image[ones], true);
+
 
 		//具材選択カーソル描画
 		DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -365,3 +375,4 @@ void InGameScene::CursolControl()
 		}
 	}
 }
+
