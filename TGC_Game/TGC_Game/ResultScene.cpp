@@ -126,7 +126,7 @@ void ResultScene::Draw() const
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
     
     // 自身のスコア画像描画
-    DrawExtendGraph(100, 130, 444, 211, result_player_title, TRUE);
+    DrawGraph(50, 200, result_player_title, TRUE);
     
     /*/ ハイスコア画像描画
     DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);*/
@@ -142,17 +142,16 @@ void ResultScene::Draw() const
 
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
-    int levelX = 350;       // レベルのX座標
-    int scoreX = 500;       // スコアのX座標
-    int missX = 800;        // ミスのX座標
+    int correctX = 350;       //  接客数のX座標
+    int salesX = 500;       // 売上のX座標
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    // レベルを描画
-    DrawNumber(levelX, yOffset, correct);
+    // 接客数を描画
+    DrawNumber(correctX, yOffset, correct);
 
-    // スコアを描画
-    DrawNumber(scoreX, yOffset, sales);
+    // 売上を描画
+    DrawNumber(salesX, yOffset, sales);
 
     // フェード描画
     fade->Draw();
