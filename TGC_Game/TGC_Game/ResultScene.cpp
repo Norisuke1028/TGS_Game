@@ -23,6 +23,8 @@ void ResultScene::Initialize()
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
+    result_collect_font = LoadGraph("Resource/image/collect.png");
+    result_sales_font = LoadGraph("Resource/image/sales.png");
 
    /* cursor_se_move = LoadSoundMem("Resource/sounds/");
     cursor_se_push = LoadSoundMem("Resource/sounds/");*/
@@ -44,6 +46,8 @@ void ResultScene::Initialize()
 
     /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
+
+    result_draw_score = 0;
 
     result_next_scene = eSceneType::eResult;
 }
@@ -131,6 +135,10 @@ void ResultScene::Draw() const
     /*/ ハイスコア画像描画
     DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);*/
 
+    DrawGraph(60, 295, result_collect_font, TRUE);
+
+    DrawGraph(850, 290, result_sales_font, TRUE);
+
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
     int sales = GameDataManager::GetInstance().GetSales();
@@ -143,12 +151,18 @@ void ResultScene::Draw() const
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
     int correctX = 350;       //  接客数のX座標
-    int salesX = 500;       // 売上のX座標
+    int salesX = 800;       // 売上のX座標
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    // 接客数を描画
-    DrawNumber(correctX, yOffset, correct);
+    if (result_draw_score < 50)
+    {
+        //result_draw_score++;
+    }
+    else {
+        // 接客数を描画
+        DrawNumber(correctX, yOffset, correct);
+    }
 
     // 売上を描画
     DrawNumber(salesX, yOffset, sales);

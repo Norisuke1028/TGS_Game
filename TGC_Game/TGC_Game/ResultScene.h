@@ -15,6 +15,11 @@ private:
 	int result_title_image;     // リザルトタイトル文字
 	int result_player_title;    // 自身のスコア上のタイトル文字
 	int result_score_history;   // １～３位のタイトル文字
+	int result_collect_font;
+	int result_sales_font;
+
+	int result_draw_score;      // スコア等秒数
+
 
 	int cursor_se_move;         // カーソルの移動SE
 	int cursor_se_push;         // カーソルの決定SE
