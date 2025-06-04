@@ -5,6 +5,7 @@
 #include "Fade.h"
 #include "DxLib.h"
 #include <stdio.h>
+#include <fstream>
 
 #define UI_BUTTON_BASE_WIDTH (220)
 #define UI_BUTTON_BASE_HEIGHT (70)
@@ -21,7 +22,7 @@ void ResultScene::Initialize()
 
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
-    result_score_history = LoadGraph("Resource/image/highscore_text.png");
+    //result_score_history = LoadGraph("Resource/image/highscore_text.png");
 
    /* cursor_se_move = LoadSoundMem("Resource/sounds/");
     cursor_se_push = LoadSoundMem("Resource/sounds/");*/
@@ -33,7 +34,7 @@ void ResultScene::Initialize()
     ResourceManager* rm = ResourceManager::GetInstance();
 
     // 背景画像
-    background_image = LoadGraph("Resource/image/burgertitle.png");
+    background_image = LoadGraph("Resource/image/result_background.png");
 
     /*/ リザルトメインbgm読み込み
     result_bgm = LoadSoundMem("Resource/sounds/");*/
@@ -121,19 +122,14 @@ eSceneType ResultScene::Update()
 
 void ResultScene::Draw() const
 {
-
-   DrawGraph(0, 0, background_image, TRUE);
-   
-   // リザルトテキストの表示（座標: x=50, y=50、色: 白）(完成次第削除予定)
-    DrawString(50, 50, "リザルト画面です", GetColor(255, 255, 255));
-    DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
-
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
-    DrawExtendGraph(410, 20, 870, 130, result_title_image, TRUE);
+    DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
+    
     // 自身のスコア画像描画
     DrawExtendGraph(100, 130, 444, 211, result_player_title, TRUE);
-    // ハイスコア画像描画
-    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
+    
+    /*/ ハイスコア画像描画
+    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);*/
 
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
@@ -196,3 +192,10 @@ void ResultScene::DrawNumber(int x, int y, int number) const
     }
 }
 
+void ResultScene::SaveScore(int correct, int sales) {
+    std::ofstream file("Resource/ScoreData/ranking.txt", std::ios::app); // appendモードで追記
+    if (file.is_open()) {
+        file << correct << " " << sales << std::endl;
+        file.close();
+    }
+}

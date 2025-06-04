@@ -26,36 +26,19 @@ private:
 	int LevelReached;	// 最終レベル
 	int Misinputs;	    // ミス数
 
-	struct HighScoreEntry
-	{
-		// データ
-		int correct = GameDataManager::GetInstance().GetCorrect();
-		int sales = GameDataManager::GetInstance().GetSales();
+	struct RankData {
+		int correct;
+		int sales;
 	};
 
-	// ハイスコア
-	std::vector<HighScoreEntry> HighScores;		// ハイスコアを格納するヴェクター
-	const int MaxHighScores = 3;		// ハイスコアを保存する数
-	const char* HighScoreFileName = "Resource/ScoreData/Scores.txt";	// ハイスコアデータを保存しているファイルの名前
-
-	void LoadHighScores();			                        // ハイスコアデータをファイルから取得する
-	void SaveHighScores();			                        // ハイスコアデータをファイルに保存する
-	void HandleNewHighScore();		                        // 今回のスコアが過去のスコアより高いか確認する
-	void DisplayHighScores() const;	                        // ハイスコアを描画する
+	
 	void DrawNumber(int x, int y, int number) const;        // スコアを画像で描画
 
-	// データを並べ替えるセッター
-	void DataSortDescending(std::vector<HighScoreEntry>& arr, int n);
 
+	std::vector<RankData> rankList;
 
-public:
-	// 他のシーンからデータを受け取る（InGameシーンで使う）
-	void SetGameData(int score, int level, int misinputs)
-	{
-		this->FinalScore = score;
-		this->LevelReached = level;
-		this->Misinputs = misinputs;
-	}
+	void LoadRankingData();
+	void DrawRanking();
 
 public:
 	RankingScene();
