@@ -18,7 +18,7 @@ private:
 	int result_collect_font;
 	int result_sales_font;
 
-	int result_draw_score;      // スコア等秒数
+	int result_score_time;      // スコア等秒数
 
 
 	int cursor_se_move;         // カーソルの移動SE
