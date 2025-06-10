@@ -175,7 +175,7 @@ void ResultScene::Draw() const
     }
     if (result_score_time >= 300)
     {
-         sum = (sales * 2) + correct;
+         sum = (sales * 50) + correct;
         // ‡Œv”‚ğ•`‰æ
         DrawNumber(sumX, yOffset, sum);
     }
