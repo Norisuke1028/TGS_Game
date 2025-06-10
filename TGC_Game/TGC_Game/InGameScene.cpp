@@ -13,7 +13,7 @@
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),sales(),check_count(),r_burger(),random(),sb_image(),select()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,back_image(),gb_number_image(),gr_number_image(),start_image()
+	,back_image(),gb_number_image(),gr_number_image(),start_image(),arrow_image()
 	,delay(),countdown(),GM_timer(), elapsed()
 {
 	next_scene = eSceneType::eInGame;
@@ -34,6 +34,7 @@ void InGameScene::Initialize()
 	guzai_image = LoadGraph("Resource/image/guzai.png");  //具材の画像
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
+	arrow_image = LoadGraph("Resource/image/cursor.png");  //矢印画像
 	back_image = LoadGraph("Resource/image/main_background.png");  //背景画像
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
 	start_image = LoadGraph("Resource/image/start.png");  //スタート画像
@@ -165,6 +166,15 @@ void InGameScene::Draw() const
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
+		//矢印の描画
+		if (next >= 1 && next < 5)DrawRotaGraph(340, 210 - (select * 40), 0.2, 3.142, arrow_image, true);
+
+		//選択した具材(画像表示)
+		if (next >= 2)DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[0]], true);
+		if (next >= 3)DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[1]], true);
+		if (next >= 4)DrawRotaGraph(200, 115, 1.3, 0, select_burger_image[guzai_select[2]], true);
+		if (next >= 5)DrawRotaGraph(200, 75, 1.3, 0, select_burger_image[guzai_select[3]], true);
+
 		DrawRotaGraph(1155, 330, 1.0, 0, sb_image, true);  //スコアボード(伝票)の画像
 
 		int c_tens = (correct / 10) % 10;
@@ -190,12 +200,6 @@ void InGameScene::Draw() const
 			DrawRotaGraph(790, 150, 3.0, 0, burger_model[random], true);
 		}
 	}
-
-	//選択した具材(画像表示)
-	DrawRotaGraph(200, 195, 1.3, 0, select_burger_image[guzai_select[0]], true);
-	DrawRotaGraph(200, 155, 1.3, 0, select_burger_image[guzai_select[1]], true);
-	DrawRotaGraph(200, 115, 1.3, 0, select_burger_image[guzai_select[2]], true);
-	DrawRotaGraph(200, 75, 1.3, 0, select_burger_image[guzai_select[3]], true);
 
 	//具材選択描画
 	DrawBox(110, 100, 290, 80, 0xffffff, false);
@@ -232,7 +236,7 @@ int InGameScene::select_guzai()
 		case(0):
 				//選んだ具材の初期化処理
 				for (select = 0; select < 4; ++select) {
-					guzai_select[select] = -1;
+					guzai_select[select] = 0;
 				}
 				ingame_cursol = 0;
 
