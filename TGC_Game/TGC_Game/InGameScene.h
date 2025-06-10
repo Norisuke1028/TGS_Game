@@ -29,7 +29,7 @@ private:
 	int ingame_cursol;  //具材選択カーソル
 	int counter_time;  //時間制限
 	int select;
-	int guzai_select[4] = {-1, -1, -1, -1};  //選んだ具材の番号を格納
+	int guzai_select[4] = {0, 0, 0, 0};  //選んだ具材の番号を格納
 	int next;  //具材を選ぶと次の選択へ
 	int check_count;  //チェックカウント
 	int correct;  //正解数
@@ -53,6 +53,7 @@ private:
 	int buns_image;  //バンズの画像
 	int back_image;  //背景画像
 	int select_guzai_image;
+	int arrow_image;  //矢印画像
 	int select_burger_image[4];  //選んだ具材画像
 	int burger_model[6];  //お題バーガー画像
 	int gb_number_image[10];  //ゲーム内で使うナンバー画像(黒) gamebrack
