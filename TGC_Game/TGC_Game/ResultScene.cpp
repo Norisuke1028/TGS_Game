@@ -144,6 +144,7 @@ void ResultScene::Draw() const
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
     int sales = GameDataManager::GetInstance().GetSales();
+    int sum = 0;
     
 
     DrawFormatString(100, 100, GetColor(255, 255, 255), "接客人数: %d", correct);
@@ -160,6 +161,8 @@ void ResultScene::Draw() const
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
+    
+
     if (result_score_time >= 50)
     {
         // 接客数を描画
@@ -172,12 +175,21 @@ void ResultScene::Draw() const
     }
     if (result_score_time >= 300)
     {
-        int sum = (sales * 2) + correct;
+         sum = (sales * 2) + correct;
+        // 合計数を描画
         DrawNumber(sumX, yOffset, sum);
     }
     if (result_score_time >= 350)
     {
-        DrawGraph(850, 490, result_sales_font, TRUE);
+        if (sum < 100) {
+            DrawGraph(850, 490, result_sales_font, TRUE);
+        }
+        if (sum < 100) {
+            DrawGraph(850, 490, result_sales_font, TRUE);
+        }
+        if (sum < 100) {
+            DrawGraph(850, 490, result_sales_font, TRUE);
+        }
     }
 
     // フェード描画
