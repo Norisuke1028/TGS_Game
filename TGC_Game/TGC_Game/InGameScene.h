@@ -63,6 +63,7 @@ private:
 	int gr_number_image[10];  //ゲーム内で使うナンバー画像(赤) gamered
 	int sb_image;  //スコアボード画像
 	int start_image;  //ゲーム開始画像
+	int controller_image;  //操作設定画像
 	
 	int cursol_se;  //カーソル音
 	int correct_se;  //正解音

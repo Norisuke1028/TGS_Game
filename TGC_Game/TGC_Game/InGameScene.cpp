@@ -38,6 +38,7 @@ void InGameScene::Initialize()
 	back_image = LoadGraph("Resource/image/main_background2.png");  //”wŒi‰æ‘œ
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //ƒXƒRƒAƒ{[ƒh‰æ‘œ
 	start_image = LoadGraph("Resource/image/start.png");  //ƒXƒ^[ƒg‰æ‘œ
+	controller_image = LoadGraph("Resource/image/controller.png");  //‘€ìÝ’è‰æ‘œ
 	plus = LoadGraph("Resource/image/plus.png");
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //‘I‚ñ‚¾‹ïÞ‰æ‘œ
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //‚¨‘èƒo[ƒK[‰æ‘œ
@@ -135,6 +136,9 @@ void InGameScene::Draw() const
 	DrawBox(70, 5, 295, 280, 0x561B24, true);
 	DrawBox(75, 10, 290, 275, 0xffffff, true);
 
+	//‘€ìŠm”F—p”wŒi
+	DrawRotaGraph(730, 47, 1.0, 0, controller_image, true);
+
 	//Countdown‚É‚È‚é‚ÆŽÀs
 	if (gameState == GameState::Countdown)
 	{
@@ -168,14 +172,15 @@ void InGameScene::Draw() const
 		DrawBox(20 + (ingame_cursol * 250), 520, 250 + (ingame_cursol * 250), 670, 0xffffff, false);
 		DrawBox(21 + (ingame_cursol * 250.1), 521, 251 + (ingame_cursol * 250.1), 671, 0xffffff, false);
 
+
 		//–îˆó‚Ì•`‰æ
 		if (next >= 1 && next < 5)DrawRotaGraph(330, 210 - (select * 40), 0.2, 3.142, arrow_image, true);
 
 		//‘I‘ð‚µ‚½‹ïÞ(‰æ‘œ•\Ž¦)
-		if (next >= 2)DrawRotaGraph(180, 200, 1.3, 0, select_burger_image[guzai_select[0]], true);  //Žl˜g–Ú
-		if (next >= 3)DrawRotaGraph(180, 160, 1.3, 0, select_burger_image[guzai_select[1]], true);  //ŽO˜g–Ú
-		if (next >= 4)DrawRotaGraph(180, 120, 1.3, 0, select_burger_image[guzai_select[2]], true);  //“ñ˜g–Ú
-		if (next >= 5)DrawRotaGraph(180, 80, 1.3, 0, select_burger_image[guzai_select[3]], true);  //ˆê˜g–Ú
+		if (next >= 2 && guzai_select[0] != 4)DrawRotaGraph(180, 200, 1.3, 0, select_burger_image[guzai_select[0]], true);  //Žl˜g–Ú
+		if (next >= 3 && guzai_select[1] != 4)DrawRotaGraph(180, 160, 1.3, 0, select_burger_image[guzai_select[1]], true);  //ŽO˜g–Ú
+		if (next >= 4 && guzai_select[2] != 4)DrawRotaGraph(180, 120, 1.3, 0, select_burger_image[guzai_select[2]], true);  //“ñ˜g–Ú
+		if (next >= 5 && guzai_select[3] != 4)DrawRotaGraph(180, 80, 1.3, 0, select_burger_image[guzai_select[3]], true);  //ˆê˜g–Ú
 
 		DrawRotaGraph(1155, 330, 1.0, 0, sb_image, true);  //ƒXƒRƒAƒ{[ƒh(“`•[)‚Ì‰æ‘œ
 
@@ -203,8 +208,6 @@ void InGameScene::Draw() const
 			DrawRotaGraph(1205, 380, 0.5, 0, gr_number_image[s_tens], true);  // \‚ÌˆÊ(”„ã)
 			DrawRotaGraph(1230, 380, 0.5, 0, gr_number_image[s_ones], true);  // ˆê‚ÌˆÊ(”„ã)
 		}
-
-		DrawFormatString(600,5,0x000000,"%d",sales);
 
 		//ƒfƒBƒŒƒC‚ð‚©‚¯‚Ä•\Ž¦‚·‚é
 		if (next >= 1 && next < 7) {
