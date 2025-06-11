@@ -26,6 +26,15 @@ void ResultScene::Initialize()
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
 
+    result_bronze_font = LoadGraph("Resource/image/result_burger_bronze.png");
+    result_bronze_badge = LoadGraph("Resource/image/brondze_badge.png");
+    
+    result_gold_font = LoadGraph("Resource/image/result_burger_gold.png");
+    result_gold_badge = LoadGraph("Resource/image/gold_badge.png");
+
+    result_diamond_font = LoadGraph("Resource/image/result_burger_god.png");
+    result_diamond_badge = LoadGraph("Resource/image/diamond_badge.png");
+
    /* cursor_se_move = LoadSoundMem("Resource/sounds/");
     cursor_se_push = LoadSoundMem("Resource/sounds/");*/
 
@@ -93,24 +102,26 @@ eSceneType ResultScene::Update()
         return eSceneType::eResult;
     }
 
-    // コントローラーの A ボタン処理(簡略化)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
-        // 押したらSEを鳴らせる
-        PlaySoundMem(cursor_se_push, DX_PLAYTYPE_BACK);
-        // BGMを止める
-        StopSoundMem(result_bgm);
-        // フェード初期化
-        fade->Initialize(false);
+    if (result_score_time >= 300) {
+        // コントローラーの A ボタン処理(簡略化)
+        if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
+            // 押したらSEを鳴らせる
+            PlaySoundMem(cursor_se_push, DX_PLAYTYPE_BACK);
+            // BGMを止める
+            StopSoundMem(result_bgm);
+            // フェード初期化
+            fade->Initialize(false);
 
-        // カーソル位置に応じてシーン遷移を予約
-        if (result_cursor == 0) {
-            result_next_scene = eSceneType::eTitle;
-        }
-        else if (result_cursor == 1) {
-            result_next_scene = eSceneType::eInGame;
-        }
-        else if (result_cursor == 2) {
-            result_next_scene = eSceneType::eRanking;
+            // カーソル位置に応じてシーン遷移を予約
+            if (result_cursor == 0) {
+                result_next_scene = eSceneType::eTitle;
+            }
+            else if (result_cursor == 1) {
+                result_next_scene = eSceneType::eInGame;
+            }
+            else if (result_cursor == 2) {
+                result_next_scene = eSceneType::eRanking;
+            }
         }
     }
 
@@ -175,20 +186,23 @@ void ResultScene::Draw() const
     }
     if (result_score_time >= 300)
     {
-         sum = (sales * 50) + correct;
+         sum = (correct * 50) + sales;
         // 合計数を描画
         DrawNumber(sumX, yOffset, sum);
     }
-    if (result_score_time >= 350)
+    if (result_score_time >= 400)
     {
-        if (sum < 100) {
-            DrawGraph(850, 490, result_sales_font, TRUE);
+        if (sum > 1000 || sum >= 0) {
+            DrawExtendGraph(800, 300, 381, 388, result_bronze_badge, TRUE);
+            DrawExtendGraph(100, 300, 381, 388, result_bronze_font, TRUE);
         }
-        if (sum < 100) {
-            DrawGraph(850, 490, result_sales_font, TRUE);
+        if (sum > 2000 || sum >= 1001) {
+            DrawExtendGraph(100, 300, 381, 388, result_gold_badge, TRUE);
+            DrawExtendGraph(100, 300, 381, 388, result_gold_font, TRUE);
         }
-        if (sum < 100) {
-            DrawGraph(850, 490, result_sales_font, TRUE);
+        if (sum > 5000 || sum >= 4500) {
+            DrawExtendGraph(100, 300, 381, 388, result_diamond_badge, TRUE);
+            DrawExtendGraph(100, 300, 381, 388, result_diamond_font, TRUE);
         }
     }
 

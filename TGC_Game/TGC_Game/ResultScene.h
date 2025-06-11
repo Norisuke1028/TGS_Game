@@ -20,6 +20,13 @@ private:
 
 	int result_score_time;      // スコア等秒数
 
+	int result_bronze_font;
+	int result_bronze_badge;
+	int result_gold_font;
+	int result_gold_badge;
+	int result_diamond_font;
+	int result_diamond_badge;
+
 
 	int cursor_se_move;         // カーソルの移動SE
 	int cursor_se_push;         // カーソルの決定SE
