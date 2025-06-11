@@ -22,8 +22,7 @@ void TitleScene::Initialize()
 	next_scene = eSceneType::eTitle;
 	
 	// ‰æ‘œ‚Ì“Ç‚Ýž‚Ý
-	background_image = LoadGraph("Resource/image/title.png");   // ”wŒi‰æ‘œ
-	menu_image = LoadGraph("Resource/image/menu2.png");         // ƒƒjƒ…[‰æ‘œ
+	background_image = LoadGraph("Resource/image/title2.png");   // ”wŒi‰æ‘œ
 	cursor_image = LoadGraph("Resource/image/cursor.png");		// ƒJ[ƒ\ƒ‹‰æ‘œ
 
 	// ‰¹Œ¹‚Ì“Ç‚Ýž‚Ý
@@ -101,10 +100,10 @@ eSceneType TitleScene::Update()
 			next_scene = eSceneType::eInGame;
 		}
 		else if (menu_cursor == 1) {
-			next_scene = eSceneType::eRanking;
+			next_scene = eSceneType::eTutorial;;
 		}
 		else if (menu_cursor == 2) {
-			next_scene = eSceneType::eTutorial;
+			next_scene = eSceneType::eRanking;
 		}
 		else if (menu_cursor == 3) {
 			next_scene = eSceneType::eEnd;
@@ -125,11 +124,8 @@ void TitleScene::Draw() const
 	// ƒ^ƒCƒgƒ‹‰æ‘œ‚Ì•`‰æ
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-	// ƒƒjƒ…[‰æ‘œ‚Ì•`‰æ
-	DrawGraph(80, 350, menu_image, TRUE);
-
 	// ƒJ[ƒ\ƒ‹‰æ‘œ‚Ì•`‰æ
-	DrawRotaGraph(520, 520 + menu_cursor * 32, 0.25, DX_PI / 200.0, cursor_image, TRUE);
+	DrawRotaGraph(70, 455 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
 
 	// ƒtƒF[ƒh•`‰æ
 	fade->Draw();
