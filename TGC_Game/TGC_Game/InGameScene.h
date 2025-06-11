@@ -32,8 +32,11 @@ private:
 	int guzai_select[4] = {0, 0, 0, 0};  //選んだ具材の番号を格納
 	int next;  //具材を選ぶと次の選択へ
 	int check_count;  //チェックカウント
+	int correct_check;
 	int correct;  //正解数
-	int sales;  //売上
+	int total_sales;  //合計売上
+	int sales; //売上
+	int plus;
 	int sozai_count;  //お題の素材数
 	int delay;  //ディレイ用カウント
 	const double limit = 30.0;  //制限時間
