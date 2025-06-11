@@ -23,6 +23,8 @@ void ResultScene::Initialize()
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
+    result_collect_font = LoadGraph("Resource/image/collect.png");
+    result_sales_font = LoadGraph("Resource/image/sales.png");
 
    /* cursor_se_move = LoadSoundMem("Resource/sounds/");
     cursor_se_push = LoadSoundMem("Resource/sounds/");*/
@@ -44,6 +46,8 @@ void ResultScene::Initialize()
 
     /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
+
+    result_score_time = 0;
 
     result_next_scene = eSceneType::eResult;
 }
@@ -112,6 +116,8 @@ eSceneType ResultScene::Update()
 
     // フェード更新
     fade->Update();
+
+    result_score_time++;
     
     // 親クラスの更新処理を呼び出す
     return __super::Update();
@@ -124,34 +130,67 @@ void ResultScene::Draw() const
 {
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
-    
+
     // 自身のスコア画像描画
     DrawGraph(50, 200, result_player_title, TRUE);
-    
-    /*/ ハイスコア画像描画
-    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);*/
+
+    // ハイスコア画像描画
+    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
+
+    DrawGraph(60, 295, result_collect_font, TRUE);
+
+    DrawGraph(850, 290, result_sales_font, TRUE);
 
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
     int sales = GameDataManager::GetInstance().GetSales();
-
+    int sum = 0;
+    
 
     DrawFormatString(100, 100, GetColor(255, 255, 255), "接客人数: %d", correct);
-    DrawFormatString(100, 140, GetColor(255, 255, 255), "売上: %d 円", sales);
+    //DrawFormatString(100, 140, GetColor(255, 255, 255), "売上: %d 円", sales);
+
+    DrawFormatString(100, 140, GetColor(0, 0, 0), "時間: %d 円", result_score_time);
 
 
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
     int correctX = 350;       //  接客数のX座標
-    int salesX = 500;       // 売上のX座標
+    int salesX = 800;       // 売上のX座標
+    int sumX = 500;
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    // 接客数を描画
-    DrawNumber(correctX, yOffset, correct);
+    
 
-    // 売上を描画
-    DrawNumber(salesX, yOffset, sales);
+    if (result_score_time >= 50)
+    {
+        // 接客数を描画
+        DrawNumber(correctX, yOffset, correct);
+    }
+    if (result_score_time >= 100)
+    {
+        // 売上を描画
+        DrawNumber(salesX, yOffset, sales);
+    }
+    if (result_score_time >= 300)
+    {
+         sum = (sales * 50) + correct;
+        // 合計数を描画
+        DrawNumber(sumX, yOffset, sum);
+    }
+    if (result_score_time >= 350)
+    {
+        if (sum < 100) {
+            DrawGraph(850, 490, result_sales_font, TRUE);
+        }
+        if (sum < 100) {
+            DrawGraph(850, 490, result_sales_font, TRUE);
+        }
+        if (sum < 100) {
+            DrawGraph(850, 490, result_sales_font, TRUE);
+        }
+    }
 
     // フェード描画
     fade->Draw();
