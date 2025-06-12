@@ -26,7 +26,7 @@ void ResultScene::Initialize()
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
-    sum_background = LoadSoundMem("Resource/sounds/drum.png");
+    sum_background = LoadSoundMem("Resource/sounds/drum.mp3");
 
     result_bronze_font = LoadGraph("Resource/image/result_burger_bronze.png");
     result_bronze_badge = LoadGraph("Resource/image/brondze_badge.png");
@@ -189,13 +189,13 @@ void ResultScene::Draw() const
         // 売上を描画
         DrawNumber(salesX, yOffset, sales);
     }
-    if (result_score_time >= 200)
+    if (result_score_time == 200)
     {
-        // 押したらSEを鳴らせる
         PlaySoundMem(sum_background, DX_PLAYTYPE_NORMAL);
     }
-    if (result_score_time >= 300)
+    if (result_score_time >= 201)
     {
+        StopSoundMem(sum_background);
          sum = (correct * 50) + sales;
         // 合計数を描画
         DrawNumber(sumX, 500, sum);
@@ -256,9 +256,12 @@ void ResultScene::DrawNumber(int x, int y, int number) const
 }
 
 void ResultScene::SaveScore(int correct, int sales) {
-    std::ofstream file("Resource/ScoreData/ranking.txt", std::ios::app); // appendモードで追記
-    if (file.is_open()) {
-        file << correct << " " << sales << std::endl;
-        file.close();
+    int sum = correct * 50 + sales;
+
+    std::ofstream ofs("Resource/ScoreData/ranking.txt", std::ios::app);
+    if (ofs.is_open()) {
+        ofs << correct << "," << sales << "," << sum << std::endl;
+        ofs.close();
     }
 }
+
