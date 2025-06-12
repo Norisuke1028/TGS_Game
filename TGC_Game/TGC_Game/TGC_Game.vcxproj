@@ -139,6 +139,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InGameScene.cpp" />
     <ClCompile Include="InputControl.cpp" />
+    <ClCompile Include="RankingManager.cpp" />
     <ClCompile Include="RankingScene.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ResultScene.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InGameScene.h" />
     <ClInclude Include="InputControl.h" />
+    <ClInclude Include="RankingManager.h" />
     <ClInclude Include="RankingScene.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ResultScene.h" />

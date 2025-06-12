@@ -2,6 +2,7 @@
 #include "InputControl.h"
 #include "ResourceManager.h"
 #include "GameDataManager.h"
+#include "ResourceManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 #include <algorithm>
@@ -113,7 +114,7 @@ eSceneType RankingScene::Update()
 	return GetNowSceneType();
 }
 
-void RankingScene::Draw() const 
+void RankingScene::Draw() 
 {
 	// ランキングテキストの表示（座標: x=50, y=50、色: 白）
 	DrawString(50, 50, "ランキング画面です", GetColor(255, 255, 255));
@@ -159,7 +160,7 @@ eSceneType RankingScene::GetNowSceneType() const
 	return eSceneType::eRanking;
 }
 
-/*/ ランキングデータ読み込み & ソート（売上→接客数の順で降順）
+// ランキングデータ読み込み & ソート（売上→接客数の順で降順）
 void RankingScene::LoadRankingData()
 {
 	std::ifstream file("Resource/ScoreData/ranking.txt");
@@ -232,4 +233,4 @@ void RankingScene::DrawNumber(int x, int y, int number)
 		// 画像の一部を切り取って描画
 		DrawRectGraph(x + i * digit_width, y, srcX, srcY, digit_width, digit_height, num_image[0], TRUE, FALSE);
 	}
-}*/
+}

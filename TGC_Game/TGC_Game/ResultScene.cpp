@@ -2,6 +2,7 @@
 #include "InputControl.h"
 #include "ResourceManager.h"
 #include "GameDataManager.h"
+#include "RankingManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 #include <stdio.h>
@@ -66,6 +67,8 @@ void ResultScene::Initialize()
 
 eSceneType ResultScene::Update()
 {
+
+
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
 
