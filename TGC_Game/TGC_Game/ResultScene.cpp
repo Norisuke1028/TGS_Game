@@ -22,9 +22,11 @@ void ResultScene::Initialize()
 
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
+    result_sum_title = LoadGraph("Resource/image/sum_score_font.png");
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
+    sum_background = LoadSoundMem("Resource/sounds/drum.png");
 
     result_bronze_font = LoadGraph("Resource/image/result_burger_bronze.png");
     result_bronze_badge = LoadGraph("Resource/image/brondze_badge.png");
@@ -142,15 +144,18 @@ void ResultScene::Draw() const
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-    // 自身のスコア画像描画
+    // 自身のスコアタイトル画像描画
     DrawGraph(50, 200, result_player_title, TRUE);
 
+    // 自身合計のスコアタイトル画像描画
+    DrawGraph(50, 450, result_sum_title, TRUE);
+
     // ハイスコア画像描画
-    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
+    //DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
 
     DrawGraph(60, 295, result_collect_font, TRUE);
 
-    DrawGraph(850, 290, result_sales_font, TRUE);
+    DrawGraph(850, 295, result_sales_font, TRUE);
 
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
@@ -167,8 +172,8 @@ void ResultScene::Draw() const
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
     int correctX = 350;       //  接客数のX座標
-    int salesX = 800;       // 売上のX座標
-    int sumX = 500;
+    int salesX = 1030;       // 売上のX座標
+    int sumX = 380;
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
@@ -184,25 +189,31 @@ void ResultScene::Draw() const
         // 売上を描画
         DrawNumber(salesX, yOffset, sales);
     }
+    if (result_score_time >= 200)
+    {
+        // 押したらSEを鳴らせる
+        PlaySoundMem(sum_background, DX_PLAYTYPE_NORMAL);
+    }
     if (result_score_time >= 300)
     {
          sum = (correct * 50) + sales;
         // 合計数を描画
-        DrawNumber(sumX, yOffset, sum);
+        DrawNumber(sumX, 500, sum);
+        
     }
     if (result_score_time >= 400)
     {
-        if (sum > 1000 || sum >= 0) {
+        if (sum <= 1000) {
             DrawExtendGraph(1000, 460, 1200, 660, result_bronze_badge, TRUE);
-            DrawExtendGraph(800, 260, 1000, 460, result_bronze_font, TRUE);
+            //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
         }
-        if (sum > 2000 || sum >= 1001) {
+        if (sum <= 3600 && sum >= 1001) {
             DrawExtendGraph(1000, 460, 1200, 660, result_gold_badge, TRUE);
-            DrawExtendGraph(1000, 460, 1200, 660, result_gold_font, TRUE);
+            //DrawGraph(400, 480, result_gold_font, TRUE);
         }
-        if (sum > 5000 || sum >= 4500) {
+        if (sum >= 3600) {
             DrawExtendGraph(1000, 460, 1200, 660, result_diamond_badge, TRUE);
-            DrawExtendGraph(1000, 460, 1200, 660, result_diamond_font, TRUE);
+           //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
     }
 
