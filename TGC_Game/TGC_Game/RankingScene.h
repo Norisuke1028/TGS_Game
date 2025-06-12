@@ -32,13 +32,12 @@ private:
 	};
 
 	
-	void DrawNumber(int x, int y, int number) const;        // スコアを画像で描画
+	void DrawNumber(int x, int y, int number);        // スコアを画像で描画
 
 
 	std::vector<RankData> rankList;
 
-	void LoadRankingData();
-	void DrawRanking();
+	
 
 public:
 	RankingScene();
@@ -47,8 +46,10 @@ public:
 public:
 	virtual void Initialize() override;
 	virtual eSceneType Update() override;
-	virtual void Draw() const override;
+	virtual void Draw();
 	virtual void Finalize() override;
+	virtual void LoadRankingData();
+	virtual void DrawRankingData();
 
 public:
 	virtual eSceneType GetNowSceneType() const override;

@@ -223,7 +223,7 @@ void ResultScene::Draw() const
 
 void ResultScene::Finalize()
 {
-    
+
 }
 
 eSceneType ResultScene::GetNowSceneType() const

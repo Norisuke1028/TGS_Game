@@ -67,6 +67,9 @@ void RankingScene::Initialize()
 	ChangeVolumeSoundMem(255 * 70 / 100, ranking_main_bgm);
 	PlaySoundMem(ranking_main_bgm, DX_PLAYTYPE_BACK);
 
+	// ↓ ランキングデータを読み込む
+	LoadRankingData();
+
 	ranking_next_scene = eSceneType::eRanking;
 }
 
@@ -110,7 +113,7 @@ eSceneType RankingScene::Update()
 	return GetNowSceneType();
 }
 
-void RankingScene::Draw() const
+void RankingScene::Draw() const 
 {
 	// ランキングテキストの表示（座標: x=50, y=50、色: 白）
 	DrawString(50, 50, "ランキング画面です", GetColor(255, 255, 255));
@@ -139,7 +142,8 @@ void RankingScene::Draw() const
 	// ミス数
 	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);*/
 
-
+	/*/ ランキング描画
+	DrawRankingData();*/
 
 	// フェード描画
 	fade->Draw();
@@ -147,7 +151,7 @@ void RankingScene::Draw() const
 
 void RankingScene::Finalize()
 {
-	;
+	
 }
 
 eSceneType RankingScene::GetNowSceneType() const
@@ -155,7 +159,7 @@ eSceneType RankingScene::GetNowSceneType() const
 	return eSceneType::eRanking;
 }
 
-// ランキングデータ読み込み & ソート
+/*/ ランキングデータ読み込み & ソート（売上→接客数の順で降順）
 void RankingScene::LoadRankingData()
 {
 	std::ifstream file("Resource/ScoreData/ranking.txt");
@@ -169,27 +173,45 @@ void RankingScene::LoadRankingData()
 		file.close();
 	}
 
-	// 売上（sales）で降順にソート
+	// 売上（sales）→ 接客数（correct）の順に降順ソート
 	std::sort(rankList.begin(), rankList.end(), [](const RankData& a, const RankData& b) {
-		return a.sales > b.sales;
+		if (a.sales != b.sales) return a.sales > b.sales;
+		return a.correct > b.correct;
 		});
 }
 
-void RankingScene::DrawRanking()
+void RankingScene::DrawRankingData()
 {
-	/*
+	if (rankList.empty()) return;
+
 	int y = 100;
-	for (int i = 0; i < std::min(3, (int)rankList.size()); ++i) {
-		DrawFormatString(100, y, GetColor(255, 255, 255), "%d位: 接客数:%d 売上:%d円",
-			i + 1, rankList[i].correct, rankList[i].sales);
-		y += 40;
-	}*/
+
+	// 最大3位まで描画
+	int drawCount = static_cast<int>(rankList.size());
+	if (drawCount > 3) drawCount = 3;
+
+	for (int i = 0; i < drawCount; ++i)
+	{
+		// ランク位置（例: 1位）
+		DrawFormatString(50, y + 20, GetColor(255, 255, 255), "%d位:", i + 1);
+
+		// 接客数（テキスト + 画像数字）
+		DrawString(150, y, "接客数:", GetColor(255, 255, 255));
+		DrawNumber(250, y, rankList[i].correct);
+
+		// 売上（テキスト + 画像数字）
+		DrawString(400, y, "売上:", GetColor(255, 255, 255));
+		DrawNumber(470, y, rankList[i].sales);
+
+		y += 70; // 次の行へ
+	}
 }
+
 
 
 
 // 指定位置に数値を画像で描画する
-void RankingScene::DrawNumber(int x, int y, int number) const
+void RankingScene::DrawNumber(int x, int y, int number) 
 {
 	if (num_image.empty()) return;  // 画像が未ロードなら描画しない
 
@@ -210,4 +232,4 @@ void RankingScene::DrawNumber(int x, int y, int number) const
 		// 画像の一部を切り取って描画
 		DrawRectGraph(x + i * digit_width, y, srcX, srcY, digit_width, digit_height, num_image[0], TRUE, FALSE);
 	}
-}
+}*/
