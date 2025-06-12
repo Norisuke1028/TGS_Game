@@ -193,16 +193,16 @@ void ResultScene::Draw() const
     if (result_score_time >= 400)
     {
         if (sum > 1000 || sum >= 0) {
-            DrawExtendGraph(800, 300, 381, 388, result_bronze_badge, TRUE);
-            DrawExtendGraph(100, 300, 381, 388, result_bronze_font, TRUE);
+            DrawExtendGraph(1000, 460, 1200, 660, result_bronze_badge, TRUE);
+            DrawExtendGraph(800, 260, 1000, 460, result_bronze_font, TRUE);
         }
         if (sum > 2000 || sum >= 1001) {
-            DrawExtendGraph(100, 300, 381, 388, result_gold_badge, TRUE);
-            DrawExtendGraph(100, 300, 381, 388, result_gold_font, TRUE);
+            DrawExtendGraph(1000, 460, 1200, 660, result_gold_badge, TRUE);
+            DrawExtendGraph(1000, 460, 1200, 660, result_gold_font, TRUE);
         }
         if (sum > 5000 || sum >= 4500) {
-            DrawExtendGraph(100, 300, 381, 388, result_diamond_badge, TRUE);
-            DrawExtendGraph(100, 300, 381, 388, result_diamond_font, TRUE);
+            DrawExtendGraph(1000, 460, 1200, 660, result_diamond_badge, TRUE);
+            DrawExtendGraph(1000, 460, 1200, 660, result_diamond_font, TRUE);
         }
     }
 
