@@ -35,7 +35,7 @@ void InGameScene::Initialize()
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
 	arrow_image = LoadGraph("Resource/image/cursor.png");  //矢印画像
-	back_image = LoadGraph("Resource/image/main_background2.png");  //背景画像
+	back_image = LoadGraph("Resource/image/main_background3.png");  //背景画像
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
 	start_image = LoadGraph("Resource/image/start.png");  //スタート画像
 	controller_image = LoadGraph("Resource/image/controller.png");  //操作設定画像
@@ -144,11 +144,11 @@ void InGameScene::Draw() const
 	{
 		//3カウントダウン用
 		if (elapsed < 4.0) {
-			DrawRotaGraph(640, 340, 3.0, 0, gr_number_image[countdown], true);
+			DrawRotaGraph(640, 340, 2.5, 0, gr_number_image[countdown], true);
 		}
 		//スタート表示用
 		else if (elapsed < 4.8) {
-			DrawRotaGraph(640, 340, 2.0, 0, start_image, true);
+			DrawRotaGraph(640, 340, 1.7, 0, start_image, true);
 		}
 	}
 
@@ -365,6 +365,7 @@ int InGameScene::select_guzai()
 			}
 			//決定ボタンを選んでる時にBボタンを押すとジャッジへ
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress && ingame_cursol == 4 || select < 4) {
+
 				//決定ボタンを押すと具材チェック
 				check_guzai();
 

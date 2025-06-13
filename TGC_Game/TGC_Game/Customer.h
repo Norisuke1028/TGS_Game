@@ -1,11 +1,4 @@
 #pragma once
-enum CustomerState
-{
-    Entering,  //“ü“X
-    Ordering,  //’•¶
-    Waiting,   //‘Ò‹@
-    Leaving    //‘Ş“X
-};
 
 class Customer
 {
@@ -15,9 +8,6 @@ private:
 
 private:
     int r_customer;  //ƒ‰ƒ“ƒ_ƒ€‚É‹q‚Ì‰æ‘œ•`‰æ
-
-public:
-    CustomerState customer_state;
 
 public:
     Customer();
