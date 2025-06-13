@@ -47,6 +47,8 @@ void RankingScene::Initialize()
 	score_text_image = LoadGraph("Resource/images/");
 	// ミス数画像の読み込み
 	miss_text_image = LoadGraph("Resource/images/");*/
+	// ボタンガイド画像の読み込み
+	button_gaid_image = LoadGraph("Resource/image/controller_guid.png");
 
 	// フェードをインスタンス化
 	fade = new Fade();
@@ -101,33 +103,31 @@ eSceneType RankingScene::Update()
 	return GetNowSceneType();
 }
 
+// 描画処理
 void RankingScene::Draw() const
 {
-
 	// 背景画像の描画
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	/*
-	DrawRotaGraphF(640.0f, 390.0f, 1.0, 0.0, certificate_image[0], TRUE);
 
 	// "ランキング"テキスト描画
-	DrawRotaGraphF(640.0f, 70.0f, 1.0, 0.0, text_image[0], TRUE);
-	// ボタン案内表示
-	DrawRotaGraphF(1150.0f, 680.0f, 1.0, 0.0, text_image[1], TRUE);
+	DrawRotaGraphF(640.0f, 70.0f, 1.0, 0.0, text_image[0], TRUE);*/
 
-	// ランキング
+	// ボタン案内表示
+	DrawGraph(1050, 470, button_gaid_image,TRUE);
+
+	/*/ ランキング
 	DrawRotaGraph(280, 240, 0.7f, DX_PI / 0.5, ranking_text_image, TRUE);
 
-	// レベル数
-	DrawRotaGraph(400, 240, 0.7f, DX_PI / 0.5, level_text_image, TRUE);
+	// 接客人数
+	DrawRotaGraph(400, 240, 0.7f, DX_PI / 0.5, correct_text_image, TRUE);
 
-	// スコア
-	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, score_text_image, TRUE);
+	// 売上額
+	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, sales_text_image, TRUE);*/
 
-	// ミス数
-	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);*/
 
-	int baseY = 200;
+	int baseY = 200;      // ← Y座標固定
 	int rowHeight = 120;  // ← 順位ごとの幅
 
 	for (int i = 0; i < scores.size(); ++i) {
@@ -155,7 +155,7 @@ eSceneType RankingScene::GetNowSceneType() const
 	return eSceneType::eRanking;
 }
 
-// 指定位置に数値を画像で描画する
+// 指定位置に数値を画像で描画する(数字画像描画用の処理)
 void RankingScene::DrawNumber(int x, int y, int number) const
 {
 	if (num_image.empty()) return;  // 画像が未ロードなら描画しない

@@ -19,8 +19,10 @@ private:
 	int ranking_text_image;     // 「順位」画像     
 	int correct_text_image;     // 「客」画像
 	int sales_text_image;       // 「売上」画像
-
+	int button_gaid_image;      // ボタン案内用画像
 	
+
+	// データ
 	struct RankData {
 		int correct;
 		int sales;
@@ -35,7 +37,7 @@ public:
 	virtual eSceneType Update() override;
 	virtual void Draw() const;
 	virtual void Finalize() override;
-	void DrawNumber(int x, int y, int number) const;
+	void DrawNumber(int x, int y, int number) const; //constの理由はDrawに持っていくため
 
 public:
 	virtual eSceneType GetNowSceneType() const override;
