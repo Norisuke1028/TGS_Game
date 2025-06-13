@@ -61,21 +61,12 @@ void ResultScene::Initialize()
 
     result_score_time = 0;
 
-    // ファイルに保存（ランキング登録）
-    GameDataManager::GetInstance().SaveScoreToFile("Resource/ScoreData/ranking.txt");
-
     result_next_scene = eSceneType::eResult;
 }
 
 
 eSceneType ResultScene::Update()
 {
-    /*static bool isSaved = false;
-    if (!isSaved) {
-        GameDataManager::GetInstance().SaveScoreToFile("Resource/ScoreData/ranking.txt");
-        isSaved = true;
-    }*/
-
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
 
@@ -233,10 +224,10 @@ void ResultScene::Draw() const
 
 void ResultScene::Finalize()
 {
-    /*int correct = GameDataManager::GetInstance().GetCorrect();
+    int correct = GameDataManager::GetInstance().GetCorrect();
     int sales = GameDataManager::GetInstance().GetSales();
 
-    GameDataManager::SaveScoreToFile(correct, sales, "ranking.txt");*/
+    RankingManager::GetInstance().WriteScore(correct, sales);
 }
 
 eSceneType ResultScene::GetNowSceneType() const

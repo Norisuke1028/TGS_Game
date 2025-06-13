@@ -46,8 +46,6 @@ public:
 	virtual eSceneType Update() override;
 	virtual void Draw() const;
 	virtual void Finalize() override;
-	virtual void LoadRankingData();
-	virtual void DrawRankingData();
 
 public:
 	virtual eSceneType GetNowSceneType() const override;

@@ -2,7 +2,7 @@
 #include "InputControl.h"
 #include "ResourceManager.h"
 #include "GameDataManager.h"
-#include "ResourceManager.h"
+#include "RankingManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 #include <algorithm>
@@ -75,9 +75,6 @@ void RankingScene::Initialize()
 	ChangeVolumeSoundMem(255 * 70 / 100, ranking_main_bgm);
 	PlaySoundMem(ranking_main_bgm, DX_PLAYTYPE_BACK);
 
-	// ↓ ランキングデータを読み込む
-	LoadRankingData();
-
 	ranking_next_scene = eSceneType::eRanking;
 }
 
@@ -123,16 +120,6 @@ eSceneType RankingScene::Update()
 
 void RankingScene::Draw() const
 {
-	for (int i = 0; i < rankingList.size(); ++i) {
-		int correct = rankingList[i].first;
-		int sales = rankingList[i].second;
-
-
-		// 数字画像で描画
-		const_cast<RankingScene*>(this)->DrawNumber(200, 100 + i * 60, correct);  // 接客数
-		const_cast<RankingScene*>(this)->DrawNumber(350, 100 + i * 60, sales);    // 売上
-	}
-
 
 	// 背景画像の描画
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
@@ -173,57 +160,6 @@ eSceneType RankingScene::GetNowSceneType() const
 {
 	return eSceneType::eRanking;
 }
-
-/*/ ランキングデータ読み込み & ソート（売上→接客数の順で降順）
-void RankingScene::LoadRankingData()
-{
-	std::ifstream file("Resource/ScoreData/ranking.txt");
-	rankList.clear();
-
-	if (file.is_open()) {
-		int correct, sales;
-		while (file >> correct >> sales) {
-			rankList.push_back({ correct, sales });
-		}
-		file.close();
-	}
-
-	// 売上（sales）→ 接客数（correct）の順に降順ソート
-	std::sort(rankList.begin(), rankList.end(), [](const RankData& a, const RankData& b) {
-		if (a.sales != b.sales) return a.sales > b.sales;
-		return a.correct > b.correct;
-		});
-}
-
-void RankingScene::DrawRankingData()
-{
-	if (rankList.empty()) return;
-
-	int y = 100;
-
-	// 最大3位まで描画
-	int drawCount = static_cast<int>(rankList.size());
-	if (drawCount > 3) drawCount = 3;
-
-	for (int i = 0; i < drawCount; ++i)
-	{
-		// ランク位置（例: 1位）
-		DrawFormatString(50, y + 20, GetColor(255, 255, 255), "%d位:", i + 1);
-
-		// 接客数（テキスト + 画像数字）
-		DrawString(150, y, "接客数:", GetColor(255, 255, 255));
-		DrawNumber(250, y, rankList[i].correct);
-
-		// 売上（テキスト + 画像数字）
-		DrawString(400, y, "売上:", GetColor(255, 255, 255));
-		DrawNumber(470, y, rankList[i].sales);
-
-		y += 70; // 次の行へ
-	}
-}*/
-
-
-
 
 // 指定位置に数値を画像で描画する
 void RankingScene::DrawNumber(int x, int y, int number) 

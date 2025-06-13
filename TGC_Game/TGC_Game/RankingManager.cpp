@@ -1,8 +1,6 @@
 #include "RankingManager.h"
 #include <fstream>
-#include <vector>
 #include <algorithm>
-#include <sstream>
 
 RankingManager& RankingManager::GetInstance() {
     static RankingManager instance;
@@ -10,38 +8,42 @@ RankingManager& RankingManager::GetInstance() {
 }
 
 void RankingManager::WriteScore(int correct, int sales) {
-    std::vector<ScoreData> scores = ReadScores(); // 既存のスコアを読み込み
+    LoadFromFile();  // まず既存データ読み込み
 
-    // 今回のスコアを追加
-    scores.push_back({ correct, sales });
+    scores.emplace_back(ScoreData{ correct, sales });
 
-    // 合計値が高い順にソート
+    // 合計値で降順にソート
     std::sort(scores.begin(), scores.end(), [](const ScoreData& a, const ScoreData& b) {
         return (a.correct + a.sales) > (b.correct + b.sales);
         });
 
-    // 最大3件まで保持
+    // 最大3件まで
     if (scores.size() > 3) {
         scores.resize(3);
     }
 
-    // 書き込み
-    std::ofstream ofs("ranking.txt");
+    // ファイルに書き込み
+    std::ofstream outFile("Resource/ScoreData/ranking.txt", std::ios::trunc);
     for (const auto& score : scores) {
-        ofs << score.correct << " " << score.sales << std::endl;
+        outFile << score.correct << " " << score.sales << "\n";
     }
+    outFile.close();
 }
 
-std::vector<ScoreData> RankingManager::ReadScores() {
-    std::vector<ScoreData> scores;
-    std::ifstream ifs("ranking.txt");
+void RankingManager::LoadFromFile() {
+    scores.clear();
+
+    std::ifstream inFile("Resource/ScoreData/ranking.txt");
     int correct, sales;
 
-    while (ifs >> correct >> sales) {
-        scores.push_back({ correct, sales });
+    while (inFile >> correct >> sales) {
+        scores.emplace_back(ScoreData{ correct, sales });
     }
 
-    return scores;
+    inFile.close();
 }
 
-
+const std::vector<ScoreData>& RankingManager::ReadScores() {
+    LoadFromFile();  // 読み込んでおく
+    return scores;
+}
