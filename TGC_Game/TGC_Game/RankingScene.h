@@ -7,6 +7,7 @@ class RankingScene : public SceneBase
 {
 private:
 	class Fade* fade;
+	std::vector<std::pair<int, int>> rankingList; // <correct, sales>
 	eSceneType ranking_next_scene; // 遷移先のシーン
 	bool push_button_flag;
 	int a_button_push;
@@ -34,9 +35,6 @@ private:
 	
 	void DrawNumber(int x, int y, int number);        // スコアを画像で描画
 
-
-	std::vector<RankData> rankList;
-
 	
 
 public:
@@ -46,7 +44,7 @@ public:
 public:
 	virtual void Initialize() override;
 	virtual eSceneType Update() override;
-	virtual void Draw();
+	virtual void Draw() const;
 	virtual void Finalize() override;
 	virtual void LoadRankingData();
 	virtual void DrawRankingData();

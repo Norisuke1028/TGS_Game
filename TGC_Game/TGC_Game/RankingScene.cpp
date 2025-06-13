@@ -20,7 +20,14 @@ RankingScene::RankingScene()
 	, certificate_image()
 	, ranking_next_scene()
 {
-
+	std::ifstream inFile("Resource/ScoreData/ranking.txt");
+	if (inFile.is_open()) {
+		int correct, sales;
+		while (inFile >> correct >> sales) {
+			rankingList.emplace_back(correct, sales);
+		}
+		inFile.close();
+	}
 }
 
 RankingScene::~RankingScene()
@@ -114,12 +121,19 @@ eSceneType RankingScene::Update()
 	return GetNowSceneType();
 }
 
-void RankingScene::Draw() 
+void RankingScene::Draw() const
 {
-	// ランキングテキストの表示（座標: x=50, y=50、色: 白）
-	DrawString(50, 50, "ランキング画面です", GetColor(255, 255, 255));
-	DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
-	
+	for (int i = 0; i < rankingList.size(); ++i) {
+		int correct = rankingList[i].first;
+		int sales = rankingList[i].second;
+
+
+		// 数字画像で描画
+		const_cast<RankingScene*>(this)->DrawNumber(200, 100 + i * 60, correct);  // 接客数
+		const_cast<RankingScene*>(this)->DrawNumber(350, 100 + i * 60, sales);    // 売上
+	}
+
+
 	// 背景画像の描画
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
@@ -160,7 +174,7 @@ eSceneType RankingScene::GetNowSceneType() const
 	return eSceneType::eRanking;
 }
 
-// ランキングデータ読み込み & ソート（売上→接客数の順で降順）
+/*/ ランキングデータ読み込み & ソート（売上→接客数の順で降順）
 void RankingScene::LoadRankingData()
 {
 	std::ifstream file("Resource/ScoreData/ranking.txt");
@@ -206,7 +220,7 @@ void RankingScene::DrawRankingData()
 
 		y += 70; // 次の行へ
 	}
-}
+}*/
 
 
 

@@ -43,3 +43,5 @@ std::vector<ScoreData> RankingManager::ReadScores() {
 
     return scores;
 }
+
+
