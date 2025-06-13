@@ -9,25 +9,13 @@
 #include <vector>
 #include <fstream>
 
-
-
-
 RankingScene::RankingScene()
 	: fade(nullptr)
 	, push_button_flag(false)
-	, text_image()
 	, num_image()
-	, certificate_image()
 	, ranking_next_scene()
 {
-	std::ifstream inFile("Resource/ScoreData/ranking.txt");
-	if (inFile.is_open()) {
-		int correct, sales;
-		while (inFile >> correct >> sales) {
-			rankingList.emplace_back(correct, sales);
-		}
-		inFile.close();
-	}
+	
 }
 
 RankingScene::~RankingScene()
@@ -48,13 +36,6 @@ void RankingScene::Initialize()
 	// 背景画像読み込み
 	background_image = LoadGraph("Resource/image/ranking_background.png");
 
-	/*/ テキスト画像の読み込み
-	text_image = rm->GetImages("Resource/images/");
-	tmp = rm->GetImages("Resource/images/");
-	text_image.push_back(tmp[0]);
-
-	certificate_image = rm->GetImages("Resource/images/");*/
-
 	// 数字画像（0?9）の読み込み
 	num_image = rm->GetImages("Resource/image/number.png");
 
@@ -74,6 +55,8 @@ void RankingScene::Initialize()
 
 	ChangeVolumeSoundMem(255 * 70 / 100, ranking_main_bgm);
 	PlaySoundMem(ranking_main_bgm, DX_PLAYTYPE_BACK);
+
+	scores = std::vector<ScoreData>(RankingManager::GetInstance().ReadScores());
 
 	ranking_next_scene = eSceneType::eRanking;
 }
@@ -144,8 +127,19 @@ void RankingScene::Draw() const
 	// ミス数
 	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);*/
 
-	/*/ ランキング描画
-	DrawRankingData();*/
+	int baseY = 200;
+	int rowHeight = 120;  // ← 順位ごとの幅
+
+	for (int i = 0; i < scores.size(); ++i) {
+		int y = baseY + i * rowHeight;
+
+		// ランク表示（1位、2位、3位）
+		//DrawFormatString(200, y, GetColor(255, 255, 255), "%d位", i + 1);
+
+		// スコア画像の描画
+		DrawNumber(400, y, scores[i].correct);  // 接客数
+		DrawNumber(800, y, scores[i].sales);    // 売上
+	}
 
 	// フェード描画
 	fade->Draw();
@@ -162,7 +156,7 @@ eSceneType RankingScene::GetNowSceneType() const
 }
 
 // 指定位置に数値を画像で描画する
-void RankingScene::DrawNumber(int x, int y, int number) 
+void RankingScene::DrawNumber(int x, int y, int number) const
 {
 	if (num_image.empty()) return;  // 画像が未ロードなら描画しない
 
