@@ -31,6 +31,9 @@ void TitleScene::Initialize()
 	cursol_push_se = LoadSoundMem("Resource/sounds/SE/");  // カーソル決定SE
 	PlaySoundMem(title_bgm, DX_PLAYTYPE_LOOP); // ループ再生する
 
+	//音量設定
+	ChangeVolumeSoundMem(150,title_bgm);
+
 	//// エラーチェック
 	//if (background_image == -1)
 	//{

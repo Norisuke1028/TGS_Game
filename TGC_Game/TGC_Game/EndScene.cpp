@@ -11,11 +11,13 @@ void EndScene::Initialize()
 	fade->Initialize(true);
 
 	// 画像
-	background_image = LoadGraph("Resource/image/Kabegami.png");
-	ty_text_image = LoadGraph("Resource/images");
+	background_image = LoadGraph("Resource/image/end.png");
+	cursor_image = LoadGraph("Resource/image/cursor.png");		// カーソル画像
+	/*ty_text_image = LoadGraph("Resource/images");*/
 
 	// BGM
 	End_bgm = LoadSoundMem("Resource/sounds/BGM/");
+	cursol_move_se = LoadSoundMem("Resource/sounds/cursol_move.mp3");  // カーソル移動SE
 	PlaySoundMem(End_bgm, DX_PLAYTYPE_BACK);
 
 	// エンド終了保有秒数の初期値
@@ -24,14 +26,14 @@ void EndScene::Initialize()
 
 eSceneType EndScene::Update()
 {
-	// 秒数加算
-	all_end_time++;
+	//// 秒数加算
+	//all_end_time++;
 
-	// 約5秒で終了
-	if (all_end_time == 550.0f)
-	{
-		exit(0);
-	}
+	//// 約5秒で終了
+	//if (all_end_time == 550.0f)
+	//{
+	//	exit(0);
+	//}
 
 	// フェード更新
 	fade->Update();
@@ -43,6 +45,9 @@ void EndScene::Draw() const
 {
 	// 背景画像
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
+
+	// カーソル画像の描画
+	DrawRotaGraph(70, 455 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
 
 	// 「thanks you for playing」描写
 	DrawRotaGraph(770, 150, 1.5f, DX_PI / 0.5, ty_text_image, TRUE);
@@ -57,6 +62,11 @@ void EndScene::Draw() const
 void EndScene::Finalize()
 {
 	StopSoundMem(End_bgm);
+
+	DeleteGraph(background_image);
+	DeleteGraph(cursor_image);
+
+	DeleteSoundMem(cursol_move_se);
 }
 
 eSceneType EndScene::GetNowSceneType() const

@@ -9,10 +9,12 @@ private:
 	int all_end_time;        // エンド画面終わるまでの時間変数
 
 	int background_image;    // 背景画像用
+	int cursor_image;		// カーソル画像
+	int menu_cursor;		// メニューカーソル番号
 	int ty_text_image;       // 「thanks you for playing」他(使用サイト)テキスト画像用
 
 	int End_bgm;             // エンド用BGM
-
+	int cursol_move_se;     // カーソル移動SE
 
 public:
 	virtual void Initialize() override;
