@@ -69,6 +69,7 @@ private:
 	int correct_se;  //正解音
 	int incorrect_se;  //不正解音
 	int sales_se;  //売上音
+	int select_se;  //選択音
 	int GM_bgm;  //ゲームメインBGM
 
 private:

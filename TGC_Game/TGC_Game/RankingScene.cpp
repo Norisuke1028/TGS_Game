@@ -2,24 +2,20 @@
 #include "InputControl.h"
 #include "ResourceManager.h"
 #include "GameDataManager.h"
+#include "RankingManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 #include <algorithm>
 #include <vector>
 #include <fstream>
 
-
-
-
 RankingScene::RankingScene()
 	: fade(nullptr)
 	, push_button_flag(false)
-	, text_image()
 	, num_image()
-	, certificate_image()
 	, ranking_next_scene()
 {
-
+	
 }
 
 RankingScene::~RankingScene()
@@ -40,13 +36,6 @@ void RankingScene::Initialize()
 	// 背景画像読み込み
 	background_image = LoadGraph("Resource/image/ranking_background.png");
 
-	/*/ テキスト画像の読み込み
-	text_image = rm->GetImages("Resource/images/");
-	tmp = rm->GetImages("Resource/images/");
-	text_image.push_back(tmp[0]);
-
-	certificate_image = rm->GetImages("Resource/images/");*/
-
 	// 数字画像（0?9）の読み込み
 	num_image = rm->GetImages("Resource/image/number.png");
 
@@ -58,6 +47,8 @@ void RankingScene::Initialize()
 	score_text_image = LoadGraph("Resource/images/");
 	// ミス数画像の読み込み
 	miss_text_image = LoadGraph("Resource/images/");*/
+	// ボタンガイド画像の読み込み
+	button_gaid_image = LoadGraph("Resource/image/controller_guid.png");
 
 	// フェードをインスタンス化
 	fade = new Fade();
@@ -66,6 +57,8 @@ void RankingScene::Initialize()
 
 	ChangeVolumeSoundMem(255 * 70 / 100, ranking_main_bgm);
 	PlaySoundMem(ranking_main_bgm, DX_PLAYTYPE_BACK);
+
+	scores = std::vector<ScoreData>(RankingManager::GetInstance().ReadScores());
 
 	ranking_next_scene = eSceneType::eRanking;
 }
@@ -110,36 +103,43 @@ eSceneType RankingScene::Update()
 	return GetNowSceneType();
 }
 
+// 描画処理
 void RankingScene::Draw() const
 {
-	// ランキングテキストの表示（座標: x=50, y=50、色: 白）
-	DrawString(50, 50, "ランキング画面です", GetColor(255, 255, 255));
-	DrawString(10, 26, "A : Title", GetColor(255, 255, 255));
-	
 	// 背景画像の描画
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	/*
-	DrawRotaGraphF(640.0f, 390.0f, 1.0, 0.0, certificate_image[0], TRUE);
 
 	// "ランキング"テキスト描画
-	DrawRotaGraphF(640.0f, 70.0f, 1.0, 0.0, text_image[0], TRUE);
-	// ボタン案内表示
-	DrawRotaGraphF(1150.0f, 680.0f, 1.0, 0.0, text_image[1], TRUE);
+	DrawRotaGraphF(640.0f, 70.0f, 1.0, 0.0, text_image[0], TRUE);*/
 
-	// ランキング
+	// ボタン案内表示
+	DrawGraph(1050, 470, button_gaid_image,TRUE);
+
+	/*/ ランキング
 	DrawRotaGraph(280, 240, 0.7f, DX_PI / 0.5, ranking_text_image, TRUE);
 
-	// レベル数
-	DrawRotaGraph(400, 240, 0.7f, DX_PI / 0.5, level_text_image, TRUE);
+	// 接客人数
+	DrawRotaGraph(400, 240, 0.7f, DX_PI / 0.5, correct_text_image, TRUE);
 
-	// スコア
-	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, score_text_image, TRUE);
-
-	// ミス数
-	DrawRotaGraph(950, 240, 0.7f, DX_PI / 0.5, miss_text_image, TRUE);*/
+	// 売上額
+	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, sales_text_image, TRUE);*/
 
 
+	int baseY = 200;      // ← Y座標固定
+	int rowHeight = 120;  // ← 順位ごとの幅
+
+	for (int i = 0; i < scores.size(); ++i) {
+		int y = baseY + i * rowHeight;
+
+		// ランク表示（1位、2位、3位）
+		//DrawFormatString(200, y, GetColor(255, 255, 255), "%d位", i + 1);
+
+		// スコア画像の描画
+		DrawNumber(400, y, scores[i].correct);  // 接客数
+		DrawNumber(800, y, scores[i].sales);    // 売上
+	}
 
 	// フェード描画
 	fade->Draw();
@@ -147,7 +147,7 @@ void RankingScene::Draw() const
 
 void RankingScene::Finalize()
 {
-	;
+	
 }
 
 eSceneType RankingScene::GetNowSceneType() const
@@ -155,40 +155,7 @@ eSceneType RankingScene::GetNowSceneType() const
 	return eSceneType::eRanking;
 }
 
-// ランキングデータ読み込み & ソート
-void RankingScene::LoadRankingData()
-{
-	std::ifstream file("Resource/ScoreData/ranking.txt");
-	rankList.clear();
-
-	if (file.is_open()) {
-		int correct, sales;
-		while (file >> correct >> sales) {
-			rankList.push_back({ correct, sales });
-		}
-		file.close();
-	}
-
-	// 売上（sales）で降順にソート
-	std::sort(rankList.begin(), rankList.end(), [](const RankData& a, const RankData& b) {
-		return a.sales > b.sales;
-		});
-}
-
-void RankingScene::DrawRanking()
-{
-	/*
-	int y = 100;
-	for (int i = 0; i < std::min(3, (int)rankList.size()); ++i) {
-		DrawFormatString(100, y, GetColor(255, 255, 255), "%d位: 接客数:%d 売上:%d円",
-			i + 1, rankList[i].correct, rankList[i].sales);
-		y += 40;
-	}*/
-}
-
-
-
-// 指定位置に数値を画像で描画する
+// 指定位置に数値を画像で描画する(数字画像描画用の処理)
 void RankingScene::DrawNumber(int x, int y, int number) const
 {
 	if (num_image.empty()) return;  // 画像が未ロードなら描画しない

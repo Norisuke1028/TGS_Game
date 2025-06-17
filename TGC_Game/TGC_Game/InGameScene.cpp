@@ -13,7 +13,7 @@
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),total_sales(),check_count(),r_burger(),random(),sb_image(),select()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,back_image(),gb_number_image(),gr_number_image(),start_image(),arrow_image()
+	,back_image(),gb_number_image(),gr_number_image(),start_image(),arrow_image(), select_se()
 	,delay(),countdown(),GM_timer(), elapsed()
 {
 	next_scene = eSceneType::eInGame;
@@ -35,7 +35,7 @@ void InGameScene::Initialize()
 	select_image = LoadGraph("Resource/image/kettei.png");  //決定ボタンの画像
 	buns_image = LoadGraph("Resource/image/buns02.png");  //バンズの画像
 	arrow_image = LoadGraph("Resource/image/cursor.png");  //矢印画像
-	back_image = LoadGraph("Resource/image/main_background2.png");  //背景画像
+	back_image = LoadGraph("Resource/image/main_background3.png");  //背景画像
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
 	start_image = LoadGraph("Resource/image/start.png");  //スタート画像
 	controller_image = LoadGraph("Resource/image/controller.png");  //操作設定画像
@@ -48,6 +48,7 @@ void InGameScene::Initialize()
 	correct_se = LoadSoundMem("Resource/sounds/correct.mp3");  //正解音
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
 	sales_se = LoadSoundMem("Resource/sounds/sales.mp3");  //売上音
+	select_se = LoadSoundMem("Resource/sounds/sozai sentaku.mp3");  //選択音
 	GM_bgm = LoadSoundMem("Resource/sounds/MainBGM.mp3");  //ゲームメインBGM
 	customer.Initialize();  //客クラスの初期化処理
 }
@@ -76,6 +77,7 @@ eSceneType InGameScene::Update()
 
 		ClearDrawScreen();
 		PlaySoundMem(GM_bgm, DX_PLAYTYPE_LOOP);
+		ChangeVolumeSoundMem(178, GM_bgm);
 		Draw(); // 背景描画など
 
 		//3カウント用
@@ -144,11 +146,11 @@ void InGameScene::Draw() const
 	{
 		//3カウントダウン用
 		if (elapsed < 4.0) {
-			DrawRotaGraph(640, 340, 3.0, 0, gr_number_image[countdown], true);
+			DrawRotaGraph(640, 340, 2.5, 0, gr_number_image[countdown], true);
 		}
 		//スタート表示用
 		else if (elapsed < 4.8) {
-			DrawRotaGraph(640, 340, 2.0, 0, start_image, true);
+			DrawRotaGraph(640, 340, 1.7, 0, start_image, true);
 		}
 	}
 
@@ -277,6 +279,7 @@ int InGameScene::select_guzai()
 			{
 				//具材を選択すると1つ目に具材を選択
 				guzai_select[select] = ingame_cursol;
+				PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
 				select += 1;
 				next += 1;
 			}
@@ -294,6 +297,7 @@ int InGameScene::select_guzai()
 				else
 				{
 					guzai_select[select] = ingame_cursol;
+					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
 					select += 1;
 					next += 1;
 				}
@@ -320,6 +324,7 @@ int InGameScene::select_guzai()
 				else
 				{
 					guzai_select[select] = ingame_cursol;
+					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
 					select += 1;
 					next += 1;
 				}
@@ -340,6 +345,7 @@ int InGameScene::select_guzai()
 				if (ingame_cursol < 4)
 				{
 					guzai_select[select] = ingame_cursol;
+					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
 					select += 1;
 					next += 1;
 				}
@@ -365,6 +371,7 @@ int InGameScene::select_guzai()
 			}
 			//決定ボタンを選んでる時にBボタンを押すとジャッジへ
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress && ingame_cursol == 4 || select < 4) {
+
 				//決定ボタンを押すと具材チェック
 				check_guzai();
 
@@ -471,6 +478,7 @@ eSceneType InGameScene::GetNowSceneType() const
 //カーソル操作設定
 void InGameScene::CursolControl()
 {
+	ChangeVolumeSoundMem(150, cursol_se);  //カーソル音の音量調整
 	// パッド入力制御のインスタンスを取得
 	InputControl* pad_input = InputControl::GetInstance();
 

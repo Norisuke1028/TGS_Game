@@ -14,9 +14,11 @@ private:
 	int cursor_image;           // カーソルイメージ
 	int result_title_image;     // リザルトタイトル文字
 	int result_player_title;    // 自身のスコア上のタイトル文字
+	int result_sum_title;       // 自身の合計スコア上のタイトル文字
 	int result_score_history;   // １～３位のタイトル文字
-	int result_collect_font;
-	int result_sales_font;
+	int result_collect_font;    //  接客数画像
+	int result_sales_font;      //  売上画像
+	int sum_background;         //  ドラムロールSE
 
 	int result_score_time;      // スコア等秒数
 

@@ -1,26 +1,30 @@
 #pragma once
+#include <string>
 
 class GameDataManager {
 private:
-    int correct = 0;
-    int sales = 0;
+    int correct = 0;  // 接客数
+    int sales = 0;    // 売上
 
-    // コンストラクタをprivateにして外部からnewできないようにする
+    // コンストラクタをprivateにしてシングルトンにする
     GameDataManager() {}
 
 public:
-    // シングルトンのインスタンス取得
+    // シングルトンインスタンス取得
     static GameDataManager& GetInstance();
-
-    // セッター
-    void SetCorrect(int value);
-    void SetSales(int value);
 
     // ゲッター
     int GetCorrect() const;
     int GetSales() const;
 
-    // コピー禁止（シングルトンなので）
+    // セッター
+    void SetCorrect(int value);
+    void SetSales(int value);
+
+    // スコア（correctとsales）をファイルに保存する
+    void SaveScoreToFile(const std::string& filename);
+
+    // コピー禁止
     GameDataManager(const GameDataManager&) = delete;
     GameDataManager& operator=(const GameDataManager&) = delete;
 };

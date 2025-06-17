@@ -2,6 +2,7 @@
 #include "InputControl.h"
 #include "ResourceManager.h"
 #include "GameDataManager.h"
+#include "RankingManager.h"
 #include "Fade.h"
 #include "DxLib.h"
 #include <stdio.h>
@@ -22,9 +23,11 @@ void ResultScene::Initialize()
 
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
+    result_sum_title = LoadGraph("Resource/image/sum_score_font.png");
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
+    sum_background = LoadSoundMem("Resource/sounds/drum.mp3");
 
     result_bronze_font = LoadGraph("Resource/image/result_burger_bronze.png");
     result_bronze_badge = LoadGraph("Resource/image/brondze_badge.png");
@@ -142,15 +145,18 @@ void ResultScene::Draw() const
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-    // 自身のスコア画像描画
+    // 自身のスコアタイトル画像描画
     DrawGraph(50, 200, result_player_title, TRUE);
 
+    // 自身合計のスコアタイトル画像描画
+    DrawGraph(50, 450, result_sum_title, TRUE);
+
     // ハイスコア画像描画
-    DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
+    //DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
 
     DrawGraph(60, 295, result_collect_font, TRUE);
 
-    DrawGraph(850, 290, result_sales_font, TRUE);
+    DrawGraph(850, 295, result_sales_font, TRUE);
 
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
@@ -167,8 +173,8 @@ void ResultScene::Draw() const
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
     int correctX = 350;       //  接客数のX座標
-    int salesX = 800;       // 売上のX座標
-    int sumX = 500;
+    int salesX = 1030;       // 売上のX座標
+    int sumX = 380;
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
@@ -184,25 +190,31 @@ void ResultScene::Draw() const
         // 売上を描画
         DrawNumber(salesX, yOffset, sales);
     }
-    if (result_score_time >= 300)
+    if (result_score_time == 200)
     {
+        PlaySoundMem(sum_background, DX_PLAYTYPE_NORMAL);
+    }
+    if (result_score_time >= 201)
+    {
+        StopSoundMem(sum_background);
          sum = (correct * 50) + sales;
         // 合計数を描画
-        DrawNumber(sumX, yOffset, sum);
+        DrawNumber(sumX, 500, sum);
+        
     }
     if (result_score_time >= 400)
     {
-        if (sum > 1000 || sum >= 0) {
-            DrawExtendGraph(800, 300, 381, 388, result_bronze_badge, TRUE);
-            DrawExtendGraph(100, 300, 381, 388, result_bronze_font, TRUE);
+        if (sum <= 1000) {
+            DrawExtendGraph(1000, 460, 1200, 660, result_bronze_badge, TRUE);
+            //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
         }
-        if (sum > 2000 || sum >= 1001) {
-            DrawExtendGraph(100, 300, 381, 388, result_gold_badge, TRUE);
-            DrawExtendGraph(100, 300, 381, 388, result_gold_font, TRUE);
+        if (sum <= 3600 && sum >= 1001) {
+            DrawExtendGraph(1000, 460, 1200, 660, result_gold_badge, TRUE);
+            //DrawGraph(400, 480, result_gold_font, TRUE);
         }
-        if (sum > 5000 || sum >= 4500) {
-            DrawExtendGraph(100, 300, 381, 388, result_diamond_badge, TRUE);
-            DrawExtendGraph(100, 300, 381, 388, result_diamond_font, TRUE);
+        if (sum >= 3600) {
+            DrawExtendGraph(1000, 460, 1200, 660, result_diamond_badge, TRUE);
+           //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
     }
 
@@ -212,7 +224,10 @@ void ResultScene::Draw() const
 
 void ResultScene::Finalize()
 {
-    
+    int correct = GameDataManager::GetInstance().GetCorrect();
+    int sales = GameDataManager::GetInstance().GetSales();
+
+    RankingManager::GetInstance().WriteScore(correct, sales);
 }
 
 eSceneType ResultScene::GetNowSceneType() const
@@ -244,10 +259,13 @@ void ResultScene::DrawNumber(int x, int y, int number) const
     }
 }
 
-void ResultScene::SaveScore(int correct, int sales) {
-    std::ofstream file("Resource/ScoreData/ranking.txt", std::ios::app); // appendモードで追記
-    if (file.is_open()) {
-        file << correct << " " << sales << std::endl;
-        file.close();
+/**void ResultScene::SaveScore(int correct, int sales) {
+    int sum = correct * 50 + sales;
+
+    std::ofstream ofs("Resource/ScoreData/ranking.txt", std::ios::app);
+    if (ofs.is_open()) {
+        ofs << correct << "," << sales << "," << sum << std::endl;
+        ofs.close();
     }
-}
+}*/
+
