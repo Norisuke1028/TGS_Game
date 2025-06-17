@@ -132,54 +132,40 @@ eSceneType ResultScene::Update()
 
 
 void ResultScene::Draw() const
-{
-    // リザルトタイトル画像 (1280, 720 \ 460, 90)
-    DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
-
-    // 自身のスコアタイトル画像描画
-    DrawGraph(50, 200, result_player_title, TRUE);
-
-    // 自身合計のスコアタイトル画像描画
-    DrawGraph(50, 450, result_sum_title, TRUE);
-
-    // ハイスコア画像描画
-    //DrawExtendGraph(100, 300, 381, 388, result_score_history, TRUE);
-
-    DrawGraph(60, 295, result_collect_font, TRUE);
-
-    DrawGraph(850, 295, result_sales_font, TRUE);
-
+{  
     // データ
     int correct = GameDataManager::GetInstance().GetCorrect();
     int sales = GameDataManager::GetInstance().GetSales();
     int sum = 0;
     
+    // リザルトタイトル画像 (1280, 720 \ 460, 90)
+    DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-    DrawFormatString(100, 100, GetColor(255, 255, 255), "接客人数: %d", correct);
-    //DrawFormatString(100, 140, GetColor(255, 255, 255), "売上: %d 円", sales);
+    // 接客数を描画（左側：タイトル→数字）
+    DrawGraph(150, 250, result_collect_font, TRUE);      // 接客数のタイトル画像
 
-    DrawFormatString(100, 140, GetColor(0, 0, 0), "時間: %d 円", result_score_time);
+    // 売上を描画（右側：タイトル→数字）
+    DrawGraph(730, 250, result_sales_font, TRUE);         // 売上のタイトル画像
 
+    // 合計スコアタイトル
+    DrawGraph(150, 400, result_sum_title, TRUE);
 
+    // 数字フォント用変数
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
-    int correctX = 350;       //  接客数のX座標
-    int salesX = 1030;       // 売上のX座標
+    int correctX = 400;       //  接客数のX座標
+    int salesX = 930;       // 売上のX座標
     int sumX = 380;
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    
-
     if (result_score_time >= 50)
     {
-        // 接客数を描画
-        DrawNumber(correctX, yOffset, correct);
+        DrawNumber(400, 250, correct, 1.0f);                  // 接客数の数字（少し拡大）
     }
     if (result_score_time >= 100)
     {
-        // 売上を描画
-        DrawNumber(salesX, yOffset, sales);
+        DrawNumber(1000, 250, sales, 1.0f);                   // 売上の数字（同じく拡大）
     }
     if (result_score_time == 200)
     {
@@ -188,26 +174,29 @@ void ResultScene::Draw() const
     if (result_score_time >= 201)
     {
         StopSoundMem(sum_background);
-         sum = (correct * 50) + sales;
-        // 合計数を描画
-        DrawNumber(sumX, 500, sum);
-        
+        sum = (correct * 50) + sales;
+
+        // 合計スコアの数字（中央表示）
+        int sum_width = std::to_string(sum).length() * 32 * 1.5f;  // 32は1桁の幅
+        int centerX = (1280 - sum_width) / 2;
+        DrawNumber(centerX, 450, sum, 1.5f);  // 大きめに表示
     }
+    // バッジと等級表示
     if (result_score_time >= 400)
     {
         if (sum <= 1000) {
             DrawExtendGraph(1000, 460, 1200, 660, result_bronze_badge, TRUE);
             //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
         }
-        if (sum <= 3600 && sum >= 1001) {
+        else if (sum <= 3600) {
             DrawExtendGraph(1000, 460, 1200, 660, result_gold_badge, TRUE);
             //DrawGraph(400, 480, result_gold_font, TRUE);
         }
-        if (sum >= 3600) {
+        else {
             DrawExtendGraph(1000, 460, 1200, 660, result_diamond_badge, TRUE);
-           //DrawGraph(400, 480, result_diamond_font, TRUE);
+            //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
-    }
+    } 
 
     // フェード描画
     fade->Draw();
@@ -227,36 +216,35 @@ eSceneType ResultScene::GetNowSceneType() const
 }
 
 // 指定位置に数値を画像で描画する
-void ResultScene::DrawNumber(int x, int y, int number) const
+void ResultScene::DrawNumber(int x, int y, int number, float scale) const
 {
-    if (num_image.empty()) return;  // 画像が未ロードなら描画しない
+    if (num_image.empty()) return;
 
     int image_width, image_height;
-    GetGraphSize(num_image[0], &image_width, &image_height);  // 画像のサイズ取得
+    GetGraphSize(num_image[0], &image_width, &image_height);
 
-    int digit_width = image_width / 10;  // 各数字の幅（10桁に分割）
-    int digit_height = image_height;  // 画像の高さ
+    int digit_width = image_width / 10;
+    int digit_height = image_height;
 
-    std::string numStr = std::to_string(number); // 数字を文字列に変換
+    std::string numStr = std::to_string(number);
 
     for (size_t i = 0; i < numStr.length(); ++i)
     {
-        int digit = numStr[i] - '0';  // 文字から数値へ変換
-        int srcX = digit * digit_width;  // 画像内のX座標
-        int srcY = 0;  // Y座標（1行の画像なら0）
+        int digit = numStr[i] - '0';
+        int srcX = digit * digit_width;
+        int srcY = 0;
 
-        // 画像の一部を切り取って描画
-        DrawRectGraph(x + i * digit_width, y, srcX, srcY, digit_width, digit_height, num_image[0], TRUE, FALSE);
+        int drawX = x + static_cast<int>(i * digit_width * scale);
+        int drawY = y;
+
+        // ここがポイント！
+        DrawRectExtendGraph(
+            drawX, drawY,
+            drawX + static_cast<int>(digit_width * scale),
+            drawY + static_cast<int>(digit_height * scale),
+            srcX, srcY, digit_width, digit_height,
+            num_image[0],
+            TRUE
+        );
     }
 }
-
-/**void ResultScene::SaveScore(int correct, int sales) {
-    int sum = correct * 50 + sales;
-
-    std::ofstream ofs("Resource/ScoreData/ranking.txt", std::ios::app);
-    if (ofs.is_open()) {
-        ofs << correct << "," << sales << "," << sum << std::endl;
-        ofs.close();
-    }
-}*/
-

@@ -127,18 +127,13 @@ void RankingScene::Draw() const
 	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, sales_text_image, TRUE);*/
 
 
-	int baseY = 200;      // ← Y座標固定
-	int rowHeight = 120;  // ← 順位ごとの幅
+	int baseY = 190;      // ← Y座標固定
+	int rowHeight = 175;  // ← 順位ごとの幅
 
 	for (int i = 0; i < scores.size(); ++i) {
 		int y = baseY + i * rowHeight;
 
-		// ランク表示（1位、2位、3位）
-		//DrawFormatString(200, y, GetColor(255, 255, 255), "%d位", i + 1);
-
-		// スコア画像の描画
-		DrawNumber(400, y, scores[i].correct);  // 接客数
-		DrawNumber(800, y, scores[i].sales);    // 売上
+		DrawNumber(500, y, scores[i].sum);    // 合計スコア
 	}
 
 	// フェード描画
