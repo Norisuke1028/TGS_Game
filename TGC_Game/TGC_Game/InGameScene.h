@@ -64,12 +64,14 @@ private:
 	int sb_image;  //スコアボード画像
 	int start_image;  //ゲーム開始画像
 	int controller_image;  //操作設定画像
+	int Ready_image;  //開始画像
 	
 	int cursol_se;  //カーソル音
 	int correct_se;  //正解音
 	int incorrect_se;  //不正解音
 	int sales_se;  //売上音
 	int select_se;  //選択音
+	int Ready_se;  //開始音
 	int GM_bgm;  //ゲームメインBGM
 
 private:

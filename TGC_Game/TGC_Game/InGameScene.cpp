@@ -12,8 +12,8 @@
 
 InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),total_sales(),check_count(),r_burger(),random(),sb_image(),select()
-	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time()
-	,back_image(),gb_number_image(),gr_number_image(),start_image(),arrow_image(), select_se()
+	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),Ready_image()
+	,back_image(),gb_number_image(),gr_number_image(),start_image(),arrow_image(), select_se(), Ready_se()
 	,delay(),countdown(),GM_timer(), elapsed()
 {
 	next_scene = eSceneType::eInGame;
@@ -39,6 +39,7 @@ void InGameScene::Initialize()
 	sb_image = LoadGraph("Resource/image/denpyo.png");  //スコアボード画像
 	start_image = LoadGraph("Resource/image/start.png");  //スタート画像
 	controller_image = LoadGraph("Resource/image/controller.png");  //操作設定画像
+	Ready_image = LoadGraph("Resource/image/ready.png");
 	plus = LoadGraph("Resource/image/plus.png");
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
@@ -49,6 +50,7 @@ void InGameScene::Initialize()
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
 	sales_se = LoadSoundMem("Resource/sounds/sales.mp3");  //売上音
 	select_se = LoadSoundMem("Resource/sounds/sozai sentaku.mp3");  //選択音
+	Ready_se = LoadSoundMem("Resource/sounds/ready2.mp3");  //開始音
 	GM_bgm = LoadSoundMem("Resource/sounds/MainBGM.mp3");  //ゲームメインBGM
 	customer.Initialize();  //客クラスの初期化処理
 }
@@ -79,6 +81,11 @@ eSceneType InGameScene::Update()
 		PlaySoundMem(GM_bgm, DX_PLAYTYPE_LOOP);
 		ChangeVolumeSoundMem(178, GM_bgm);
 		Draw(); // 背景描画など
+
+		//Ready?呼びかけ(音源)
+		if (elapsed < 2.0) {
+			PlaySoundMem(Ready_se, DX_PLAYTYPE_BACK);
+		}
 
 		//3カウント用
 		if (elapsed < 4.0) {
@@ -121,6 +128,10 @@ eSceneType InGameScene::Update()
 		// フェードアウト
 		fade->Initialize(false);
 
+		//ゲームメインのBGMを止める
+		StopSoundMem(GM_bgm);
+
+
 		//30秒経つとリザルト画面へ遷移する	
 		return eSceneType::eResult;
 
@@ -144,13 +155,16 @@ void InGameScene::Draw() const
 	//Countdownになると実行
 	if (gameState == GameState::Countdown)
 	{
-		//3カウントダウン用
-		if (elapsed < 4.0) {
-			DrawRotaGraph(640, 340, 2.5, 0, gr_number_image[countdown], true);
-		}
-		//スタート表示用
-		else if (elapsed < 4.8) {
-			DrawRotaGraph(640, 340, 1.7, 0, start_image, true);
+		////3カウントダウン用
+		//if (elapsed < 4.0) {
+		//	DrawRotaGraph(640, 340, 2.5, 0, gr_number_image[countdown], true);
+		//}
+		////スタート表示用
+		//else if (elapsed < 4.8) {
+		//	DrawRotaGraph(640, 340, 1.7, 0, start_image, true);
+		//}
+		if (countdown <= 2) {
+			DrawRotaGraph(640, 340, 0.5, 0, Ready_image, true);
 		}
 	}
 
