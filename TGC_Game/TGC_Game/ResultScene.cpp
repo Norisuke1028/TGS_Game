@@ -114,17 +114,8 @@ eSceneType ResultScene::Update()
             StopSoundMem(result_bgm);
             // フェード初期化
             fade->Initialize(false);
-
-            // カーソル位置に応じてシーン遷移を予約
-            if (result_cursor == 0) {
-                result_next_scene = eSceneType::eTitle;
-            }
-            else if (result_cursor == 1) {
-                result_next_scene = eSceneType::eInGame;
-            }
-            else if (result_cursor == 2) {
-                result_next_scene = eSceneType::eRanking;
-            }
+            // ランキングシーンに遷移
+            result_next_scene = eSceneType::eRanking;
         }
     }
 
