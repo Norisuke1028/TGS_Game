@@ -83,7 +83,7 @@ eSceneType InGameScene::Update()
 
 		ClearDrawScreen();
 		PlaySoundMem(GM_bgm, DX_PLAYTYPE_LOOP);
-		ChangeVolumeSoundMem(178, GM_bgm);
+		ChangeVolumeSoundMem(120, GM_bgm);
 		Draw(); // 背景描画など
 
 
@@ -103,9 +103,11 @@ eSceneType InGameScene::Update()
 
 		if (delay <= 30) {
 			PlaySoundMem(Ready_se, DX_PLAYTYPE_BACK);
+			ChangeVolumeSoundMem(170, Ready_se);
 		}
 		else if (delay <= 180) {
 			PlaySoundMem(Go_se, DX_PLAYTYPE_BACK);
+			ChangeVolumeSoundMem(170, Go_se);
 		}
 
 		ScreenFlip();
@@ -310,7 +312,6 @@ int InGameScene::select_guzai()
 				//具材を選択すると1つ目に具材を選択
 				guzai_select[select] = ingame_cursol;
 				PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
-				ChangeVolumeSoundMem(200, select_se);
 				select += 1;
 				next += 1;
 			}
@@ -329,7 +330,6 @@ int InGameScene::select_guzai()
 				{
 					guzai_select[select] = ingame_cursol;
 					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
-					ChangeVolumeSoundMem(200, select_se);
 					select += 1;
 					next += 1;
 				}
@@ -357,7 +357,6 @@ int InGameScene::select_guzai()
 				{
 					guzai_select[select] = ingame_cursol;
 					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
-					ChangeVolumeSoundMem(200, select_se);
 					select += 1;
 					next += 1;
 				}
@@ -379,7 +378,6 @@ int InGameScene::select_guzai()
 				{
 					guzai_select[select] = ingame_cursol;
 					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
-					ChangeVolumeSoundMem(200, select_se);
 					select += 1;
 					next += 1;
 				}
@@ -420,12 +418,14 @@ int InGameScene::select_guzai()
 					//スコアを1加算する
 					correct++;
 					PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(120, correct_se);
 
 					next += 1;
 				}
 				//ジャッジ判定に失敗するとリセット
 				else {
 					PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(150, incorrect_se);
 					check_count = 0;
 					next = 0;
 				}
@@ -512,7 +512,7 @@ eSceneType InGameScene::GetNowSceneType() const
 //カーソル操作設定
 void InGameScene::CursolControl()
 {
-	ChangeVolumeSoundMem(150, cursol_se);  //カーソル音の音量調整
+	ChangeVolumeSoundMem(100, cursol_se);  //カーソル音の音量調整
 	// パッド入力制御のインスタンスを取得
 	InputControl* pad_input = InputControl::GetInstance();
 
@@ -522,7 +522,6 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol--;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
-		ChangeVolumeSoundMem(20, cursol_se);
 
 		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
 		if (ingame_cursol < 0)
@@ -540,7 +539,6 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol++;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
-		ChangeVolumeSoundMem(20, cursol_se);
 
 		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
 		if (next > 1) {
