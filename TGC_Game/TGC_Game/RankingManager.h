@@ -4,6 +4,7 @@
 struct ScoreData {
     int correct;
     int sales;
+    int sum;
 };
 
 class RankingManager {

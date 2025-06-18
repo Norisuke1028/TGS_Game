@@ -26,9 +26,13 @@ void TitleScene::Initialize()
 	cursor_image = LoadGraph("Resource/image/cursor.png");		// カーソル画像
 
 	// 音源の読み込み
-	title_bgm = LoadGraph("Resource/sounds/SE/");       // タイトルBGM
-	cursol_move_se = LoadGraph("Resource/sounds/SE/");  // カーソル移動SE
-	cursol_push_se = LoadGraph("Resource/sounds/SE/");  // カーソル決定SE
+	title_bgm = LoadSoundMem("Resource/sounds/titleBGM.mp3");       // タイトルBGM
+	cursol_move_se = LoadSoundMem("Resource/sounds/cursol_move.mp3");  // カーソル移動SE
+	cursol_push_se = LoadSoundMem("Resource/sounds/SE/");  // カーソル決定SE
+	PlaySoundMem(title_bgm, DX_PLAYTYPE_LOOP); // ループ再生する
+
+	//音量設定
+	ChangeVolumeSoundMem(150,title_bgm);
 
 	//// エラーチェック
 	//if (background_image == -1)

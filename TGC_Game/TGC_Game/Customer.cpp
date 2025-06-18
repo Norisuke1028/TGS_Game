@@ -17,7 +17,7 @@ void Customer::Initialize()
 
 void Customer::Draw() const
 {
-	DrawRotaGraph(520, 338, 1.0, 0, customer_image[r_customer], TRUE);  //‹q‚Ì‰æ‘œ
+	DrawRotaGraph(520, 340, 1.0, 0, customer_image[r_customer], TRUE);  //‹q‚Ì‰æ‘œ
 	DrawRotaGraph(820, 250, 0.6, 0, hukidasi_image, TRUE);  //‚«o‚µ‚Ì‰æ‘œ
 }
 

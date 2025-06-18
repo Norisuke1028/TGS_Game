@@ -8,40 +8,41 @@ RankingManager& RankingManager::GetInstance() {
 }
 
 void RankingManager::WriteScore(int correct, int sales) {
-    LoadFromFile();  // まず既存データ読み込み
+    int sum = correct * 50 + sales;
 
-    scores.emplace_back(ScoreData{ correct, sales });
+    LoadFromFile();  // 既存のデータを読み込み
 
-    // 合計値で降順にソート
+    scores.push_back({ correct, sales, sum });
+
+    // sumの値で降順にソート
     std::sort(scores.begin(), scores.end(), [](const ScoreData& a, const ScoreData& b) {
-        return (a.correct + a.sales) > (b.correct + b.sales);
+        return a.sum > b.sum;
         });
 
-    // 最大3件まで
+    // 上位3件までに制限
     if (scores.size() > 3) {
         scores.resize(3);
     }
 
-    // ファイルに書き込み
+    // 書き込み：correct sales sum の形式
     std::ofstream outFile("Resource/ScoreData/ranking.txt", std::ios::trunc);
     for (const auto& score : scores) {
-        outFile << score.correct << " " << score.sales << "\n";
+        outFile << score.correct << " " << score.sales << " " << score.sum << std::endl;
     }
-    outFile.close();
 }
+
 
 void RankingManager::LoadFromFile() {
     scores.clear();
 
     std::ifstream inFile("Resource/ScoreData/ranking.txt");
-    int correct, sales;
+    int correct, sales, sum;
 
-    while (inFile >> correct >> sales) {
-        scores.emplace_back(ScoreData{ correct, sales });
+    while (inFile >> correct >> sales >> sum) {
+        scores.push_back({ correct, sales, sum });
     }
-
-    inFile.close();
 }
+
 
 const std::vector<ScoreData>& RankingManager::ReadScores() {
     LoadFromFile();  // 読み込んでおく

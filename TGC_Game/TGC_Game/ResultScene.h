@@ -35,11 +35,12 @@ private:
 
 	std::vector<int> num_image; // 数字用画像
 
+
 	int result_bgm;             // リザルトメインbgm
 
 
-	void DrawNumber(int x, int y, int number) const;        // スコアを画像で描画
-	
+	void DrawNumber(int x, int y, int number, float scale) const;        // スコアを画像で描画
+	void SumDrawNumber(int x, int y, int number, float scale) const;
 
 public:
 	virtual void Initialize() override;
