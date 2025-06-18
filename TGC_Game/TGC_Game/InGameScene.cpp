@@ -310,6 +310,7 @@ int InGameScene::select_guzai()
 				//具材を選択すると1つ目に具材を選択
 				guzai_select[select] = ingame_cursol;
 				PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
+				ChangeVolumeSoundMem(200, select_se);
 				select += 1;
 				next += 1;
 			}
@@ -328,6 +329,7 @@ int InGameScene::select_guzai()
 				{
 					guzai_select[select] = ingame_cursol;
 					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(200, select_se);
 					select += 1;
 					next += 1;
 				}
@@ -355,6 +357,7 @@ int InGameScene::select_guzai()
 				{
 					guzai_select[select] = ingame_cursol;
 					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(200, select_se);
 					select += 1;
 					next += 1;
 				}
@@ -376,6 +379,7 @@ int InGameScene::select_guzai()
 				{
 					guzai_select[select] = ingame_cursol;
 					PlaySoundMem(select_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(200, select_se);
 					select += 1;
 					next += 1;
 				}
@@ -518,6 +522,7 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol--;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
+		ChangeVolumeSoundMem(20, cursol_se);
 
 		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
 		if (ingame_cursol < 0)
@@ -535,6 +540,7 @@ void InGameScene::CursolControl()
 	{
 		ingame_cursol++;
 		PlaySoundMem(cursol_se, DX_PLAYTYPE_BACK);
+		ChangeVolumeSoundMem(20, cursol_se);
 
 		//具材が一つも選ばれていないときは決定ボタンを押せないようにする
 		if (next > 1) {
