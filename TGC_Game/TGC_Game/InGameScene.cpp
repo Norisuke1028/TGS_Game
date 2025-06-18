@@ -51,7 +51,7 @@ void InGameScene::Initialize()
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
 	sales_se = LoadSoundMem("Resource/sounds/sales.mp3");  //売上音
 	select_se = LoadSoundMem("Resource/sounds/sozai sentaku.mp3");  //選択音
-	Ready_se = LoadSoundMem("Resource/sounds/ready2.mp3");  //開始音(Ready?)
+	Ready_se = LoadSoundMem("Resource/sounds/ready.mp3");  //開始音(Ready?)
 	Go_se = LoadSoundMem("Resource/sounds/Go.mp3");  //開始音(Go!)
 	GM_bgm = LoadSoundMem("Resource/sounds/MainBGM.mp3");  //ゲームメインBGM
 	customer.Initialize();  //客クラスの初期化処理
