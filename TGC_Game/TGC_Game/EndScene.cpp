@@ -21,6 +21,9 @@ void EndScene::Initialize()
 	cursol_move_se = LoadSoundMem("Resource/sounds/cursol_move.mp3");  // カーソル移動SE
 	PlaySoundMem(End_bgm, DX_PLAYTYPE_BACK);
 
+	//音量設定
+	ChangeVolumeSoundMem(170, cursol_move_se);
+
 	// エンド終了保有秒数の初期値
 	all_end_time = 0;
 }
@@ -112,7 +115,7 @@ void EndScene::Draw() const
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// カーソル画像の描画
-	DrawRotaGraph(70, 455 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
+	DrawRotaGraph(80 + menu_cursor * 720, 680, 0.3, DX_PI / 200.0, cursor_image, TRUE);
 
 	// フェード描画
 	fade->Draw();

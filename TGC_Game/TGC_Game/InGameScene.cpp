@@ -44,13 +44,14 @@ void InGameScene::Initialize()
 	plus = LoadGraph("Resource/image/plus.png");
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
-	LoadDivGraph("Resource/image/number.png", 10, 10, 1, 49, 80, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
+	LoadDivGraph("Resource/image/number2.png", 10, 10, 1, 95, 118, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
 	LoadDivGraph("Resource/image/red_number.png", 10, 10, 1, 50, 80, gr_number_image);  //ゲーム内で使用するナンバー画像(赤)
 	cursol_se = LoadSoundMem("Resource/sounds/cursol.mp3");  //カーソル音
 	correct_se = LoadSoundMem("Resource/sounds/correct.mp3");  //正解音
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
 	sales_se = LoadSoundMem("Resource/sounds/sales.mp3");  //売上音
 	select_se = LoadSoundMem("Resource/sounds/sozai sentaku.mp3");  //選択音
+	cancel_se = LoadSoundMem("Resource/sounds/cancel.mp3");  //キャンセル音
 	Ready_se = LoadSoundMem("Resource/sounds/ready.mp3");  //開始音(Ready?)
 	Go_se = LoadSoundMem("Resource/sounds/Go.mp3");  //開始音(Go!)
 	GM_bgm = LoadSoundMem("Resource/sounds/MainBGM.mp3");  //ゲームメインBGM
@@ -83,7 +84,7 @@ eSceneType InGameScene::Update()
 
 		ClearDrawScreen();
 		PlaySoundMem(GM_bgm, DX_PLAYTYPE_LOOP);
-		ChangeVolumeSoundMem(178, GM_bgm);
+		ChangeVolumeSoundMem(120, GM_bgm);
 		Draw(); // 背景描画など
 
 
@@ -103,9 +104,11 @@ eSceneType InGameScene::Update()
 
 		if (delay <= 30) {
 			PlaySoundMem(Ready_se, DX_PLAYTYPE_BACK);
+			ChangeVolumeSoundMem(170, Ready_se);
 		}
 		else if (delay <= 180) {
 			PlaySoundMem(Go_se, DX_PLAYTYPE_BACK);
+			ChangeVolumeSoundMem(170, Go_se);
 		}
 
 		ScreenFlip();
@@ -196,8 +199,8 @@ void InGameScene::Draw() const
 		//時間制限
 		DrawCircle(1175, 80, 75, 0x000000, true);
 		DrawCircle(1175, 80, 70, 0xffffff, true);
-		DrawRotaGraph(1155, 80, 1.0, 0, gb_number_image[t_tens], true);
-		DrawRotaGraph(1200, 80, 1.0, 0, gb_number_image[t_ones], true);
+		DrawRotaGraph(1148, 80, 0.6, 0, gb_number_image[t_tens], true);
+		DrawRotaGraph(1200, 80, 0.6, 0, gb_number_image[t_ones], true);
 
 		//具材選択カーソル描画
 		DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -219,17 +222,17 @@ void InGameScene::Draw() const
 		int c_tens = (correct / 10) % 10;
 		int c_ones = correct % 10;
 
-		if (correct >= 10)DrawRotaGraph(1130, 315, 1.0, 0, gb_number_image[c_tens], true);  //正解数(十の位)
-		DrawRotaGraph(1180, 315, 1.0, 0, gb_number_image[c_ones], true);  //正解数(一の位)
+		if (correct >= 10)DrawRotaGraph(1130, 315, 0.5, 0, gb_number_image[c_tens], true);  //正解数(十の位)
+		DrawRotaGraph(1180, 315, 0.5, 0, gb_number_image[c_ones], true);  //正解数(一の位)
 
 		int ts_thousands = (total_sales / 1000) % 10;   // 千の位(合計売上)
 		int ts_hundreds = (total_sales / 100) % 10;    // 百の位(合計売上)
 		int ts_tens = (total_sales / 10) % 10;     // 十の位(合計売上)
 		int ts_ones = total_sales % 10;            // 一の位(合計売上)
-		if (total_sales >= 1000)DrawRotaGraph(1095, 430, 1.0, 0, gb_number_image[ts_thousands], true);  // 千の位(合計売上)
-		if (total_sales >= 100)DrawRotaGraph(1140, 430, 1.0, 0, gb_number_image[ts_hundreds], true);  // 百の位(合計売上)
-		if (total_sales >= 10)DrawRotaGraph(1185, 430, 1.0, 0, gb_number_image[ts_tens], true);  // 十の位(合計売上)
-		DrawRotaGraph(1230, 430, 1.0, 0, gb_number_image[ts_ones], true);  // 一の位(合計売上)
+		if (total_sales >= 1000)DrawRotaGraph(1095, 430, 0.5, 0, gb_number_image[ts_thousands], true);  // 千の位(合計売上)
+		if (total_sales >= 100)DrawRotaGraph(1137, 430, 0.5, 0, gb_number_image[ts_hundreds], true);  // 百の位(合計売上)
+		if (total_sales >= 10)DrawRotaGraph(1185, 430, 0.5, 0, gb_number_image[ts_tens], true);  // 十の位(合計売上)
+		DrawRotaGraph(1230, 430, 0.5, 0, gb_number_image[ts_ones], true);  // 一の位(合計売上)
 
 		int s_hundreds = (sales / 100) % 10;    // 百の位(売上)
 		int s_tens = (sales / 10) % 10;     // 十の位(売上)
@@ -335,6 +338,7 @@ int InGameScene::select_guzai()
 			//Aボタンを押すと具材をまた選べるようになる(一枠目)
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
 				if (select > 0) {
+					PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 					select -= 1;
 					guzai_select[select] = -1;
 					next -= 1;
@@ -361,6 +365,7 @@ int InGameScene::select_guzai()
 			}
 			//Aボタンを押すと具材をまた選べるようになる(二枠目)
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 				select -= 1;
 				guzai_select[select] = -1;
 				next -= 1;
@@ -387,6 +392,7 @@ int InGameScene::select_guzai()
 			}
 			//Aボタンを押すと具材をまた選べるようになる(三枠目)
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 				select -= 1;
 				guzai_select[select] = -1;
 				next -= 1;
@@ -395,6 +401,7 @@ int InGameScene::select_guzai()
 		case(5):
 			//Aボタンを押すと具材をまた選べるようになる(四枠目)
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 				select -= 1;
 				guzai_select[select] = -1;
 				next -= 1;
@@ -416,12 +423,14 @@ int InGameScene::select_guzai()
 					//スコアを1加算する
 					correct++;
 					PlaySoundMem(correct_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(120, correct_se);
 
 					next += 1;
 				}
 				//ジャッジ判定に失敗するとリセット
 				else {
 					PlaySoundMem(incorrect_se, DX_PLAYTYPE_BACK);
+					ChangeVolumeSoundMem(150, incorrect_se);
 					check_count = 0;
 					next = 0;
 				}
@@ -508,7 +517,7 @@ eSceneType InGameScene::GetNowSceneType() const
 //カーソル操作設定
 void InGameScene::CursolControl()
 {
-	ChangeVolumeSoundMem(150, cursol_se);  //カーソル音の音量調整
+	ChangeVolumeSoundMem(100, cursol_se);  //カーソル音の音量調整
 	// パッド入力制御のインスタンスを取得
 	InputControl* pad_input = InputControl::GetInstance();
 

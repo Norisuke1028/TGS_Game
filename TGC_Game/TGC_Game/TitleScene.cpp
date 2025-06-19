@@ -32,7 +32,8 @@ void TitleScene::Initialize()
 	PlaySoundMem(title_bgm, DX_PLAYTYPE_LOOP); // ループ再生する
 
 	//音量設定
-	ChangeVolumeSoundMem(150,title_bgm);
+	ChangeVolumeSoundMem(255,title_bgm);
+	ChangeVolumeSoundMem(170, cursol_move_se);
 
 	//// エラーチェック
 	//if (background_image == -1)
