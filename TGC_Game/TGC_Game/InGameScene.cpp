@@ -44,7 +44,7 @@ void InGameScene::Initialize()
 	plus = LoadGraph("Resource/image/plus.png");
 	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
-	LoadDivGraph("Resource/image/number.png", 10, 10, 1, 49, 80, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
+	LoadDivGraph("Resource/image/number2.png", 10, 10, 1, 95, 118, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
 	LoadDivGraph("Resource/image/red_number.png", 10, 10, 1, 50, 80, gr_number_image);  //ゲーム内で使用するナンバー画像(赤)
 	cursol_se = LoadSoundMem("Resource/sounds/cursol.mp3");  //カーソル音
 	correct_se = LoadSoundMem("Resource/sounds/correct.mp3");  //正解音
@@ -198,8 +198,8 @@ void InGameScene::Draw() const
 		//時間制限
 		DrawCircle(1175, 80, 75, 0x000000, true);
 		DrawCircle(1175, 80, 70, 0xffffff, true);
-		DrawRotaGraph(1155, 80, 1.0, 0, gb_number_image[t_tens], true);
-		DrawRotaGraph(1200, 80, 1.0, 0, gb_number_image[t_ones], true);
+		DrawRotaGraph(1148, 80, 0.6, 0, gb_number_image[t_tens], true);
+		DrawRotaGraph(1200, 80, 0.6, 0, gb_number_image[t_ones], true);
 
 		//具材選択カーソル描画
 		DrawBox(19 + (ingame_cursol * 249.9), 519, 249 + (ingame_cursol * 249.9), 669, 0xffffff, false);
@@ -221,17 +221,17 @@ void InGameScene::Draw() const
 		int c_tens = (correct / 10) % 10;
 		int c_ones = correct % 10;
 
-		if (correct >= 10)DrawRotaGraph(1130, 315, 1.0, 0, gb_number_image[c_tens], true);  //正解数(十の位)
-		DrawRotaGraph(1180, 315, 1.0, 0, gb_number_image[c_ones], true);  //正解数(一の位)
+		if (correct >= 10)DrawRotaGraph(1130, 315, 0.5, 0, gb_number_image[c_tens], true);  //正解数(十の位)
+		DrawRotaGraph(1180, 315, 0.5, 0, gb_number_image[c_ones], true);  //正解数(一の位)
 
 		int ts_thousands = (total_sales / 1000) % 10;   // 千の位(合計売上)
 		int ts_hundreds = (total_sales / 100) % 10;    // 百の位(合計売上)
 		int ts_tens = (total_sales / 10) % 10;     // 十の位(合計売上)
 		int ts_ones = total_sales % 10;            // 一の位(合計売上)
-		if (total_sales >= 1000)DrawRotaGraph(1095, 430, 1.0, 0, gb_number_image[ts_thousands], true);  // 千の位(合計売上)
-		if (total_sales >= 100)DrawRotaGraph(1140, 430, 1.0, 0, gb_number_image[ts_hundreds], true);  // 百の位(合計売上)
-		if (total_sales >= 10)DrawRotaGraph(1185, 430, 1.0, 0, gb_number_image[ts_tens], true);  // 十の位(合計売上)
-		DrawRotaGraph(1230, 430, 1.0, 0, gb_number_image[ts_ones], true);  // 一の位(合計売上)
+		if (total_sales >= 1000)DrawRotaGraph(1095, 430, 0.5, 0, gb_number_image[ts_thousands], true);  // 千の位(合計売上)
+		if (total_sales >= 100)DrawRotaGraph(1137, 430, 0.5, 0, gb_number_image[ts_hundreds], true);  // 百の位(合計売上)
+		if (total_sales >= 10)DrawRotaGraph(1185, 430, 0.5, 0, gb_number_image[ts_tens], true);  // 十の位(合計売上)
+		DrawRotaGraph(1230, 430, 0.5, 0, gb_number_image[ts_ones], true);  // 一の位(合計売上)
 
 		int s_hundreds = (sales / 100) % 10;    // 百の位(売上)
 		int s_tens = (sales / 10) % 10;     // 十の位(売上)
