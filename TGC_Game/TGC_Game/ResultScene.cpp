@@ -144,7 +144,7 @@ void ResultScene::Draw() const
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-    DrawGraph(0, -10, sb_result_image, TRUE);
+    DrawGraph(0, -10, sb_result_image, TRUE);  //リザルトスコアボードの描画
 
     // 接客数を描画（左側：タイトル→数字）
     //DrawGraph(150, 250, result_collect_font, TRUE);      // 接客数のタイトル画像
@@ -166,11 +166,24 @@ void ResultScene::Draw() const
 
     if (result_score_time >= 50)
     {
-        DrawNumber(400, 250, correct, 1.0f);                  // 接客数の数字（少し拡大）
+        // 接客数の数字（少し拡大）
+        if (correct >= 10) {
+            DrawNumber(760, 220, correct, 1.0f);
+        }
+        else {
+            DrawNumber(800, 220, correct, 1.0f);
+        }
     }
-    if (result_score_time >= 100)
+    if (result_score_time >= 100)  // 売上の数字（同じく拡大）
     {
-        DrawNumber(1000, 250, sales, 1.0f);                   // 売上の数字（同じく拡大）
+        //売上が4桁の時のスコアの位置調整
+        if (sales >= 1000) {
+            DrawNumber(660, 300, sales, 1.0f);
+        }
+        //売上が4桁以下の時のスコアの位置調整
+        else {
+            DrawNumber(700, 300, sales, 1.0f);
+        }
     }
     if (result_score_time == 200)
     {
@@ -184,21 +197,26 @@ void ResultScene::Draw() const
         // 合計スコアの数字（中央表示）
         int sum_width = std::to_string(sum).length() * 32 * 1.5f;  // 32は1桁の幅
         int centerX = (1280 - sum_width) / 2;
-        DrawNumber(centerX, 450, sum, 1.5f);  // 大きめに表示
+        if (sum >= 1000) {
+            DrawNumber(centerX-80, 520, sum, 1.5f);
+        }
+        else {
+            DrawNumber(centerX, 520, sum, 1.5f);  // 大きめに表示
+        }
     }
     // バッジと等級表示
     if (result_score_time >= 400)
     {
         if (sum <= 1000) {
-            DrawExtendGraph(1000, 460, 1200, 660, result_bronze_badge, TRUE);
+            DrawExtendGraph(800, 500, 960, 660, result_bronze_badge, TRUE);
             //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
         }
         else if (sum <= 3600) {
-            DrawExtendGraph(1000, 460, 1200, 660, result_gold_badge, TRUE);
+            DrawExtendGraph(800, 500, 960, 660, result_gold_badge, TRUE);
             //DrawGraph(400, 480, result_gold_font, TRUE);
         }
         else {
-            DrawExtendGraph(1000, 460, 1200, 660, result_diamond_badge, TRUE);
+            DrawExtendGraph(800, 500, 960, 660, result_diamond_badge, TRUE);
             //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
     } 

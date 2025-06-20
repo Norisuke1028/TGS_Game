@@ -87,12 +87,6 @@ eSceneType InGameScene::Update()
 		ChangeVolumeSoundMem(120, GM_bgm);
 		Draw(); // 背景描画など
 
-
-	/*	else if(elapsed > 2.5) {
-
-			PlaySoundMem(Go_se, DX_PLAYTYPE_BACK);
-		}*/
-
 		//3カウント用
 		if (elapsed < 4.0) {
 			countdown = 4 - static_cast<int>(elapsed);
