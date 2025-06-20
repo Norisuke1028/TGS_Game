@@ -48,7 +48,10 @@ void ResultScene::Initialize()
     ResourceManager* rm = ResourceManager::GetInstance();
 
     // 背景画像
-    background_image = LoadGraph("Resource/image/result_background.png");
+    background_image = LoadGraph("Resource/image/r_background.png");
+
+    //リザルトのスコアボード画像
+    sb_result_image = LoadGraph("Resource/image/result_S.png");
 
     /*/ リザルトメインbgm読み込み
     result_bgm = LoadSoundMem("Resource/sounds/");*/
@@ -141,14 +144,16 @@ void ResultScene::Draw() const
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
+    DrawGraph(0, -10, sb_result_image, TRUE);
+
     // 接客数を描画（左側：タイトル→数字）
-    DrawGraph(150, 250, result_collect_font, TRUE);      // 接客数のタイトル画像
+    //DrawGraph(150, 250, result_collect_font, TRUE);      // 接客数のタイトル画像
 
     // 売上を描画（右側：タイトル→数字）
-    DrawGraph(730, 250, result_sales_font, TRUE);         // 売上のタイトル画像
+    //DrawGraph(730, 250, result_sales_font, TRUE);         // 売上のタイトル画像
 
     // 合計スコアタイトル
-    DrawGraph(150, 400, result_sum_title, TRUE);
+    //DrawGraph(150, 400, result_sum_title, TRUE);
 
     // 数字フォント用変数
     int yOffset = 290;      // y軸オフセット
