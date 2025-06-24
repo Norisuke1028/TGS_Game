@@ -25,30 +25,20 @@ RankingScene::~RankingScene()
 
 void RankingScene::Initialize()
 {
-	/*/ ボタン押されたときのSE読み込み
-	a_button_push = LoadSoundMem("Resource/sounds/SE/");
+	// ボタン押されたときのSE読み込み
+	a_button_push = LoadSoundMem("Resource/sounds/SE/ranking/ranking_button_se.mp3");
 	// メインbgm
-	ranking_main_bgm = LoadSoundMem("Resource/sounds/BGM/");*/
+	ranking_main_bgm = LoadSoundMem("Resource/sounds/BGM/ranking/ranking_main_bgm.mp3");
 	// リソース管理のインスタンスを取得
 	ResourceManager* rm = ResourceManager::GetInstance();
 	std::vector<int> tmp;
 
 	// 背景画像読み込み
-	background_image = LoadGraph("Resource/image/ranking_background.png");
+	background_image = LoadGraph("Resource/image/ranking_background3.png");
 
 	// 数字画像（0?9）の読み込み
 	num_image = rm->GetImages("Resource/image/number.png");
 
-	/*/ 順位画像の読み込み
-	ranking_text_image = LoadGraph("Resource/images/");
-	// レベル数画像の読み込み
-	level_text_image = LoadGraph("Resource/images/");
-	// スコア画像の読み込み
-	score_text_image = LoadGraph("Resource/images/");
-	// ミス数画像の読み込み
-	miss_text_image = LoadGraph("Resource/images/");*/
-	// ボタンガイド画像の読み込み
-	button_gaid_image = LoadGraph("Resource/image/controller_guid.png");
 
 	// フェードをインスタンス化
 	fade = new Fade();
@@ -56,6 +46,7 @@ void RankingScene::Initialize()
 	fade->Initialize(true);
 
 	ChangeVolumeSoundMem(255 * 70 / 100, ranking_main_bgm);
+	ChangeVolumeSoundMem(178, ranking_main_bgm);
 	PlaySoundMem(ranking_main_bgm, DX_PLAYTYPE_BACK);
 
 	scores = std::vector<ScoreData>(RankingManager::GetInstance().ReadScores());
@@ -109,31 +100,13 @@ void RankingScene::Draw() const
 	// 背景画像の描画
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-	/*
-
-	// "ランキング"テキスト描画
-	DrawRotaGraphF(640.0f, 70.0f, 1.0, 0.0, text_image[0], TRUE);*/
-
-	// ボタン案内表示
-	DrawGraph(1050, 470, button_gaid_image,TRUE);
-
-	/*/ ランキング
-	DrawRotaGraph(280, 240, 0.7f, DX_PI / 0.5, ranking_text_image, TRUE);
-
-	// 接客人数
-	DrawRotaGraph(400, 240, 0.7f, DX_PI / 0.5, correct_text_image, TRUE);
-
-	// 売上額
-	DrawRotaGraph(620, 240, 0.7f, DX_PI / 0.5, sales_text_image, TRUE);*/
-
-
-	int baseY = 190;      // ← Y座標固定
-	int rowHeight = 175;  // ← 順位ごとの幅
+	int baseY = 135;      // ← Y座標固定
+	int rowHeight = 165;  // ← 順位ごとの幅
 
 	for (int i = 0; i < scores.size(); ++i) {
 		int y = baseY + i * rowHeight;
 
-		DrawNumber(500, y, scores[i].sum);    // 合計スコア
+		DrawNumber(780, y, scores[i].sum);    // 合計スコア
 	}
 
 	// フェード描画

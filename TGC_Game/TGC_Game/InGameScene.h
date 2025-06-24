@@ -73,6 +73,7 @@ private:
 	int incorrect_se;  //不正解音
 	int sales_se;  //売上音
 	int select_se;  //選択音
+	int cancel_se;  //キャンセル音
 	int Ready_se;  //開始音(Ready?)
 	int Go_se;  //開始音(Go!)
 	int GM_bgm;  //ゲームメインBGM

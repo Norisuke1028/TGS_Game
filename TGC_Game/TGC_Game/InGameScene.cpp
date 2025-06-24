@@ -42,7 +42,7 @@ void InGameScene::Initialize()
 	Ready_image = LoadGraph("Resource/image/ready.png");  //開始画像(Ready?)
 	Go_image = LoadGraph("Resource/image/Go.png");  //開始画像(Go!)
 	plus = LoadGraph("Resource/image/plus.png");
-	LoadDivGraph("Resource/image/guzai04.png", 4, 4, 1, 200, 170, select_burger_image);  //選んだ具材画像
+	LoadDivGraph("Resource/image/guzai05.png", 5, 5, 1, 200, 170, select_burger_image);  //選んだ具材画像
 	LoadDivGraph("Resource/image/burger_model.png", 6, 6, 1, 266.6, 140, burger_model);  //お題バーガー画像
 	LoadDivGraph("Resource/image/number2.png", 10, 10, 1, 95, 118, gb_number_image);  //ゲーム内で使用するナンバー画像(黒)
 	LoadDivGraph("Resource/image/red_number.png", 10, 10, 1, 50, 80, gr_number_image);  //ゲーム内で使用するナンバー画像(赤)
@@ -51,6 +51,7 @@ void InGameScene::Initialize()
 	incorrect_se = LoadSoundMem("Resource/sounds/incorrect.mp3");  //不正解音
 	sales_se = LoadSoundMem("Resource/sounds/sales.mp3");  //売上音
 	select_se = LoadSoundMem("Resource/sounds/sozai sentaku.mp3");  //選択音
+	cancel_se = LoadSoundMem("Resource/sounds/cancel.mp3");  //キャンセル音
 	Ready_se = LoadSoundMem("Resource/sounds/ready.mp3");  //開始音(Ready?)
 	Go_se = LoadSoundMem("Resource/sounds/Go.mp3");  //開始音(Go!)
 	GM_bgm = LoadSoundMem("Resource/sounds/MainBGM.mp3");  //ゲームメインBGM
@@ -85,12 +86,6 @@ eSceneType InGameScene::Update()
 		PlaySoundMem(GM_bgm, DX_PLAYTYPE_LOOP);
 		ChangeVolumeSoundMem(120, GM_bgm);
 		Draw(); // 背景描画など
-
-
-	/*	else if(elapsed > 2.5) {
-
-			PlaySoundMem(Go_se, DX_PLAYTYPE_BACK);
-		}*/
 
 		//3カウント用
 		if (elapsed < 4.0) {
@@ -337,6 +332,7 @@ int InGameScene::select_guzai()
 			//Aボタンを押すと具材をまた選べるようになる(一枠目)
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
 				if (select > 0) {
+					PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 					select -= 1;
 					guzai_select[select] = -1;
 					next -= 1;
@@ -363,6 +359,7 @@ int InGameScene::select_guzai()
 			}
 			//Aボタンを押すと具材をまた選べるようになる(二枠目)
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 				select -= 1;
 				guzai_select[select] = -1;
 				next -= 1;
@@ -389,6 +386,7 @@ int InGameScene::select_guzai()
 			}
 			//Aボタンを押すと具材をまた選べるようになる(三枠目)
 			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 				select -= 1;
 				guzai_select[select] = -1;
 				next -= 1;
@@ -397,6 +395,7 @@ int InGameScene::select_guzai()
 		case(5):
 			//Aボタンを押すと具材をまた選べるようになる(四枠目)
 			if (pad_input->GetButtonInputState(XINPUT_BUTTON_A) == ePadInputState::ePress) {
+				PlaySoundMem(cancel_se, DX_PLAYTYPE_BACK);
 				select -= 1;
 				guzai_select[select] = -1;
 				next -= 1;
