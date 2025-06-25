@@ -22,7 +22,7 @@ void TitleScene::Initialize()
 	next_scene = eSceneType::eTitle;
 	
 	// 画像の読み込み
-	background_image = LoadGraph("Resource/image/title2.png");   // 背景画像
+	background_image = LoadGraph("Resource/image/title.png");   // 背景画像
 	cursor_image = LoadGraph("Resource/image/cursor.png");		// カーソル画像
 
 	// 音源の読み込み
@@ -32,8 +32,8 @@ void TitleScene::Initialize()
 	PlaySoundMem(title_bgm, DX_PLAYTYPE_LOOP); // ループ再生する
 
 	//音量設定
-	ChangeVolumeSoundMem(255,title_bgm);
-	ChangeVolumeSoundMem(170, cursol_move_se);
+	ChangeVolumeSoundMem(190,title_bgm);
+	ChangeVolumeSoundMem(150, cursol_move_se);
 
 	//// エラーチェック
 	//if (background_image == -1)
