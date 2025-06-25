@@ -20,6 +20,7 @@ private:
 	int sb_result_image;  //リザルトのスコアボード画像
 	int result_sales_font;      //  売上画像
 	int sum_background;         //  ドラムロールSE
+	int result_se;              //リザルトSE(レジ音)
 
 	int result_score_time;      // スコア等秒数
 
