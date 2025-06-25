@@ -27,7 +27,8 @@ void ResultScene::Initialize()
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
-    sum_background = LoadSoundMem("Resource/sounds/drum.mp3");
+    sum_background = LoadSoundMem("Resource/sounds/drum03.mp3");
+    result_se = LoadSoundMem("Resource/sounds/result.mp3");
 
     result_bronze_font = LoadGraph("Resource/image/result_burger_bronze.png");
     result_bronze_badge = LoadGraph("Resource/image/brondze_badge.png");
@@ -155,6 +156,8 @@ void ResultScene::Draw() const
     // 合計スコアタイトル
     //DrawGraph(150, 400, result_sum_title, TRUE);
 
+    DrawFormatString(20, 600, 0x000000, "%d", result_score_time);
+
     // 数字フォント用変数
     int yOffset = 290;      // y軸オフセット
     int rankX = 25;        // 順位のX座標
@@ -166,6 +169,7 @@ void ResultScene::Draw() const
 
     if (result_score_time >= 50)
     {
+        //PlaySoundMem(result_se, DX_PLAYTYPE_BACK);
         // 接客数の数字（少し拡大）
         if (correct >= 10) {
             DrawNumber(760, 220, correct, 1.0f);
@@ -173,9 +177,16 @@ void ResultScene::Draw() const
         else {
             DrawNumber(800, 220, correct, 1.0f);
         }
+        if (result_score_time == 53) {
+            ChangeVolumeSoundMem(120, result_se);
+            PlaySoundMem(result_se, DX_PLAYTYPE_NORMAL);
+        }
     }
-    if (result_score_time >= 100)  // 売上の数字（同じく拡大）
+    if (result_score_time >= 53)  // 売上の数字（同じく拡大）
     {
+        if (result_score_time == 54) {
+            PlaySoundMem(result_se, DX_PLAYTYPE_NORMAL);
+        }
         //売上が4桁の時のスコアの位置調整
         if (sales >= 1000) {
             DrawNumber(660, 300, sales, 1.0f);
