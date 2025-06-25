@@ -34,7 +34,7 @@ void RankingScene::Initialize()
 	std::vector<int> tmp;
 
 	// ”wŒi‰æ‘œ“Ç‚İ‚İ
-	background_image = LoadGraph("Resource/image/ranking_background3.png");
+	background_image = LoadGraph("Resource/image/ranking_background.png");
 
 	// ”š‰æ‘œi0?9j‚Ì“Ç‚İ‚İ
 	num_image = rm->GetImages("Resource/image/number.png");
@@ -100,8 +100,8 @@ void RankingScene::Draw() const
 	// ”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-	int baseY = 135;      // © YÀ•WŒÅ’è
-	int rowHeight = 165;  // © ‡ˆÊ‚²‚Æ‚Ì•
+	int baseY = 157;      // © YÀ•WŒÅ’è
+	int rowHeight = 175;  // © ‡ˆÊ‚²‚Æ‚Ì•
 
 	for (int i = 0; i < scores.size(); ++i) {
 		int y = baseY + i * rowHeight;
