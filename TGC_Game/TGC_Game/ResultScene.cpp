@@ -27,6 +27,7 @@ void ResultScene::Initialize()
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
+    result_button_image = LoadGraph("Resource/image/result_button.png");
     sum_background = LoadSoundMem("Resource/sounds/drum03.mp3");
     result_se = LoadSoundMem("Resource/sounds/result.mp3");
 
@@ -109,7 +110,7 @@ eSceneType ResultScene::Update()
         return eSceneType::eResult;
     }
 
-    if (result_score_time >= 300) {
+    if (result_score_time >= 1100) {
         // コントローラーの A ボタン処理(簡略化)
         if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
             // 押したらSEを鳴らせる
@@ -169,7 +170,6 @@ void ResultScene::Draw() const
 
     if (result_score_time >= 50)
     {
-        //PlaySoundMem(result_se, DX_PLAYTYPE_BACK);
         // 接客数の数字（少し拡大）
         if (correct >= 10) {
             DrawNumber(760, 220, correct, 1.0f);
@@ -198,11 +198,10 @@ void ResultScene::Draw() const
     }
     if (result_score_time == 200)
     {
-        PlaySoundMem(sum_background, DX_PLAYTYPE_NORMAL);
+        PlaySoundMem(sum_background, DX_PLAYTYPE_BACK);
     }
-    if (result_score_time >= 201)
+    if (result_score_time >= 700)
     {
-        StopSoundMem(sum_background);
         sum = (correct * 50) + sales;
 
         // 合計スコアの数字（中央表示）
@@ -216,8 +215,9 @@ void ResultScene::Draw() const
         }
     }
     // バッジと等級表示
-    if (result_score_time >= 400)
+    if (result_score_time >= 900)
     {
+
         if (sum <= 1000) {
             DrawExtendGraph(800, 500, 960, 660, result_bronze_badge, TRUE);
             //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
@@ -231,6 +231,8 @@ void ResultScene::Draw() const
             //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
     } 
+
+    if (result_score_time >= 1000)DrawRotaGraph(1125, 690, 1.15, 0, result_button_image, TRUE);
 
     // フェード描画
     fade->Draw();

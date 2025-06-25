@@ -19,6 +19,7 @@ private:
 	int result_collect_font;    //  接客数画像
 	int sb_result_image;  //リザルトのスコアボード画像
 	int result_sales_font;      //  売上画像
+	int result_button_image;    //シーン遷移画像
 	int sum_background;         //  ドラムロールSE
 	int result_se;              //リザルトSE(レジ音)
 
