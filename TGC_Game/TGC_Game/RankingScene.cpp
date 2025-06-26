@@ -34,11 +34,10 @@ void RankingScene::Initialize()
 	std::vector<int> tmp;
 
 	// 背景画像読み込み
-	background_image = LoadGraph("Resource/image/ranking_background.png");
+	background_image = LoadGraph("Resource/image/ranking_background2.png");
 
-	// 数字画像（0?9）の読み込み
+	// 数字画像（0～9）の読み込み
 	num_image = rm->GetImages("Resource/image/number.png");
-
 
 	// フェードをインスタンス化
 	fade = new Fade();
@@ -100,8 +99,8 @@ void RankingScene::Draw() const
 	// 背景画像の描画
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-	int baseY = 157;      // ← Y座標固定
-	int rowHeight = 175;  // ← 順位ごとの幅
+	int baseY = 170;      // ← Y座標固定
+	int rowHeight = 160;  // ← 順位ごとの幅
 
 	for (int i = 0; i < scores.size(); ++i) {
 		int y = baseY + i * rowHeight;
