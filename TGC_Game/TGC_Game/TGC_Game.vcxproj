@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
+    <ClCompile Include="CreditScene.cpp" />
     <ClCompile Include="Customer.cpp" />
     <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Fade.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CreditScene.h" />
     <ClInclude Include="Customer.h" />
     <ClInclude Include="EndScene.h" />
     <ClInclude Include="Fade.h" />
