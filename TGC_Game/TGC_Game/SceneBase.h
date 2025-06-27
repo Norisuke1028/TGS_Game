@@ -13,6 +13,7 @@ enum class eSceneType
 	eResult,				// リザルト画面
 	eRanking,				// ランキング画面
 	eEnd,					// エンド画面
+	eCredit,				//クレジット画面
 };
 
 // 基底シーンクラス

@@ -6,6 +6,7 @@
 #include "RankingScene.h"
 #include "ResultScene.h"
 #include "EndScene.h"
+#include "CreditScene.h"
 
 SceneManager::SceneManager()
 	: current_scene(nullptr)
@@ -23,12 +24,12 @@ SceneManager::~SceneManager()
 void SceneManager::Initialize()
 {
 	 /*SceneManagerが生成されたときのScene（ゲーム開始時のScene）*/
-	/*ChangeScene(eSceneType::eTitle);*/
-
+	ChangeScene(eSceneType::eTitle);
+	/*ChangeScene(eSceneType::eEnd);*/
 	/*ChangeScene(eSceneType::eResult);*/
 	/*ChangeScene(eSceneType::eRanking);*/
 
-	ChangeScene(eSceneType::eInGame);
+	/*ChangeScene(eSceneType::eInGame);*/
 }
 
 void SceneManager::Update()
@@ -120,6 +121,8 @@ SceneBase* SceneManager::CreateScene(eSceneType new_scene_type)
 		return dynamic_cast<SceneBase*>(new ResultScene());
 	case eSceneType::eEnd:
 		return dynamic_cast<SceneBase*>(new EndScene()); 
+	case eSceneType::eCredit:
+		return dynamic_cast<SceneBase*>(new CreditScene());
 	default:
 		return nullptr;
 	}

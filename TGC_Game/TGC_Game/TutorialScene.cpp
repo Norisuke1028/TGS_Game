@@ -22,7 +22,7 @@ void TutorialScene::Initialize()
 	next_scene = eSceneType::eTutorial;
 
 	// ‰æ‘œ‚Ì“Ç‚İ‚İ
-	background_image = LoadGraph("Resource/image/Chat Tutorial.png");   // ”wŒi‰æ‘œ
+	background_image = LoadGraph("Resource/image/tutorial2.png");   // ”wŒi‰æ‘œ
 	button_gaid_images = LoadGraph("Resource/images/"); // ƒ{ƒ^ƒ“ˆÄ“à‰æ‘œ
 	
 	// ‰¹Œ¹‚Ì“Ç‚İ‚İ
