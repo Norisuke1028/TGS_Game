@@ -35,6 +35,7 @@ private:
 
 	int cursor_se_move;         // カーソルの移動SE
 	int cursor_se_push;         // カーソルの決定SE
+	int result_badge_se;        // バッジ表示時SE
 
 	std::vector<int> num_image; // 数字用画像
 

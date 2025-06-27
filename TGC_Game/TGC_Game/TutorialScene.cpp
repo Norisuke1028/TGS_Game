@@ -27,7 +27,8 @@ void TutorialScene::Initialize()
 	
 	// 音源の読み込み
 	tutorial_bgm = LoadGraph("Resource/sounds/SE/");       // チュートリアルBGM
-	cursol_push_se = LoadGraph("Resource/sounds/SE/");     // カーソル決定SE
+	cursol_push_se = LoadSoundMem("Resource/sounds/SE/ranking/ranking_button_se.mp3");;     // カーソル決定SE
+	
 }
 
 eSceneType TutorialScene::Update()
@@ -48,7 +49,7 @@ eSceneType TutorialScene::Update()
 
 	// コントローラーの A ボタン処理(簡略化)
 	if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
-		// 押したらSEを鳴らせる
+		// 押されたときのSE
 		PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		// BGMを止める
 		StopSoundMem(tutorial_bgm);

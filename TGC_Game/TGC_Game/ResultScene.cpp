@@ -41,9 +41,9 @@ void ResultScene::Initialize()
     result_diamond_font = LoadGraph("Resource/image/result_burger_god.png");
     result_diamond_badge = LoadGraph("Resource/image/diamond_badge.png");
 
-   /* cursor_se_move = LoadSoundMem("Resource/sounds/");
-    cursor_se_push = LoadSoundMem("Resource/sounds/");*/
-
+   //cursor_se_move = LoadSoundMem("Resource/sounds/");
+    cursor_se_push = LoadSoundMem("Resource/sounds/SE/ranking/ranking_button_se.mp3");
+    result_badge_se = LoadSoundMem("Resource/sounds/Award.mp3");
     // コントローラーの入力インスタンス取得
     pad_input = InputControl::GetInstance();
 
@@ -76,30 +76,6 @@ eSceneType ResultScene::Update()
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
 
-    // 十字キー操作(上)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_UP) == ePadInputState::ePress)
-    {
-       result_cursor--;
-        PlaySoundMem(cursor_se_move, DX_PLAYTYPE_BACK);
-
-        if (result_cursor < 0)
-        {
-            result_cursor = 3;
-        }
-    }
-    // 十字キー操作(下)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_DOWN) == ePadInputState::ePress)
-    {
-        result_cursor++;
-        PlaySoundMem(cursor_se_move, DX_PLAYTYPE_BACK);
-
-        if (result_cursor > 3)
-        {
-            result_cursor = 0;
-        }
-    }
-
-
     // フェードアウト中なら、フェード処理を続ける
     if (result_next_scene != eSceneType::eResult) {
         if (fade->GetEndFlag()) {
@@ -111,7 +87,7 @@ eSceneType ResultScene::Update()
         return eSceneType::eResult;
     }
 
-    if (result_score_time >= 1100) {
+    if (result_score_time >= 1300) {
         // コントローラーの A ボタン処理(簡略化)
         if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
             // 押したらSEを鳴らせる
@@ -211,21 +187,25 @@ void ResultScene::Draw() const
             DrawNumber(centerX - 40, 520, sum, 0.9f);  // 大きめに表示
         }
     }
+
+    //バッジ表示時SE
+    if (result_score_time == 999)
+    {
+        PlaySoundMem(result_badge_se, DX_PLAYTYPE_BACK);
+    }
+
     // バッジと等級表示
     if (result_score_time >= 1000)
     {
-
         if (sum <= 1000) {
             DrawExtendGraph(800, 540, 960, 700, result_bronze_badge, TRUE);
-            //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
         }
         else if (sum <= 3600) {
             DrawExtendGraph(800, 540, 960, 700, result_gold_badge, TRUE);
-            //DrawGraph(400, 480, result_gold_font, TRUE);
+            
         }
         else {
             DrawExtendGraph(800, 540, 960, 700, result_diamond_badge, TRUE);
-            //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
     } 
 
