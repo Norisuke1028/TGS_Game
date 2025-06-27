@@ -43,6 +43,7 @@ private:
 	int countdown;  //カウントダウン用
 	int GM_timer;  //ゲームメインタイマー
 	double elapsed;  //経過した時間
+	int Cooldown;
 
 private:
 	int r_burger[4];  //ハンバーガーをランダムに出力

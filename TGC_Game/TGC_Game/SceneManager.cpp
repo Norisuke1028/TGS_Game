@@ -23,13 +23,9 @@ SceneManager::~SceneManager()
 
 void SceneManager::Initialize()
 {
-	 /*SceneManagerが生成されたときのScene（ゲーム開始時のScene）*/
+	/*SceneManagerが生成されたときのScene（ゲーム開始時のScene）*/
 	ChangeScene(eSceneType::eTitle);
-	/*ChangeScene(eSceneType::eEnd);*/
-	/*ChangeScene(eSceneType::eResult);*/
-	/*ChangeScene(eSceneType::eRanking);*/
 
-	/*ChangeScene(eSceneType::eInGame);*/
 }
 
 void SceneManager::Update()

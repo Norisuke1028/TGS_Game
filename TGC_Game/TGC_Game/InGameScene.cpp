@@ -14,7 +14,7 @@ InGameScene::InGameScene() :
 	guzai_image(),select_image(),next(),correct(),total_sales(),check_count(),r_burger(),random(),sb_image(),select()
 	,buns_image(),select_burger_image(),burger_model(),sozai_count(),ingame_cursol(),counter_time(),Ready_image(),Go_image()
 	,back_image(),gb_number_image(),gr_number_image(),start_image(),arrow_image(), select_se(), Ready_se(), Go_se()
-	,delay(),countdown(),GM_timer(), elapsed()
+	,delay(),countdown(),GM_timer(), elapsed(), Cooldown()
 {
 	next_scene = eSceneType::eInGame;
 }
@@ -117,6 +117,10 @@ eSceneType InGameScene::Update()
 			CursolControl();
 		}
 
+		if (Cooldown > 0) {
+			Cooldown--;
+		}
+
 		//描画処理
 		Draw();
 
@@ -165,14 +169,6 @@ void InGameScene::Draw() const
 	//Countdownになると実行
 	if (gameState == GameState::Countdown)
 	{
-		////3カウントダウン用
-		//if (elapsed < 4.0) {
-		//	DrawRotaGraph(640, 340, 2.5, 0, gr_number_image[countdown], true);
-		//}
-		////スタート表示用
-		//else if (elapsed < 4.8) {
-		//	DrawRotaGraph(640, 340, 1.7, 0, start_image, true);
-		//}
 		if (elapsed > 1.5 && elapsed < 3.2) {
 			DrawRotaGraph(640, 340, 0.5, 0, Ready_image, true);
 		}
@@ -258,6 +254,8 @@ void InGameScene::Draw() const
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
 	DrawRotaGraph(160, 145, 1.0, 0, buns_image, true);  //バンズの画像の描画
 
+	DrawFormatString(20, 500, 0x000000, "%d", Cooldown);
+
 	// フェード描画
 	fade->Draw();
 
@@ -302,7 +300,7 @@ int InGameScene::select_guzai()
 				}
 		//具材一枠目
 		case(1):
-			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			if (Cooldown <= 0 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
 				//具材を選択すると1つ目に具材を選択
 				guzai_select[select] = ingame_cursol;
@@ -313,11 +311,12 @@ int InGameScene::select_guzai()
 		break;
 		//具材二枠目
 		case(2):
-			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			if (Cooldown <= 0 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
 				//決定ボタンを押すとジャッジ処理へ
 				if (ingame_cursol == 4)
 				{
+					Cooldown = 20;
 					next = 5;
 				}
 				//具材を選択すると2つ目に具材を選択
@@ -341,11 +340,12 @@ int InGameScene::select_guzai()
 		break;
 		//具材三枠目
 		case(3):
-			if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
+			if (Cooldown <= 0 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress)
 			{
 				//決定ボタンを押すとジャッジ処理へ
 				if (ingame_cursol == 4)
 				{
+					Cooldown = 20;
 					next = 5;
 				}
 				//具材を選択すると3つ目に具材を選択
@@ -379,8 +379,9 @@ int InGameScene::select_guzai()
 					next += 1;
 				}
 				// 決定ボタンが押されていてカーソルが決定位置ならジャッジへ
-				else if (ingame_cursol == 4)
+				else if (Cooldown <= 0 && ingame_cursol == 4)
 				{
+					Cooldown = 20;
 					next += 1;
 				}
 			}
@@ -401,8 +402,8 @@ int InGameScene::select_guzai()
 				next -= 1;
 			}
 			//決定ボタンを選んでる時にBボタンを押すとジャッジへ
-			else if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress && ingame_cursol == 4 || select < 4) {
-
+			else if (Cooldown <= 0 && pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress && ingame_cursol == 4 || select < 4) {
+				Cooldown = 20;
 				//決定ボタンを押すと具材チェック
 				check_guzai();
 
