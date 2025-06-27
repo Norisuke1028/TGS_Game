@@ -37,7 +37,7 @@ public:
 	virtual eSceneType Update() override;
 	virtual void Draw() const;
 	virtual void Finalize() override;
-	void DrawNumber(int x, int y, int number) const; //const‚Ì——R‚ÍDraw‚É‚Á‚Ä‚¢‚­‚½‚ß
+	void DrawNumber(int x, int y, int number, float scale) const; //const‚Ì——R‚ÍDraw‚É‚Á‚Ä‚¢‚­‚½‚ß
 
 public:
 	virtual eSceneType GetNowSceneType() const override;
