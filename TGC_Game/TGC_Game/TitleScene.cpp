@@ -130,7 +130,7 @@ void TitleScene::Draw() const
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// カーソル画像の描画
-	DrawRotaGraph(70, 455 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
+	DrawRotaGraph(70, 430 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
 
 	// フェード描画
 	fade->Draw();
