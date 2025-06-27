@@ -11,8 +11,8 @@ private:
 	std::vector<ScoreData> scores;  // 読み込んだスコア一覧
 	eSceneType ranking_next_scene; // 遷移先のシーン
 	bool push_button_flag;
-	int a_button_push;
-	int ranking_main_bgm;
+	int a_button_push;             // ボタンを押した際のSE
+	int ranking_main_bgm;          // ランキングBGM
 
 	std::vector<int> num_image;
 
