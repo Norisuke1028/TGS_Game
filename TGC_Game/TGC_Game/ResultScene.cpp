@@ -24,6 +24,7 @@ void ResultScene::Initialize()
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
     result_sum_title = LoadGraph("Resource/image/sum_score_font.png");
+
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
@@ -59,7 +60,7 @@ void ResultScene::Initialize()
     result_bgm = LoadSoundMem("Resource/sounds/");*/
 
    // 数字画像（0?9）の読み込み
-	num_image = rm->GetImages("Resource/image/number.png");
+	num_image = rm->GetImages("Resource/image/number2.png");
 
     /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
@@ -148,16 +149,6 @@ void ResultScene::Draw() const
 
     DrawGraph(0, -10, sb_result_image, TRUE);  //リザルトスコアボードの描画
 
-    // 接客数を描画（左側：タイトル→数字）
-    //DrawGraph(150, 250, result_collect_font, TRUE);      // 接客数のタイトル画像
-
-    // 売上を描画（右側：タイトル→数字）
-    //DrawGraph(730, 250, result_sales_font, TRUE);         // 売上のタイトル画像
-
-    // 合計スコアタイトル
-    //DrawGraph(150, 400, result_sum_title, TRUE);
-
-    DrawFormatString(20, 600, 0x000000, "%d", result_score_time);
 
     // 数字フォント用変数
     int yOffset = 290;      // y軸オフセット
@@ -172,10 +163,10 @@ void ResultScene::Draw() const
     {
         // 接客数の数字（少し拡大）
         if (correct >= 10) {
-            DrawNumber(760, 220, correct, 1.0f);
+            DrawNumber(750, 220, correct, 0.6f);
         }
         else {
-            DrawNumber(800, 220, correct, 1.0f);
+            DrawNumber(800, 220, correct, 0.6f);
         }
         if (result_score_time == 53) {
             ChangeVolumeSoundMem(120, result_se);
@@ -189,11 +180,14 @@ void ResultScene::Draw() const
         }
         //売上が4桁の時のスコアの位置調整
         if (sales >= 1000) {
-            DrawNumber(660, 300, sales, 1.0f);
+            DrawNumber(630, 300, sales, 0.6f);
         }
         //売上が4桁以下の時のスコアの位置調整
+        else if(sales > 0){
+            DrawNumber(690, 300, sales, 0.6f);
+        }
         else {
-            DrawNumber(700, 300, sales, 1.0f);
+            DrawNumber(800, 300, sales, 0.6f);
         }
     }
     if (result_score_time == 200)
@@ -205,13 +199,16 @@ void ResultScene::Draw() const
         sum = (correct * 50) + sales;
 
         // 合計スコアの数字（中央表示）
-        int sum_width = std::to_string(sum).length() * 32 * 1.5f;  // 32は1桁の幅
+        int sum_width = std::to_string(sum).length() * 32 * 1.0f;  // 32は1桁の幅
         int centerX = (1280 - sum_width) / 2;
         if (sum >= 1000) {
-            DrawNumber(centerX-80, 520, sum, 1.5f);
+            DrawNumber(centerX - 140, 520, sum, 0.9f);
+        }
+        else if(sum > 0){
+            DrawNumber(centerX - 90, 520, sum, 0.9f);  // 大きめに表示
         }
         else {
-            DrawNumber(centerX, 520, sum, 1.5f);  // 大きめに表示
+            DrawNumber(centerX - 40, 520, sum, 0.9f);  // 大きめに表示
         }
     }
     // バッジと等級表示

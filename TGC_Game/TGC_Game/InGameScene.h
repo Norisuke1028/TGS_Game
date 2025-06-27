@@ -39,7 +39,7 @@ private:
 	int plus;
 	int sozai_count;  //お題の素材数
 	int delay;  //ディレイ用カウント
-	const double limit = 30.0;  //制限時間
+	const double limit = 10.0;  //制限時間
 	int countdown;  //カウントダウン用
 	int GM_timer;  //ゲームメインタイマー
 	double elapsed;  //経過した時間

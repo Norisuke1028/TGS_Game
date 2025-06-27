@@ -33,7 +33,7 @@ void TitleScene::Initialize()
 
 	//音量設定
 	ChangeVolumeSoundMem(190,title_bgm);
-	ChangeVolumeSoundMem(150, cursol_move_se);
+	ChangeVolumeSoundMem(100, cursol_move_se);
 
 	//// エラーチェック
 	//if (background_image == -1)
