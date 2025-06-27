@@ -147,7 +147,7 @@ void ResultScene::Draw() const
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-    DrawGraph(0, -10, sb_result_image, TRUE);  //リザルトスコアボードの描画
+    if (result_score_time >= 100)DrawGraph(0, -10, sb_result_image, TRUE);  //リザルトスコアボードの描画
 
 
     // 数字フォント用変数
@@ -159,7 +159,7 @@ void ResultScene::Draw() const
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    if (result_score_time >= 50)
+    if (result_score_time >= 200)
     {
         // 接客数の数字（少し拡大）
         if (correct >= 10) {
@@ -168,14 +168,14 @@ void ResultScene::Draw() const
         else {
             DrawNumber(800, 220, correct, 0.6f);
         }
-        if (result_score_time == 53) {
+        if (result_score_time == 203) {
             ChangeVolumeSoundMem(120, result_se);
             PlaySoundMem(result_se, DX_PLAYTYPE_NORMAL);
         }
     }
-    if (result_score_time >= 53)  // 売上の数字（同じく拡大）
+    if (result_score_time >= 203)  // 売上の数字（同じく拡大）
     {
-        if (result_score_time == 54) {
+        if (result_score_time == 204) {
             PlaySoundMem(result_se, DX_PLAYTYPE_NORMAL);
         }
         //売上が4桁の時のスコアの位置調整
@@ -190,11 +190,11 @@ void ResultScene::Draw() const
             DrawNumber(800, 300, sales, 0.6f);
         }
     }
-    if (result_score_time == 200)
+    if (result_score_time == 300)
     {
         PlaySoundMem(sum_background, DX_PLAYTYPE_BACK);
     }
-    if (result_score_time >= 700)
+    if (result_score_time >= 800)
     {
         sum = (correct * 50) + sales;
 
@@ -212,24 +212,24 @@ void ResultScene::Draw() const
         }
     }
     // バッジと等級表示
-    if (result_score_time >= 900)
+    if (result_score_time >= 1000)
     {
 
         if (sum <= 1000) {
-            DrawExtendGraph(800, 500, 960, 660, result_bronze_badge, TRUE);
+            DrawExtendGraph(800, 540, 960, 700, result_bronze_badge, TRUE);
             //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
         }
         else if (sum <= 3600) {
-            DrawExtendGraph(800, 500, 960, 660, result_gold_badge, TRUE);
+            DrawExtendGraph(800, 540, 960, 700, result_gold_badge, TRUE);
             //DrawGraph(400, 480, result_gold_font, TRUE);
         }
         else {
-            DrawExtendGraph(800, 500, 960, 660, result_diamond_badge, TRUE);
+            DrawExtendGraph(800, 540, 960, 700, result_diamond_badge, TRUE);
             //DrawGraph(400, 480, result_diamond_font, TRUE);
         }
     } 
 
-    if (result_score_time >= 1000)DrawRotaGraph(1125, 690, 1.15, 0, result_button_image, TRUE);
+    if (result_score_time >= 1100)DrawRotaGraph(1125, 690, 1.15, 0, result_button_image, TRUE);
 
     // フェード描画
     fade->Draw();
