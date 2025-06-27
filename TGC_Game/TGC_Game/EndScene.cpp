@@ -15,11 +15,11 @@ void EndScene::Initialize()
 	background_image = LoadGraph("Resource/image/end2.png");
 
 	// BGM
-	End_bgm = LoadSoundMem("Resource/sounds/BGM/");
+	End_bgm = LoadSoundMem("Resource/sounds/EndBGM.mp3");
 	PlaySoundMem(End_bgm, DX_PLAYTYPE_BACK);
 
-	////音量設定
-	//ChangeVolumeSoundMem(170, cursol_move_se);
+	//音量設定
+	ChangeVolumeSoundMem(170, End_bgm);
 
 	// エンド終了保有秒数の初期値
 	all_end_time = 0;
