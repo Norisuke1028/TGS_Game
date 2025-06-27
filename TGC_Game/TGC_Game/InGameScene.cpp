@@ -116,7 +116,7 @@ eSceneType InGameScene::Update()
 			//カーソル操作設定
 			CursolControl();
 		}
-
+		//ボタンのクールタイム
 		if (Cooldown > 0) {
 			Cooldown--;
 		}
@@ -137,8 +137,8 @@ eSceneType InGameScene::Update()
 	//リザルトへ
 	case GameState::Result:
 	{
-		GameDataManager::GetInstance().SetCorrect(correct);
-		GameDataManager::GetInstance().SetSales(total_sales);
+		GameDataManager::GetInstance().SetCorrect(correct);  //正解数の値取得(人数)
+		GameDataManager::GetInstance().SetSales(total_sales);  //合計売上の値取得
 		// フェードアウト
 		fade->Initialize(false);
 
@@ -253,8 +253,6 @@ void InGameScene::Draw() const
 	DrawBox(1035, 535, 1235, 645, 0x000000, true);  //決定ボタン外枠
 	DrawRotaGraph(1135, 590, 0.8, 0, select_image, false);  //決定ボタンの描画
 	DrawRotaGraph(160, 145, 1.0, 0, buns_image, true);  //バンズの画像の描画
-
-	DrawFormatString(20, 500, 0x000000, "%d", Cooldown);
 
 	// フェード描画
 	fade->Draw();
