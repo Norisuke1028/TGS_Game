@@ -24,6 +24,7 @@ void ResultScene::Initialize()
     result_title_image = LoadGraph("Resource/image/result_title.png");
     result_player_title = LoadGraph("Resource/image/your_score.png");
     result_sum_title = LoadGraph("Resource/image/sum_score_font.png");
+
     //result_score_history = LoadGraph("Resource/image/highscore_text.png");
     result_collect_font = LoadGraph("Resource/image/collect.png");
     result_sales_font = LoadGraph("Resource/image/sales.png");
@@ -40,9 +41,9 @@ void ResultScene::Initialize()
     result_diamond_font = LoadGraph("Resource/image/result_burger_god.png");
     result_diamond_badge = LoadGraph("Resource/image/diamond_badge.png");
 
-   /* cursor_se_move = LoadSoundMem("Resource/sounds/");
-    cursor_se_push = LoadSoundMem("Resource/sounds/");*/
-
+   //cursor_se_move = LoadSoundMem("Resource/sounds/");
+    cursor_se_push = LoadSoundMem("Resource/sounds/SE/ranking/ranking_button_se.mp3");
+    result_badge_se = LoadSoundMem("Resource/sounds/Award.mp3");
     // コントローラーの入力インスタンス取得
     pad_input = InputControl::GetInstance();
 
@@ -59,7 +60,7 @@ void ResultScene::Initialize()
     result_bgm = LoadSoundMem("Resource/sounds/");*/
 
    // 数字画像（0?9）の読み込み
-	num_image = rm->GetImages("Resource/image/number.png");
+	num_image = rm->GetImages("Resource/image/number2.png");
 
     /*/ リザルトメインbgm再生
     PlaySoundMem(result_bgm, DX_PLAYTYPE_BACK);*/
@@ -75,30 +76,6 @@ eSceneType ResultScene::Update()
     // パッド入力制御のインスタンスを取得
     InputControl* pad_input = InputControl::GetInstance();
 
-    // 十字キー操作(上)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_UP) == ePadInputState::ePress)
-    {
-       result_cursor--;
-        PlaySoundMem(cursor_se_move, DX_PLAYTYPE_BACK);
-
-        if (result_cursor < 0)
-        {
-            result_cursor = 3;
-        }
-    }
-    // 十字キー操作(下)
-    if (pad_input->GetButtonInputState(XINPUT_BUTTON_DPAD_DOWN) == ePadInputState::ePress)
-    {
-        result_cursor++;
-        PlaySoundMem(cursor_se_move, DX_PLAYTYPE_BACK);
-
-        if (result_cursor > 3)
-        {
-            result_cursor = 0;
-        }
-    }
-
-
     // フェードアウト中なら、フェード処理を続ける
     if (result_next_scene != eSceneType::eResult) {
         if (fade->GetEndFlag()) {
@@ -110,7 +87,7 @@ eSceneType ResultScene::Update()
         return eSceneType::eResult;
     }
 
-    if (result_score_time >= 1100) {
+    if (result_score_time >= 1300) {
         // コントローラーの A ボタン処理(簡略化)
         if (pad_input->GetButtonInputState(XINPUT_BUTTON_B) == ePadInputState::ePress) {
             // 押したらSEを鳴らせる
@@ -146,18 +123,8 @@ void ResultScene::Draw() const
     // リザルトタイトル画像 (1280, 720 \ 460, 90)
     DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
-    DrawGraph(0, -10, sb_result_image, TRUE);  //リザルトスコアボードの描画
+    if (result_score_time >= 100)DrawGraph(0, -10, sb_result_image, TRUE);  //リザルトスコアボードの描画
 
-    // 接客数を描画（左側：タイトル→数字）
-    //DrawGraph(150, 250, result_collect_font, TRUE);      // 接客数のタイトル画像
-
-    // 売上を描画（右側：タイトル→数字）
-    //DrawGraph(730, 250, result_sales_font, TRUE);         // 売上のタイトル画像
-
-    // 合計スコアタイトル
-    //DrawGraph(150, 400, result_sum_title, TRUE);
-
-    DrawFormatString(20, 600, 0x000000, "%d", result_score_time);
 
     // 数字フォント用変数
     int yOffset = 290;      // y軸オフセット
@@ -168,71 +135,81 @@ void ResultScene::Draw() const
     int rowSpacing = 100;    // 行間のスペース
     int digitWidth = 32;    // 1桁の幅（使用するフォント画像に合わせる）
 
-    if (result_score_time >= 50)
+    if (result_score_time >= 200)
     {
         // 接客数の数字（少し拡大）
         if (correct >= 10) {
-            DrawNumber(760, 220, correct, 1.0f);
+            DrawNumber(750, 220, correct, 0.6f);
         }
         else {
-            DrawNumber(800, 220, correct, 1.0f);
+            DrawNumber(800, 220, correct, 0.6f);
         }
-        if (result_score_time == 53) {
+        if (result_score_time == 203) {
             ChangeVolumeSoundMem(120, result_se);
             PlaySoundMem(result_se, DX_PLAYTYPE_NORMAL);
         }
     }
-    if (result_score_time >= 53)  // 売上の数字（同じく拡大）
+    if (result_score_time >= 203)  // 売上の数字（同じく拡大）
     {
-        if (result_score_time == 54) {
+        if (result_score_time == 204) {
             PlaySoundMem(result_se, DX_PLAYTYPE_NORMAL);
         }
         //売上が4桁の時のスコアの位置調整
         if (sales >= 1000) {
-            DrawNumber(660, 300, sales, 1.0f);
+            DrawNumber(630, 300, sales, 0.6f);
         }
         //売上が4桁以下の時のスコアの位置調整
+        else if(sales > 0){
+            DrawNumber(690, 300, sales, 0.6f);
+        }
         else {
-            DrawNumber(700, 300, sales, 1.0f);
+            DrawNumber(800, 300, sales, 0.6f);
         }
     }
-    if (result_score_time == 200)
+    if (result_score_time == 300)
     {
         PlaySoundMem(sum_background, DX_PLAYTYPE_BACK);
     }
-    if (result_score_time >= 700)
+    if (result_score_time >= 800)
     {
         sum = (correct * 50) + sales;
 
         // 合計スコアの数字（中央表示）
-        int sum_width = std::to_string(sum).length() * 32 * 1.5f;  // 32は1桁の幅
+        int sum_width = std::to_string(sum).length() * 32 * 1.0f;  // 32は1桁の幅
         int centerX = (1280 - sum_width) / 2;
         if (sum >= 1000) {
-            DrawNumber(centerX-80, 520, sum, 1.5f);
+            DrawNumber(centerX - 140, 520, sum, 0.9f);
+        }
+        else if(sum > 0){
+            DrawNumber(centerX - 90, 520, sum, 0.9f);  // 大きめに表示
         }
         else {
-            DrawNumber(centerX, 520, sum, 1.5f);  // 大きめに表示
+            DrawNumber(centerX - 40, 520, sum, 0.9f);  // 大きめに表示
         }
     }
-    // バッジと等級表示
-    if (result_score_time >= 900)
-    {
 
+    //バッジ表示時SE
+    if (result_score_time == 999)
+    {
+        PlaySoundMem(result_badge_se, DX_PLAYTYPE_BACK);
+    }
+
+    // バッジと等級表示
+    if (result_score_time >= 1000)
+    {
         if (sum <= 1000) {
-            DrawExtendGraph(800, 500, 960, 660, result_bronze_badge, TRUE);
-            //DrawExtendGraph(1000, 460,1300,660, result_bronze_font, TRUE);
+            DrawExtendGraph(800, 540, 960, 700, result_bronze_badge, TRUE);
         }
         else if (sum <= 3600) {
-            DrawExtendGraph(800, 500, 960, 660, result_gold_badge, TRUE);
-            //DrawGraph(400, 480, result_gold_font, TRUE);
+            DrawExtendGraph(800, 540, 960, 700, result_gold_badge, TRUE);
+            
         }
         else {
-            DrawExtendGraph(800, 500, 960, 660, result_diamond_badge, TRUE);
-            //DrawGraph(400, 480, result_diamond_font, TRUE);
+            DrawExtendGraph(800, 540, 960, 700, result_diamond_badge, TRUE);
         }
     } 
 
-    if (result_score_time >= 1000)DrawRotaGraph(1125, 690, 1.15, 0, result_button_image, TRUE);
+    if (result_score_time >= 1100)DrawRotaGraph(1125, 690, 1.15, 0, result_button_image, TRUE);
 
     // フェード描画
     fade->Draw();

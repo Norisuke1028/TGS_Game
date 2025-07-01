@@ -28,12 +28,12 @@ void TitleScene::Initialize()
 	// 音源の読み込み
 	title_bgm = LoadSoundMem("Resource/sounds/titleBGM.mp3");       // タイトルBGM
 	cursol_move_se = LoadSoundMem("Resource/sounds/cursol_move.mp3");  // カーソル移動SE
-	cursol_push_se = LoadSoundMem("Resource/sounds/SE/");  // カーソル決定SE
+	cursol_push_se = LoadSoundMem("Resource/sounds/SE/ranking/ranking_button_se.mp3");  // カーソル決定SE
 	PlaySoundMem(title_bgm, DX_PLAYTYPE_LOOP); // ループ再生する
 
 	//音量設定
 	ChangeVolumeSoundMem(190,title_bgm);
-	ChangeVolumeSoundMem(150, cursol_move_se);
+	ChangeVolumeSoundMem(100, cursol_move_se);
 
 	//// エラーチェック
 	//if (background_image == -1)
@@ -103,15 +103,23 @@ eSceneType TitleScene::Update()
 		// カーソル位置に応じてシーン遷移を予約
 		if (menu_cursor == 0) {
 			next_scene = eSceneType::eInGame;
+			// 押されたときのSE
+			PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		}
 		else if (menu_cursor == 1) {
-			next_scene = eSceneType::eTutorial;;
+			next_scene = eSceneType::eTutorial;
+			// 押されたときのSE
+			PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		}
 		else if (menu_cursor == 2) {
 			next_scene = eSceneType::eRanking;
+			// 押されたときのSE
+			PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		}
 		else if (menu_cursor == 3) {
 			next_scene = eSceneType::eEnd;
+			// 押されたときのSE
+			PlaySoundMem(cursol_push_se, DX_PLAYTYPE_BACK);
 		}
 	}
 
@@ -130,7 +138,7 @@ void TitleScene::Draw() const
 	DrawExtendGraph(0, 0, 1280, 720, background_image, FALSE);
 
 	// カーソル画像の描画
-	DrawRotaGraph(70, 455 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
+	DrawRotaGraph(70, 430 + menu_cursor * 80, 0.3, DX_PI / 200.0, cursor_image, TRUE);
 
 	// フェード描画
 	fade->Draw();
